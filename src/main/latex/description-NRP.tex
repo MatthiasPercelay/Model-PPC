@@ -1,0 +1,79 @@
+\documentclass[a4paper]{article}       % onecolumn (second format)
+
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+ \usepackage[numbers,sort&compress]{natbib}
+% ~a4wide
+\usepackage{geometry}
+\geometry{
+includeheadfoot,
+margin=2.54cm
+}
+
+\graphicspath{{fig/}}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+
+\usepackage{paralist}
+
+\usepackage[pdftex,dvipsnames,usenames]{xcolor}
+\usepackage[pdftex,colorlinks=true,urlcolor=ForestGreen,citecolor=Blue,linkcolor=BrickRed]{hyperref}
+\usepackage{graphicx}
+\usepackage{url}
+
+
+\usepackage[draft, footnote, marginclue, nomargin,index]{fixme}
+\fxusetheme{color}
+\definecolor{fxtarget}{rgb}{1,0,0.2}
+\fxsetface{target}{\bfseries}
+
+\usepackage[scriptsize]{subfigure}
+\subfigtopskip=0pt
+\subfigcapskip=0pt
+\subfigbottomskip=0pt
+
+\usepackage{array}
+
+\usepackage{booktabs}
+\title{Nurse Rostering Problem Description}
+\author{M2I}
+\date{\today}
+
+
+
+\begin{document}
+\maketitle
+\tableofcontents
+\listoffixmes
+
+
+\abstract{
+
+}
+
+
+% Double interline
+% \baselineskip 20pt plus .3pt minus .1pt
+
+
+\section{Introduction}
+
+Let $i \in N=[1,n]$ denote the agent \dots
+
+
+\citep{burke.ea-04}
+
+
+\bibliographystyle{unsrtnat}       
+\bibliography{bibli-NRP.bib}   % name your BibTeX data base
+
+\end{document}
+
+
+%%% Local Variables: 
+%%% TeX-command-default: "latexmk" 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
