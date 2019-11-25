@@ -66,6 +66,104 @@ Let $i \in N=[1,n]$ denote the agent \dots
 \citep{burke.ea-04}
 
 
+the description is written in French for validation by head nurses.
+\section*{Organisation du travail}
+
+L'emploi du temps est organisé par jour.
+Chaque jour, un agent est soit au travail, en repos, ou en congés. 
+\begin{itemize}
+\item Travail (T)
+Chaque jour travaillé, un agent est affecté à un créneau de travail.
+Le temps de travail journalier est fixe : 7h42 ;)
+Dix minutes de pause sont intégrés au temps de travail, et la durée de présence journalière est donc 7h52.
+\begin{itemize}
+\item Dans le service
+\begin{itemize}
+\item Matin (M) : 7h10-14h52
+\item Journée (J) : 8h30-16h12
+\item Soir (S) : 14h10-21h52
+\end{itemize}
+\item Externe au service
+\begin{itemize}
+\item Journée de Formation (FO) : 8h30-16h12
+\item Autre service (EX) ?
+\end{itemize}
+\end{itemize}
+\item Repos (R)
+\begin{itemize}
+\item Repos Hebdomadaire (RH)
+\item Repos Aménagé (RA)
+\item Réduction du temps de travail (RTT)
+\item Repos Compensateur (RC)
+\end{itemize}
+\item Congés (C)
+\begin{itemize}
+\item Congé Annuel (CA)
+\item Congé Maladie (CM)
+\item Jour Férié (JF)
+\end{itemize}
+\end{itemize}
+\section*{Durée du travail dans la fonction publique hospitalière (FPH)}
+Source : \href{https://www.service-public.fr/particuliers/vosdroits/F573}{service-public.fr}.
+
+\begin{itemize}
+\item Durée hebdomadaire
+\begin{itemize}
+\item La durée de travail effectif, heures supplémentaires comprises, ne peut pas dépasser 48 heures par période de 7 jours glissants (c'est à-dire de date à date).
+\begin{itemize}
+\item L'agent ne peut pas travailler plus de 6 jours de suite.
+\end{itemize}
+\begin{itemize}
+\item {\bfseries\sffamily TODO} Pourquoi pas plus de 5 jours ?
+\end{itemize}
+\item L'agent doit bénéficier d'un repos hebdomadaire de 36 heures consécutives minimum.
+\begin{itemize}
+\item L'agent ne bénéficie pas ce repos si il enchaîne S-R-M ou S-R-J.
+\end{itemize}
+\item Un agent ne peut pas travailler plus de 39 heures hebdomadaires en moyenne (heures supplémentaires non comprises) sur un cycle de travail, ni plus de 44 heures par semaine en cas de cycle irrégulier.
+\begin{itemize}
+\item Un agent travaille 5 jours par semaine en moyenne.
+\end{itemize}
+\item Le nombre de jours de repos est fixé à 4 jours pour 2 semaines, 2 d'entre eux, au moins, devant être consécutifs, dont un dimanche.
+\end{itemize}
+\item Cycles de travail
+Le travail est organisé selon des périodes de référence dénommées cycles de travail définis par service ou par fonctions.
+Le cycle de travail est une période de référence dont la durée se répète à l'identique d'un cycle à l'autre. 
+Un cycle ne peut pas être inférieure à la semaine civile (du lundi au dimanche), ni supérieure à 12 semaines. 
+Le nombre d'heures de travail effectué au cours des semaines composant le cycle peut être irrégulier. 
+Les heures supplémentaires et les repos compensateurs sont décomptés sur la durée totale du cycle. 
+
+\emph{Au vu des contraintes légales, il est raisonnable de fixer un cycle de travail multiple de 2 semaines.}
+\end{itemize}
+\section*{Demande}
+Pour chaque créneau (M/J/S) du cycle de travail, la demande dans le service est exprimé en nombre d'agents.
+\section*{Contraintes}
+Au niveau opérationnel, un certain nombres de décisions ont déjà été prises et ne peuvent pas être changées.  
+\begin{itemize}
+\item Certains jours de travail, de repos, ou de congés sont affectés aux agents.
+\item Des créneaux de travail peuvent aussi être affectés aux agents.
+\end{itemize}
+Par exemple, les congés sont fixés avant la planification.
+
+Pareillement, le nombre de jours de travail et de repos de chaque agent pour le cycle de travail est fixé à l'avance en fonction de la quotité de travail de l'agent et d'autres facteurs. 
+
+\section*{Préférences}
+Chaque agent exprime des préférences sur : 
+\begin{itemize}
+\item les jours et créneaux travaillés,
+\item le nombre de jours de travail consécutifs,
+\item les repos de 2 jours consécutifs
+\item les repos du week-end.
+\end{itemize}
+
+
+\section*{Objectifs}
+\begin{itemize}
+\item Relâcher la demande quand le problème est sur-contraint
+\item Maximiser les préférences des infirmières
+\end{itemize}
+
+
 \bibliographystyle{unsrtnat}       
 \bibliography{bibli-NRP.bib}   % name your BibTeX data base
 
