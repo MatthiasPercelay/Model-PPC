@@ -11,7 +11,8 @@ int SUNDAYS_PER_CYCLE = 1;
 int MIN_BREAKS_PER_CYCLE = 4;
 int TWODAYS_BREAKS_PER_CYCLE = 1;
 int MIN_BREAKS_PER_WEEK = 1;
- 
+int MAX_CONSECUTIVE_WORKING_DAYS = 6;
+int PREF_CONSECUTIVE_WORKING_DAYS = 5;
 
  int n = ...; // number of agents
  range AGENTS = 1..n;
@@ -56,6 +57,22 @@ int MIN_BREAKS_PER_WEEK = 1;
  
  dexpr int work5Days[i in AGENTS][j in DAYS] = (j>=d-3) ? 0 : minl( break[i][j], break[i][j+1],break[i][j+2],break[i][j+3],break[i][j+4]); // break2Days[i][j] = 1 means that the agent i  have a 2days break (j is the first day)
  
+ 
+ 
+ //for each agent this is the score of his preferences for each week
+ dexpr int breakprefpW[i in AGENTS][w in WEEKS] = sum(j in 1..DAYS_PER_WEEK)(break[i][startW[w]+(j-1)]*breakPrefs[i][j])
+ // global score of the preferences
+ dexpr int TOTALbreakPrefpW =sum(i in AGENTS, w in WEEKS)breakprefpW[i in AGENTS][w in WEEKS];
+
+
+
+ // for each agent number of day worked by week
+ dexpr int WdayPweek[i in AGENTS][w in WEEKS] = sum(j in 1..DAYS_PER_WEEK)(work[i][startW[w]+(j-1)]);
+ //maximum of day work in a week for each agent
+ dexpr int MAXWdayPweek[i in AGENTS]= sum(w in WEEKS)(WdayPweek[i][w]);
+ //sum of max day worked in a week for each agent
+ dexpr int TOTALMAXWdayPweek= sum(i in AGENTS)(MAXWdayPweek[i]);
+ 
 subject to{
 
  	forall(j in DAYS) 
@@ -82,14 +99,14 @@ subject to{
 			sum(j in startW[startC[c]]..endW[endC[c]]) break2Days[i][j] >= TWODAYS_BREAKS_PER_CYCLE;	//satisfy the number two days breaks per  cylcle
 	
 	forall(i in AGENTS) 
-		forall(k in 1..(d-(DAYS_PER_WEEK-1))) 
+		forall(k in 1..(d-(MAX_CONSECUTIVE_WORKING_DAYS))) 
 			ct6DaysMax:
-			sum(j in k..k+DAYS_PER_WEEK-1) work[i][j] <= DAYS_PER_WEEK - MIN_BREAKS_PER_WEEK ; //at most 6 working days over a rolling 7 day	
+			sum(j in k..k+MAX_CONSECUTIVE_WORKING_DAYS) work[i][j] <= MAX_CONSECUTIVE_WORKING_DAYS ; //at most 6 working days over a rolling 7 day	
 	
 	forall(i in AGENTS) 
-		forall(k in 1..(d-5)) 
+		forall(k in 1..(d-PREF_CONSECUTIVE_WORKING_DAYS)) 
 			ct5ConsDaysMax:
-			sum(j in k..k+5) work[i][j] <= 5; // at most 5 consecutive working days over a roliing 6 day
+			sum(j in k..k+PREF_CONSECUTIVE_WORKING_DAYS) work[i][j] <= PREF_CONSECUTIVE_WORKING_DAYS; // at most 5 consecutive working days over a roliing 6 day
 
 	ctFixedWork:
 	forall(i in AGENTS, j in DAYS : fixedWork[i][j] == 1) work[i][j] == 1; // the fixed work day has to be respect
