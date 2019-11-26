@@ -10,7 +10,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.AreaReference;
 import org.apache.poi.ss.util.CellReference;
 
-public class Planning {
+public class Planning { // TODO extends ITimetable
     private Shift[][] days;
     private int cycles;
     private int agents;
