@@ -178,6 +178,7 @@ $RECYCLE.BIN/
 *.aux
 *.lof
 *.lot
+*.log
 *.lox
 *.bbl
 *.blg
