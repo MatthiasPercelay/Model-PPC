@@ -26,7 +26,9 @@ public enum Shift {
 	CM("Congé Maladie", false, true),
 	// Partial assignments
 	W("Work", true, false),
-	B("Break", false, false);
+	B("Break", false, false),
+	// Not assigned
+	NA("Non assigné", true, false);
 	
 	private final String name;
 	
