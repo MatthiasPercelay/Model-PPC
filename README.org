@@ -6,7 +6,7 @@
 * Nurse Rostering Solver
 
 
-nurse-rostering-solver is distributed under BSD 3-Clause License (Copyright (c) 2018, Université Nice Sophia Antipolis). 
+nurse-rostering-solver is distributed under BSD 3-Clause License (Copyright (c) 2019, Université Nice Sophia Antipolis). 
 
 * Documentation, Support and Issues
   
