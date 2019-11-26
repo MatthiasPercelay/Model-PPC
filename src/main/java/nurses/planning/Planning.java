@@ -12,8 +12,8 @@ import org.apache.poi.ss.util.CellReference;
 
 public class Planning {
     private Shift[][] days;
-    int cycles;
-    int agents;
+    private int cycles;
+    private int agents;
 
     public Planning(int cycles, int agents) {
         this.days = new Shift[agents][14 * cycles];
@@ -60,5 +60,14 @@ public class Planning {
             }
             this.setShift(shift, day, agent);
         }
+    }
+
+    /**
+     *
+     * @param k an agent
+     * @return agent k's schedule on this planning
+     */
+    public Shift[] getAgentsSchedule(int k) {
+        return days[k];
     }
 }
