@@ -1,0 +1,25 @@
+n=6;
+c=2;
+planning= [
+[ "S", "RH", "M", "M", "M", "RH", "RH", "J", "J", "RH", "J", "S", "S", "S", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR" ],
+[ "CA", "CA", "CA", "CA", "CA", "RH", "RH", "RH", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "JF", "NA", "NA", "NA", "NA" ],
+[ "NA", "NA", "NA", "NA", "RA", "NA", "NA", "NA", "NA", "RA", "NA", "NA", "RH", "RH", "RA", "RTT", "RTT", "RTT", "RTT", "RH", "RH", "RA", "NA", "NA", "NA", "NA", "NA", "NA" ],
+[ "NA", "NA", "NA", "NA", "NA", "RH", "RH", "RTT", "RTT", "RTT", "RA", "RTT", "RH", "RH", "RTT", "NA", "RA", "NA", "NA", "RH", "RH", "NA", "NA", "NA", "NA", "NA", "NA", "NA" ],
+[ "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "JF", "NA", "NA", "NA", "NA" ],
+[ "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "JF", "CA", "CA", "RH", "RH" ]
+];
+workDays= [ 10, 13, 10, 11, 17, 17 ];
+breaksPerCycle= [ 4, 4, 6, 6, 4, 4 ];
+demands= [
+[ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+[ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+[ 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0 ]
+];
+breakPrefs= [
+[ 1, 0, 0, 0, 0, 1, 1 ],
+[ 0, 0, 0, 0, 0, 1, 1 ],
+[ 0, 0, 1, 0, 0, 1, 1 ],
+[ 0, 0, 1, 0, 0, 0, 1 ],
+[ 2, 0, 0, 0, 1, 0, 0 ],
+[ 0, 0, 1, 0, 0, 1, 1 ]
+];

@@ -12,6 +12,7 @@ import java.util.Arrays;
 
 public final class MOSolution {
 
+	// TODO Use ITimeTable instead of Object
 	public final Object solution;
 
 	public final double[] objective;

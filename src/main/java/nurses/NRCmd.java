@@ -8,9 +8,9 @@
  */
 package nurses;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.function.Supplier;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -23,6 +23,10 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
 import nurses.specs.IParetoArchive;
+import nurses.specs.IProblemInstance;
+import nurses.specs.IShiftSolver;
+import nurses.specs.ITimetableReports;
+import nurses.specs.IWorkdaySolver;
 
 public class NRCmd  {
 
@@ -49,6 +53,9 @@ public class NRCmd  {
 		}
 	}
 	private final CmdLineParser parser;
+
+	@Option(name = "-f", aliases = { "-file", "--file" }, usage = "Random Seed.", required = true)
+	private File instanceFile;
 
 	@Option(name = "-s", aliases = { "-seed", "--seed" }, usage = "Random Seed.")
 	private long seed = 0;
@@ -85,11 +92,45 @@ public class NRCmd  {
 	}
 
 
+	public final static IProblemInstance parseInstance(File instanceFile) {
+		// TODO 
+		return null;
+	}
+	
+	public final static IParetoArchive createArchive() {
+		// TODO 
+		return null;
+	}
+	
+	public final static IWorkdaySolver createWorkdaySolver() {
+		// TODO See for instance CPLEX_Studio129/opl/examples/opl_interfaces/java/oplrunsample/OplRunSample.java
+		return null;
+	}
+	
+	public final static IShiftSolver createShiftSolver() {
+		// TODO 
+		return null;
+	}
+	
+	private final ITimetableReports createTimetableReports() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	public void execute() {
 		runtime = - System.nanoTime();
 		// TODO
+		final IProblemInstance instance = parseInstance(instanceFile);
+		final IWorkdaySolver workdaySolver = createWorkdaySolver();
+		final IParetoArchive workdayArchive = createArchive();
+		workdaySolver.solve(instance, workdayArchive);
+		final IShiftSolver shiftSolver = createShiftSolver();	
+		final IParetoArchive shiftArchive = createArchive();
+		shiftSolver.solve(instance, workdayArchive, shiftArchive);	
+		final ITimetableReports reporter = createTimetableReports();
+		reporter.generateReports(instance, shiftArchive);
 		runtime += System.nanoTime();
-
+		
 	}
 
 	private final static long NS2MS = 1000000;
