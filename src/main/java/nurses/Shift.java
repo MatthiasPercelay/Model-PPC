@@ -27,8 +27,9 @@ public enum Shift {
 	// Partial assignments
 	W("Work", true, false),
 	B("Break", false, false),
-	// Not assigned
-	NA("Non assigné", true, false);
+	// Special values
+	NA("Not Available", true, false),
+	ND("No Decision", false, true);
 	
 	private final String name;
 	
