@@ -9,10 +9,11 @@ import java.util.function.Consumer;
 
 public class ParetoArchiveL implements IParetoArchive {
     private List<MOSolution> solutions;
-    private ParetoDominance comp;
+    final private ParetoDominance comp;
 
     public ParetoArchiveL() {
         solutions = new ArrayList<>();
+        comp = new ParetoDominance();
     }
 
     @Override
@@ -23,7 +24,8 @@ public class ParetoArchiveL implements IParetoArchive {
     @Override
     public boolean isDominated(double[] objective) {
         for (MOSolution s : solutions) {
-            if (comp.compare(s.getObjective(), objective) >= 0) {
+            if (s.getObjective() != objective // we are really comparing references here
+                    && comp.compare(s.getObjective(), objective) < 0) {
                 return true;
             }
         }

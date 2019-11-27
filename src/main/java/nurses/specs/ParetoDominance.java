@@ -20,10 +20,12 @@ public class ParetoDominance implements IDominanceComparator {
         int comp = 0;
 
         for (int i = 0; i < objective1.length; i++) {
+            if(objective1[i] == objective2[i]) { continue; }
             if(objective1[i] < objective2[i] && comp == 1) { return 0; }
             if(objective1[i] > objective2[i] && comp == -1) { return 0; }
             if(objective1[i] < objective2[i]) { comp = -1; }
-            if(objective1[i] > objective2[i]) { comp = 1; }
+            else if(objective1[i] > objective2[i]) { comp = 1; }
+
         }
 
         return comp;

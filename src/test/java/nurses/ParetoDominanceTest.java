@@ -38,4 +38,28 @@ public class ParetoDominanceTest {
 
         assertEquals(0, dom.compare(objList1, objList2));
     }
+
+    @Test
+    public void firstDomSecondsEq() {
+        double[] objList1 = new double[]{1, 1, 1, 1};
+        double[] objList2 = new double[]{0, 0, 1, 0};
+
+        assertEquals(1, dom.compare(objList1, objList2));
+    }
+
+    @Test
+    public void secondDomFirstEq() {
+        double[] objList1 = new double[]{0, 0, 1, 0};
+        double[] objList2 = new double[]{1, 1, 1, 1};
+
+        assertEquals(-1, dom.compare(objList1, objList2));
+    }
+
+    @Test
+    public void noDomEq() {
+        double[] objList1 = new double[]{1, 1, 1, 1};
+        double[] objList2 = new double[]{1, 1, 1, 1};
+
+        assertEquals(0, dom.compare(objList1, objList2));
+    }
 }
