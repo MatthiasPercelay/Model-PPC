@@ -46,19 +46,31 @@ dexpr int SM[a in AGENTS] = sum(i in 1..d-1) (shift_assign[evening][i] == shift_
 // Number of consecutive days where we do the same shift
 int CONSECUTIVE_DAYS = 3;
 dexpr int sameShift[a in AGENTS][c in 2..CONSECUTIVE_DAYS] = sum(i in 1..d-c+1, s in SHIFTS) (sum(j in 0..c-1) (shift_assign[s][i+j] == a) == c);
+
 // Number of preferences respected for each agent
 dexpr int preferences[a in AGENTS] = sum(d in DAYS, s in SHIFTS) (shift_assign[s][d] == a && shift_preference[a][d] == s) ;
 // Number of forbidden respected for each agent
-dexpr int interdictions[a in AGENTS] = sum(d in DAYS, s in SHIFTS) (shift_assign[s][d] == a && shift_forbidden[a][d] != s) ;
+dexpr int interdictions[a in AGENTS] = sum(d in DAYS, s in SHIFTS) (shift_assign[s][d] == a && shift_forbidden[a][d] == s) ;
 
+// Evaluation for each agent
+dexpr int objectiveValuePerAgent[a in AGENTS] = 10*SM[a] - sameShift[a][2] + 4*interdictions[a] - preferences[a];
+// Global evaluation of the solution
+dexpr int objectiveValue = sum(a in AGENTS) objectiveValuePerAgent[a];
+// Difference of value to the average for each agent
+dexpr float differenceToAveragePerAgent[a in AGENTS] = abs(objectiveValue - objectiveValuePerAgent[a]*n);
+// Global difference to average
+dexpr float differenceToAverage = sum(a in AGENTS) differenceToAveragePerAgent[a];
 
 /*	OBJECTIVE FUNCTION
 	GOALS :
 		- Minimize the shift sequence evening + morning
-		- Minimize the sequence of length 3 of the same shift
 		- Maximize the sequence of length 2 of the same shift
+		- Maximize the preference satisfaction
+		- Maximize the interdictions satisfaction
+		- Minimize the difference to the average for each agent 
+			(one does not get the timetable of his life and the other wants to kill himself)
 */
-minimize sum(a in AGENTS) (SM[a]*10 - sameShift[a][2]);
+minimize objectiveValue + differenceToAverage;
 
 subject to{
 
