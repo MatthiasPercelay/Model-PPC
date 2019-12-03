@@ -18,6 +18,7 @@ morning = "M";
 day = "J";
 evening = "S";
 to_define = "W";
+hebdomary_break = "RH"
 
 demands= [
 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],

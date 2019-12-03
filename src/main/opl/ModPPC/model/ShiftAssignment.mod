@@ -22,6 +22,7 @@ string morning = ...;
 string evening = ...;
 string day = ...;
 string to_define = ...;
+string hebdomary_break = ...;
 
 // IMPORTANT ! Same order as the demands array !!
 {string} SHIFTS = {evening, morning, day};
@@ -92,7 +93,13 @@ subject to{
  	// ADDITIONNAL CONSTRAINTS //
  	/////////////////////////////
  	
- 	// TODO ... ?
+ 	forall(i in 2..d-1, a in AGENTS){ 	
+ 		// If an agent has only one day for hebdomary break, then he must have more than 36 hours of break
+ 		if(planning[a][d] == hebdomary_break && planning[a][d-1] != hebdomary_break && planning[a][d+1] != hebdomary_break){
+ 		 	(shift_assign[evening][d-1] == a) + (shift_assign[morning][d+1] == a) <= 1;
+ 		 	(shift_assign[evening][d-1] == a) + (shift_assign[day][d+1] == a) <= 1;
+ 		}
+ 	}
  	 
 }
 
