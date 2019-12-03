@@ -21,7 +21,7 @@ public class PlanningChecker {
      */
     public boolean check() {
         for (IRule r : this.rules) {
-            for (int i = 0; i < this.planning.getAgents(); i++) {
+            for (int i = 0; i < this.planning.getNbAgents(); i++) {
                 if (!r.check(this.planning.getAgentsSchedule(i))) {
                     return false;
                 }
