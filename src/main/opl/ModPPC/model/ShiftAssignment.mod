@@ -27,8 +27,10 @@ string to_define = ...;
 {string} SHIFTS = {evening, morning, day};
 
 // MAIN DATA
-int demands[SHIFTS][DAYS] = ...;		// demands per shift per days
-string planning[AGENTS][DAYS] = ...;	// already established planning
+int demands[SHIFTS][DAYS] = ...;			// demands per shift per days
+string planning[AGENTS][DAYS] = ...;		// already established planning
+string shift_preference[AGENTS][DAYS] = ...;      // what each agent wants
+string shift_forbidden[AGENTS][DAYS] = ...; // what each agent does not want
 
 // DAY OF WORK AND FIXED SHIFT
 int fixedWork[a in AGENTS][d in DAYS] = planning[a][d] == to_define || planning[a][d] == evening || planning[a][d] == day || planning[a][d] == morning;
@@ -44,6 +46,11 @@ dexpr int SM[a in AGENTS] = sum(i in 1..d-1) (shift_assign[evening][i] == shift_
 // Number of consecutive days where we do the same shift
 int CONSECUTIVE_DAYS = 3;
 dexpr int sameShift[a in AGENTS][c in 2..CONSECUTIVE_DAYS] = sum(i in 1..d-c+1, s in SHIFTS) (sum(j in 0..c-1) (shift_assign[s][i+j] == a) == c);
+// Number of preferences respected for each agent
+dexpr int preferences[a in AGENTS] = sum(d in DAYS, s in SHIFTS) (shift_assign[s][d] == a && shift_preference[a][d] == s) ;
+// Number of forbidden respected for each agent
+dexpr int interdictions[a in AGENTS] = sum(d in DAYS, s in SHIFTS) (shift_assign[s][d] == a && shift_forbidden[a][d] != s) ;
+
 
 /*	OBJECTIVE FUNCTION
 	GOALS :
