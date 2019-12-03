@@ -2,15 +2,15 @@
 	<version>1.0</version>
 	<configs>
 		<config default="true" name="WorkdayAssignment" category="opl">
-			<ref name="model/nurseSchedule.mod" type="model">
-			</ref>
 			<ref name="data/workday/ucl-planning-december-19.dat" type="data">
+			</ref>
+			<ref name="model/WorkDayAssignment.mod" type="model">
 			</ref>
 		</config>
 		<config default="false" name="WorkdayAssignment-HARD" category="opl">
-			<ref name="model/nurseSchedule.mod" type="model">
-			</ref>
 			<ref name="data/workday/ucl-planning-december-19-hard.dat" type="data">
+			</ref>
+			<ref name="model/WorkDayAssignment.mod" type="model">
 			</ref>
 		</config>
 		<config default="false" name="ShiftAssignment" category="opl">

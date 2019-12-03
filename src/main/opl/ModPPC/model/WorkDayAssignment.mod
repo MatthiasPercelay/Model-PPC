@@ -33,8 +33,8 @@ int PREF_CONSECUTIVE_WORKING_DAYS = 5;
  int breaksPerCycle[AGENTS] = ...;
  
  string planning[AGENTS][DAYS] = ...;
- int fixedWork[i in AGENTS][j in DAYS] = planning[i][j] == "M" || planning[i][j] == "J" || planning[i][j] == "S";
- int fixedBreak[i in AGENTS][j in DAYS] = planning[i][j] == "RA" || planning[i][j] == "JF" || planning[i][j] == "CA" || planning[i][j] == "RH" || planning[i][j] == "RTT" || planning[i][j] == "RC" || planning[i][j] == "RH" || planning[i][j] == "MPR";
+ int fixedWork[i in AGENTS][j in DAYS] = planning[i][j] == "M" || planning[i][j] == "J" || planning[i][j] == "S" || planning[i][j] == "JF";
+ int fixedBreak[i in AGENTS][j in DAYS] = planning[i][j] == "CA" || planning[i][j] == "RH" || planning[i][j] == "RTT" || planning[i][j] == "RC" || planning[i][j] == "RH" || planning[i][j] == "MPR";
  
  int breakPrefs[AGENTS][WEEKDAYS] = ...;
  
@@ -47,6 +47,15 @@ int PREF_CONSECUTIVE_WORKING_DAYS = 5;
  int startC[k in CYCLES] = WEEKS_PER_CYCLE * (k-1) + 1;
  int endC[k in CYCLES] = WEEKS_PER_CYCLE * k;
  
+ //-------------------------------- Definition of constraint ------------------------------
+ constraint ctDemand[DAYS];
+ constraint ctBreak[AGENTS][CYCLES];
+ constraint ctSunday[AGENTS][CYCLES];
+ constraint ct2ConsBreak[AGENTS][CYCLES];
+ constraint ct6DaysMax[AGENTS][1..(d-(MAX_CONSECUTIVE_WORKING_DAYS))];
+ constraint ct5ConsDaysMax[AGENTS][1..(d-(PREF_CONSECUTIVE_WORKING_DAYS))];
+ int DemandRelax[j in DAYS] = demand[j] - 1; 
+ 
  //-------------------------------- Definition of variable --------------------------------
   
  dvar boolean work[AGENTS][DAYS];	
@@ -55,57 +64,70 @@ int PREF_CONSECUTIVE_WORKING_DAYS = 5;
  
  dexpr int break2Days[i in AGENTS][j in DAYS] = (j==d) ? 0 : minl( break[i][j], break[i][j+1]); // break2Days[i][j] = 1 means that the agent i  have a 2days break (j is the first day)
  
- dexpr int work5Days[i in AGENTS][j in DAYS] = (j>=d-3) ? 0 : minl( break[i][j], break[i][j+1],break[i][j+2],break[i][j+3],break[i][j+4]); // break2Days[i][j] = 1 means that the agent i  have a 2days break (j is the first day)
+ dexpr int work5Days[i in AGENTS][j in DAYS] = (j>=d-3) ? 0 : minl( break[i][j], break[i][j+1],break[i][j+2],break[i][j+3],break[i][j+4]); // work5days[i][j] = 1 means that the agent i  will work 5 consecutif days starting from the day j.
  
+ dexpr int realWorkDay[i in AGENTS] = sum(j in DAYS) work[i][j];
  
+ dexpr float workDayDiff[i in AGENTS] = abs(workDays[i] - realWorkDay[i]); // difference between the work done in the planning  and the work intended to do
  
  //for each agent this is the score of his preferences for each week
  dexpr int breakprefpW[i in AGENTS][w in WEEKS] = sum(j in 1..DAYS_PER_WEEK)(break[i][startW[w]+(j-1)]*breakPrefs[i][j]);
  // global score of the preferences
  dexpr int TOTALbreakPrefpW =sum(i in AGENTS, w in WEEKS)breakprefpW[i in AGENTS][w in WEEKS];
 
-
-
+// number of nurse working the day j
+ dexpr int realDemand[j in DAYS] = sum(i in AGENTS) work[i][j];
+ 
+ //diff between the number of nurse wanted and the real number of nurse working
+ dexpr int diffDemand[j in DAYS] = demand[j]-realDemand[j];
+ //dexpr float diffDemand[j in DAYS] = abs(demand[j]-realDemand[j]);
+ 
+ // if demand[j]< realDemand[j] then 0 else demand[j]-realDemand[j]
+ dexpr float PositivDiffDemand[j in DAYS] = (abs(demand[j]-realDemand[j])+demand[j]-realDemand[j])/2;
+ dexpr float PositivDiffDemandInv[j in DAYS] = (abs(realDemand[j]-demand[j])+realDemand[j]-demand[j])/2;
+ 
+ 
  // for each agent number of day worked by week
  dexpr int WdayPweek[i in AGENTS][w in WEEKS] = sum(j in 1..DAYS_PER_WEEK)(work[i][startW[w]+(j-1)]);
  //maximum of day work in a week for each agent
  dexpr int MAXWdayPweek[i in AGENTS]= sum(w in WEEKS)(WdayPweek[i][w]);
  //sum of max day worked in a week for each agent
  dexpr int TOTALMAXWdayPweek= sum(i in AGENTS)(MAXWdayPweek[i]);
+ // minimize in first sum(j in DAYS) (PositivDiffDemand[j]) and then (sum(j in DAYS) (PositivDiffDemandInv[j])
+ dexpr float objectif = (max(j in DAYS) demand[j]*d+1)*(sum(j in DAYS) PositivDiffDemand[j]) +(sum(j in DAYS) PositivDiffDemandInv[j]) ;
+
+ minimize objectif;
+//minimize sum(i in AGENTS) (workDayDiff[i]); //previous objectif()
  
 subject to{
 
- 	forall(j in DAYS) 
- 		ctDemand:
- 		sum(i in AGENTS) work[i][j] >= demand[j]; // satisfy demand
-
-/*	ctWork: 	
- 	forall(i in AGENTS) 
- 		sum(d in DAYS) work[i][d] >= workDays[i]; // satisfy the number of work Days
- */	
+/*    forall(j in DAYS) 
+ 		ctDemand[j]:
+ 		realDemand[j] >= demand[j]; // satisfy demand
+*/
  	forall(i in AGENTS) 
  		forall(c in CYCLES) 
- 		 	ctBreak:
+ 		 	ctBreak[i][c]:
  			sum(j in startW[startC[c]]..endW[endC[c]]) break[i][j] >= breaksPerCycle[i] ; //satisfy the number of breaks per cycles
  	
  	forall(i in AGENTS) 
  		forall(c in CYCLES)
- 		   	ctSunday:
+ 		   	ctSunday[i][c]:
  		  sum(w in startC[c]..endC[c]) break[i][endW[w]] >= SUNDAYS_PER_CYCLE ; // satisfy the number of sundays per cycle
  		  
  	forall(i in AGENTS)
  		forall(c in CYCLES) 
- 		 	ct2ConsBreak:
+ 		 	ct2ConsBreak[i][c]:
 			sum(j in startW[startC[c]]..endW[endC[c]]) break2Days[i][j] >= TWODAYS_BREAKS_PER_CYCLE;	//satisfy the number two days breaks per  cylcle
 	
 	forall(i in AGENTS) 
 		forall(k in 1..(d-(MAX_CONSECUTIVE_WORKING_DAYS))) 
-			ct6DaysMax:
+			ct6DaysMax[i][k]:
 			sum(j in k..k+MAX_CONSECUTIVE_WORKING_DAYS) work[i][j] <= MAX_CONSECUTIVE_WORKING_DAYS ; //at most 6 working days over a rolling 7 day	
 	
 	forall(i in AGENTS) 
 		forall(k in 1..(d-PREF_CONSECUTIVE_WORKING_DAYS)) 
-			ct5ConsDaysMax:
+			ct5ConsDaysMax[i][k]:
 			sum(j in k..k+PREF_CONSECUTIVE_WORKING_DAYS) work[i][j] <= PREF_CONSECUTIVE_WORKING_DAYS; // at most 5 consecutive working days over a roliing 6 day
 
 	ctFixedWork:
@@ -116,19 +138,15 @@ subject to{
 }
 
 execute POSTPROCESS{
-		write("[")
-        for(var i in AGENTS) {        
-        	write("[");
+        for(var i in AGENTS) {
             for(var j in DAYS) {
                 if(planning[i][j] == "NA") {
-                    if(work[i][j] == 1) write("\"W\"");
-                    else write("\"BRK\"");                   
-                } else {      
-                	write("\"" + planning[i][j] + "\"");
+                    write(work[i][j])                   
+                } else {
+                    write(planning[i][j])
                  }
-                write(",")               
+                write(", ")               
                }                                   
-        writeln("],");
-      }     
-      write("]")  
+        writeln();
+      }       
 }
