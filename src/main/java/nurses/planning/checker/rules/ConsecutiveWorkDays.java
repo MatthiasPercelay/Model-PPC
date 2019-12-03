@@ -20,7 +20,7 @@ public class ConsecutiveWorkDays implements IRule {
     public boolean check(Shift[] agentSchedule) {
         List<String> warnings = new ArrayList<>();
         int consecutiveDays = 0;
-        for (int i = 0; i < agentSchedule.length-7; i++) {
+        for (int i = 0; i < agentSchedule.length-6; i++) {
             for (int j = 0; j < 7; j++) {
                 if (consecutiveDays == 7) {
                     if (warnings.size() > 0) {
@@ -32,7 +32,7 @@ public class ConsecutiveWorkDays implements IRule {
                     warnings.add("Warning: an agent is working 6 days in a row (from day " + i + ")");
                 }
 
-                if (agentSchedule[i+j].isWork()) {
+                if (agentSchedule[i+j].isWork()) {  // increment each day an agent is working
                     consecutiveDays += 1;
                 } else {
                     consecutiveDays = 0;
