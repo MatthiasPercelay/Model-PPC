@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="ASCII"?><project>
 	<version>1.0</version>
 	<configs>
-		<config default="true" name="Configuration 1" category="opl">
-			<ref name="nurseSchedule.mod" type="model">
+		<config default="true" name="WorkdayAssignment" category="opl">
+			<ref name="model/nurseSchedule.mod" type="model">
 			</ref>
-			<ref name="ucl-planning-december-19.dat" type="data">
+			<ref name="data/workday/ucl-planning-december-19.dat" type="data">
 			</ref>
 		</config>
-		<config default="false" name="hard" category="opl">
-			<ref name="ucl-planning-december-19-hard.dat" type="data">
+		<config default="false" name="WorkdayAssignment-HARD" category="opl">
+			<ref name="model/nurseSchedule.mod" type="model">
 			</ref>
-			<ref name="nurseSchedule.mod" type="model">
+			<ref name="data/workday/ucl-planning-december-19-hard.dat" type="data">
+			</ref>
+		</config>
+		<config default="false" name="ShiftAssignment" category="opl">
+			<ref name="model/ShiftAssignment.mod" type="model">
+			</ref>
+			<ref name="data/shift/ShiftAssignment.dat" type="data">
 			</ref>
 		</config>
 	</configs>

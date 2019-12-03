@@ -33,8 +33,8 @@ int PREF_CONSECUTIVE_WORKING_DAYS = 5;
  int breaksPerCycle[AGENTS] = ...;
  
  string planning[AGENTS][DAYS] = ...;
- int fixedWork[i in AGENTS][j in DAYS] = planning[i][j] == "M" || planning[i][j] == "J" || planning[i][j] == "S" || planning[i][j] == "JF";
- int fixedBreak[i in AGENTS][j in DAYS] = planning[i][j] == "CA" || planning[i][j] == "RH" || planning[i][j] == "RTT" || planning[i][j] == "RC" || planning[i][j] == "RH" || planning[i][j] == "MPR";
+ int fixedWork[i in AGENTS][j in DAYS] = planning[i][j] == "M" || planning[i][j] == "J" || planning[i][j] == "S";
+ int fixedBreak[i in AGENTS][j in DAYS] = planning[i][j] == "RA" || planning[i][j] == "JF" || planning[i][j] == "CA" || planning[i][j] == "RH" || planning[i][j] == "RTT" || planning[i][j] == "RC" || planning[i][j] == "RH" || planning[i][j] == "MPR";
  
  int breakPrefs[AGENTS][WEEKDAYS] = ...;
  
@@ -60,7 +60,7 @@ int PREF_CONSECUTIVE_WORKING_DAYS = 5;
  
  
  //for each agent this is the score of his preferences for each week
- dexpr int breakprefpW[i in AGENTS][w in WEEKS] = sum(j in 1..DAYS_PER_WEEK)(break[i][startW[w]+(j-1)]*breakPrefs[i][j])
+ dexpr int breakprefpW[i in AGENTS][w in WEEKS] = sum(j in 1..DAYS_PER_WEEK)(break[i][startW[w]+(j-1)]*breakPrefs[i][j]);
  // global score of the preferences
  dexpr int TOTALbreakPrefpW =sum(i in AGENTS, w in WEEKS)breakprefpW[i in AGENTS][w in WEEKS];
 
@@ -116,15 +116,19 @@ subject to{
 }
 
 execute POSTPROCESS{
-        for(var i in AGENTS) {
+		write("[")
+        for(var i in AGENTS) {        
+        	write("[");
             for(var j in DAYS) {
                 if(planning[i][j] == "NA") {
-                    write(work[i][j])                   
-                } else {
-                    write(planning[i][j])
+                    if(work[i][j] == 1) write("\"W\"");
+                    else write("\"BRK\"");                   
+                } else {      
+                	write("\"" + planning[i][j] + "\"");
                  }
-                write(", ")               
+                write(",")               
                }                                   
-        writeln();
-      }       
+        writeln("],");
+      }     
+      write("]")  
 }
