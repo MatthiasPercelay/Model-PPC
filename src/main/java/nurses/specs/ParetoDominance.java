@@ -1,6 +1,8 @@
 package nurses.specs;
 
 
+import nurses.pareto.MOSolution;
+
 public class ParetoDominance implements IDominanceComparator {
 
     /**
@@ -30,4 +32,5 @@ public class ParetoDominance implements IDominanceComparator {
 
         return comp;
     }
+
 }
