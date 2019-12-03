@@ -16,19 +16,19 @@ public class ParetoDominanceTest {
     }
 
     @Test
-    public void firdtDominatesSecond() {
-        double[] objList1 = new double[]{1, 2, 1, 1};
-        double[] objList2 = new double[]{0, 1, 0, 0};
+    public void firstDominatesSecond() {
+        double[] objList1 = new double[]{0, 1, 0, 0};
+        double[] objList2 = new double[]{1, 2, 1, 1};
 
-        assertEquals(1, dom.compare(objList1, objList2));
+        assertEquals(-1, dom.compare(objList1, objList2));
     }
 
     @Test
     public void secondDominatesFirst() {
-        double[] objList1 = new double[]{1, 2, 1, 1};
-        double[] objList2 = new double[]{4, 3, 2, 2};
+        double[] objList1 = new double[]{4, 3, 2, 2};
+        double[] objList2 = new double[]{1, 2, 1, 1};
 
-        assertEquals(-1, dom.compare(objList1, objList2));
+        assertEquals(1, dom.compare(objList1, objList2));
     }
 
     @Test
@@ -41,18 +41,18 @@ public class ParetoDominanceTest {
 
     @Test
     public void firstDomSecondsEq() {
-        double[] objList1 = new double[]{1, 1, 1, 1};
-        double[] objList2 = new double[]{0, 0, 1, 0};
-
-        assertEquals(1, dom.compare(objList1, objList2));
-    }
-
-    @Test
-    public void secondDomFirstEq() {
         double[] objList1 = new double[]{0, 0, 1, 0};
         double[] objList2 = new double[]{1, 1, 1, 1};
 
         assertEquals(-1, dom.compare(objList1, objList2));
+    }
+
+    @Test
+    public void secondDomFirstEq() {
+        double[] objList1 = new double[]{1, 1, 1, 1};
+        double[] objList2 = new double[]{0, 0, 1, 0};
+
+        assertEquals(1, dom.compare(objList1, objList2));
     }
 
     @Test

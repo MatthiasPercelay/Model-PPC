@@ -18,14 +18,16 @@ public class ParetoArchiveL implements IParetoArchive {
 
     @Override
     public void add(MOSolution mosol) {
-        solutions.add(mosol);
+        if (!isDominated(mosol)) {
+            removeNowDominated();
+            solutions.add(mosol);
+        }
     }
 
     @Override
     public boolean isDominated(double[] objective) {
         for (MOSolution s : solutions) {
-            if (s.getObjective() != objective // we are really comparing references here
-                    && comp.compare(s.getObjective(), objective) < 0) {
+            if (comp.compare(s.getObjective(), objective) < 0) {
                 return true;
             }
         }
@@ -40,5 +42,18 @@ public class ParetoArchiveL implements IParetoArchive {
     @Override
     public int size() {
         return 0;
+    }
+
+    public List<MOSolution> getSolutions() {
+        return solutions;
+    }
+
+    public void removeNowDominated(){
+        for (MOSolution s : solutions) {
+            if (isDominated(s)) {
+                solutions.remove(s);
+                return;
+            }
+        }
     }
 }
