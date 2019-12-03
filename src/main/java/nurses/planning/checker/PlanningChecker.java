@@ -1,16 +1,16 @@
 package nurses.planning.checker;
 
-import nurses.planning.Planning;
+import nurses.planning.TimeTable;
 import nurses.planning.checker.rules.IRule;
 
 import java.util.List;
 
 public class PlanningChecker {
-    private Planning planning;
+    private TimeTable planning;
     private List<IRule> rules;
 
-    public PlanningChecker(Planning planning, List<IRule> rules) {
-        this.planning = planning;
+    public PlanningChecker(TimeTable timeTable, List<IRule> rules) {
+        this.planning = timeTable;
         this.rules = rules;
     }
 

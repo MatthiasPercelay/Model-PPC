@@ -14,12 +14,12 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.AreaReference;
 import org.apache.poi.ss.util.CellReference;
 
-public class Planning implements ITimetable { // TODO extends ITimetable
+public class TimeTable implements ITimetable {
     private Shift[][] days;
     private int cycles;
     private int agents;
 
-    public Planning(int cycles, int agents) {
+    public TimeTable(int cycles, int agents) {
         this.cycles = cycles;
         this.agents = agents;
         this.days = new Shift[agents][14 * cycles];
@@ -39,7 +39,7 @@ public class Planning implements ITimetable { // TODO extends ITimetable
      * @param cycles The number of cycles to plan for
      * @param agents The number of agents to plan for
      */
-    public Planning(File file, int cycles, int agents) {
+    public TimeTable(File file, int cycles, int agents) {
         this(cycles, agents);
         org.apache.poi.ss.usermodel.Workbook wb = null;
         try {
@@ -127,12 +127,22 @@ public class Planning implements ITimetable { // TODO extends ITimetable
 
     @Override
     public boolean isWorkdayAssignment() {
-        return false;
+        for (int i = 0; i < days.length; i++) {
+            for (int j = 0; j < days[i].length; j++) {
+                if (days[i][j] == Shift.NA) return false;
+            }
+        }
+        return true;
     }
 
     @Override
     public boolean isShiftAssignment() {
-        return false;
+        for (int i = 0; i < days.length; i++) {
+            for (int j = 0; j < days[i].length; j++) {
+                if (days[i][j] == Shift.NA || days[i][j] == Shift.W) return false;
+            }
+        }
+        return true;
     }
 
     @Override
