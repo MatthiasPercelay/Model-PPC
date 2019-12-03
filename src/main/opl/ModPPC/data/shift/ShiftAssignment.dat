@@ -1,0 +1,27 @@
+/*********************************************
+ * OPL 12.9.0.0 Data
+ * Author: JUNG
+ * Creation Date: 25 nov. 2019 at 13:45:45
+ *********************************************/
+n=6;
+c=2;
+planning=[
+["S","RH","M","M","M","RH","RH","J","J","RH","J","S","S","S","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR"],
+["CA","CA","CA","CA","CA","RH","RH","RH","W","W","W","W","BRK","W","W","W","W","BRK","W","W","W","W","BRK","JF","W","W","W","BRK"],
+["W","BRK","W","BRK","RA","W","BRK","BRK","W","RA","W","W","RH","RH","RA","RTT","RTT","RTT","RTT","RH","RH","RA","W","W","W","W","BRK","W"],
+["W","W","BRK","W","W","RH","RH","RTT","RTT","RTT","RA","RTT","RH","RH","RTT","W","RA","W","BRK","RH","RH","BRK","W","W","BRK","W","BRK","W"],
+["BRK","W","BRK","W","W","W","W","W","BRK","W","BRK","BRK","W","BRK","W","W","W","W","W","BRK","W","W","BRK","JF","W","BRK","W","BRK"],
+["BRK","W","W","BRK","BRK","BRK","W","W","BRK","W","BRK","BRK","BRK","BRK","W","BRK","W","W","W","W","BRK","W","W","JF","CA","CA","RH","RH"]
+];
+
+morning = "M";
+day = "J";
+evening = "S";
+to_define = "W";
+
+demands= [
+[ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+[ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+[ 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0 ]
+];
+ 
