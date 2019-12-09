@@ -22,6 +22,17 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
+import ilog.concert.IloException;
+import ilog.opl.IloCplex;
+import ilog.opl.IloOplDataHandler;
+import ilog.opl.IloOplDataSource;
+import ilog.opl.IloOplErrorHandler;
+import ilog.opl.IloOplFactory;
+import ilog.opl.IloOplModel;
+import ilog.opl.IloOplModelDefinition;
+import ilog.opl.IloOplModelSource;
+import ilog.opl.IloOplRunConfiguration;
+import ilog.opl.IloOplSettings;
 import nurses.specs.IParetoArchive;
 import nurses.specs.IProblemInstance;
 import nurses.specs.IShiftSolver;
@@ -103,7 +114,41 @@ public class NRCmd  {
 	}
 	
 	public final static IWorkdaySolver createWorkdaySolver() {
-		// TODO See for instance CPLEX_Studio129/opl/examples/opl_interfaces/java/oplrunsample/OplRunSample.java
+        IloOplFactory.setDebugMode(true);
+        IloOplFactory oplF = new IloOplFactory();
+
+       
+        IloOplErrorHandler errHandler = oplF.createOplErrorHandler(System.out);
+        IloOplModelSource modelSource = oplF.createOplModelSource("src/main/opl/ModPPC/model/WorkDayAssignment,mod");
+        IloOplSettings settings = oplF.createOplSettings(errHandler);
+        IloOplModelDefinition def=oplF.createOplModelDefinition(modelSource,settings);
+        IloCplex cplex;
+		try {
+			cplex = oplF.createCplex();
+		} catch (IloException e) {
+			return null;
+		}
+		
+        IloOplModel opl=oplF.createOplModel(def,cplex);
+
+        //IloOplDataSource dataSource=new MyCustomDataSource(oplF);
+        //opl.addDataSource(dataSource);
+        opl.generate();
+        oplF.end();
+
+        // from  customdatasource example
+//        IloOplDataHandler handler = getDataHandler();
+//        IloOplErrorHandler errHandler = oplF.createOplErrorHandler();
+//        IloOplRunConfiguration rc = null;
+//            if (_cl.getDataFileNames().size() == 0) {
+//                rc = oplF.createOplRunConfiguration(_cl.getModelFileName());
+//            } else {
+//                String[] dataFiles = _cl.getDataFileNames().toArray(
+//                        new String[_cl.getDataFileNames().size()]);
+//                rc = oplF.createOplRunConfiguration(_cl.getModelFileName(),
+//                        dataFiles);
+//            }
+
 		return null;
 	}
 	

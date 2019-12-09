@@ -26,7 +26,7 @@ public enum Shift {
 	CM("Congé Maladie", false, true),
 	// Partial assignments
 	W("Work", true, false),
-	B("Break", false, false),
+	B("Break", false, true),
 	// Special values
 	NA("Not Available", true, false),
 	ND("No Decision", false, true);
