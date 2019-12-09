@@ -3,39 +3,40 @@
  * Author: JUNG
  * Creation Date: 25 nov. 2019 at 13:45:45
  *********************************************/
+ include "nursesCommon.mod";
 
-int DAYS_PER_WEEK = 7;
-int WEEKS_PER_CYCLE = 2;
+//int DAYS_PER_WEEK = 7;
+//int WEEKS_PER_CYCLE = 2;
  
 // AGENTS
-int n = ...; 					// number of agents
-range AGENTS = 1..n;
+//int n = ...; 					// number of agents
+//range AGENTS = 1..n;
 
 // DAYS
-int c = ...; 					// number of work cycles
-int w = WEEKS_PER_CYCLE * c;	// number of weeks of the work period
-int d = DAYS_PER_WEEK * w;		// number of days of the work period
-range DAYS = 1..d;
+//int c = ...; 					// number of work cycles
+//int w = WEEKS_PER_CYCLE * c;	// number of weeks of the work period
+//int d = DAYS_PER_WEEK * w;		// number of days of the work period
+//range DAYS = 1..d;
 
 // REPRESENTATION OF SHIFTS ON THE PLANNING
-string morning = ...;
-string evening = ...;
-string day = ...;
+//string morning = ...;
+//string evening = ...;
+//string day = ...;
 string to_define = ...;
 string hebdomary_break = ...;
 
 // IMPORTANT ! Same order as the demands array !!
-{string} SHIFTS = {evening, morning, day};
+//{string} SHIFTS = {evening, morning, day};
 
 // MAIN DATA
-int demands[SHIFTS][DAYS] = ...;			// demands per shift per days
-string planning[AGENTS][DAYS] = ...;		// already established planning
+//int demands[SHIFTS][DAYS] = ...;			// demands per shift per days
+string timetable[AGENTS][DAYS] = ...;		// already established planning
 string shift_preference[AGENTS][DAYS] = ...;      // what each agent wants
 string shift_forbidden[AGENTS][DAYS] = ...; // what each agent does not want
 
 // DAY OF WORK AND FIXED SHIFT
-int fixedWork[a in AGENTS][d in DAYS] = planning[a][d] == to_define || planning[a][d] == evening || planning[a][d] == day || planning[a][d] == morning;
-int fixedShift[a in AGENTS][d in DAYS] = planning[a][d] == evening || planning[a][d] == day || planning[a][d] == morning;
+int fixedWork[a in AGENTS][d in DAYS] = timetable[a][d] == to_define || timetable[a][d] == evening || timetable[a][d] == day || timetable[a][d] == morning;
+int fixedShift[a in AGENTS][d in DAYS] = timetable[a][d] == evening || timetable[a][d] == day || timetable[a][d] == morning;
 
 // VARIABLES
 // Assign an agent to a shift
@@ -84,7 +85,7 @@ subject to{
 
 	forall(d in DAYS, a in AGENTS){
 		// If the shift is already shift, then we must respect it	
-		if(fixedShift[a][d] != 0) shift_assign[planning[a][d]][d] == a;
+		if(fixedShift[a][d] != 0) shift_assign[timetable[a][d]][d] == a;
 		// If an agent must work a certain day, then he must have a shift
 		fixedWork[a][d] == sum(s in SHIFTS) (shift_assign[s][d] == a);
 	}
@@ -95,7 +96,7 @@ subject to{
  	
  	forall(i in 2..d-1, a in AGENTS){ 	
  		// If an agent has only one day for hebdomary break, then he must have more than 36 hours of break
- 		if(planning[a][d] == hebdomary_break && planning[a][d-1] != hebdomary_break && planning[a][d+1] != hebdomary_break){
+ 		if(timetable[a][d] == hebdomary_break && timetable[a][d-1] != hebdomary_break && timetable[a][d+1] != hebdomary_break){
  		 	(shift_assign[evening][d-1] == a) + (shift_assign[morning][d+1] == a) <= 1;
  		 	(shift_assign[evening][d-1] == a) + (shift_assign[day][d+1] == a) <= 1;
  		}
