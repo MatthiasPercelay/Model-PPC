@@ -75,7 +75,7 @@ subject to{
 		if(fixedShift[a][d] == 1) shift_assign[a][d] == shift[timetable[a][d]];
 		// If an agent must work a certain day, then he must have a shift
 		if(fixedWork[a][d] == 1 && timetable[a][d] != "FO") shift_assign[a][d] != 0;
-		if(fixedWork[a][d] == 0) shift_assign[a][d] == 0;
+		if(fixedWork[a][d] == 0 || timetable[a][d] == "FO") shift_assign[a][d] == 0;
 	}
 	
 	// If an agent has only one day for hebdomary break, then he must have more than 36 hours of break
