@@ -30,7 +30,6 @@ public interface IParetoArchive {
 	default boolean isDominated(MOSolution mosol) {
 		return isDominated(mosol.objective);
 	}
-	
 	void forEach(Consumer<MOSolution> consumer);
 	
 	default <E> void forEachBi(final BiConsumer<E, double[]> consumer) {

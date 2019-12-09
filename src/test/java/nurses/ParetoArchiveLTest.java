@@ -1,6 +1,7 @@
 package nurses;
 
 import nurses.pareto.MOSolution;
+import nurses.specs.LexicoDominance;
 import nurses.specs.ParetoArchiveL;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,16 +34,16 @@ public class ParetoArchiveLTest {
 
     @Test
     public void notAddingDominatedSolutions() {
-        assertFalse(pareto.getSolutions().contains(sols[0]));
-        assertFalse(pareto.getSolutions().contains(sols[1]));
-        assertFalse(pareto.getSolutions().contains(sols[2]));
-        assertFalse(pareto.getSolutions().contains(sols[4]));
+        assertFalse("should have removed or never added solution 0", pareto.getSolutions().contains(sols[0]));
+        assertFalse("should have removed or never added solution 1", pareto.getSolutions().contains(sols[1]));
+        assertFalse("should have removed or never added solution 2", pareto.getSolutions().contains(sols[2]));
+        assertFalse("should have removed or never added solution 4", pareto.getSolutions().contains(sols[4]));
     }
 
     @Test
     public void addingNonDominatedSolutions() {
-        assertTrue(pareto.getSolutions().contains(sols[3]));
-        assertTrue(pareto.getSolutions().contains(sols[5]));
+        assertTrue("should have kept solution 3", pareto.getSolutions().contains(sols[3]));
+        assertTrue("should have kept solution 5", pareto.getSolutions().contains(sols[5]));
     }
 
 
@@ -79,6 +80,14 @@ public class ParetoArchiveLTest {
         assertEquals("should add non dominated solution", 2, paretoWatch.size());
         assertTrue("should have added the solution 5", pareto.getSolutions().contains(sols[5]));
         assertTrue("should not have removed the solution 3", pareto.getSolutions().contains(sols[3]));
+    }
+
+    @Test
+    public void sortByLexico(){
+        LexicoDominance d = new LexicoDominance();
+
+        pareto.getSolutions().sort(d);
+        assertTrue("lexically minimal solution should come first in sorted solution", pareto.getSolutions().indexOf(sols[5]) < pareto.getSolutions().indexOf(sols[3]));
     }
 
 }
