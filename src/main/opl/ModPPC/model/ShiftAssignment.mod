@@ -27,32 +27,37 @@ string hebdomary_break = ...;
 
 // IMPORTANT ! Same order as the demands array !!
 //{string} SHIFTS = {evening, morning, day};
+int shift[SHIFTS] = [1, 2, 3];
+string shift_s[1..3] = [evening, morning, day];
 
 // MAIN DATA
 //int demands[SHIFTS][DAYS] = ...;			// demands per shift per days
 //string timetable[AGENTS][DAYS] = ...;		// already established planning
-string shift_preference[AGENTS][DAYS] = ...;      // what each agent wants
-string shift_forbidden[AGENTS][DAYS] = ...; // what each agent does not want
+int shift_preference[AGENTS][DAYS][SHIFTS] = ...;    // what each agent wants or doesn't want
 
 // DAY OF WORK AND FIXED SHIFT
 //int fixedWork[a in AGENTS][d in DAYS] = timetable[a][d] == to_define || timetable[a][d] == evening || timetable[a][d] == day || timetable[a][d] == morning;
 //int fixedShift[a in AGENTS][d in DAYS] = timetable[a][d] == evening || timetable[a][d] == day || timetable[a][d] == morning;
 
+int is_preference[a in AGENTS][d in DAYS][s in SHIFTS] = shift_preference[a][d][s] > 0;
+int is_forbidden[a in AGENTS][d in DAYS][s in SHIFTS] = shift_preference[a][d][s] < 0;
+
 // VARIABLES
 // Assign an agent to a shift
-dvar int shift_assign[SHIFTS][DAYS] in 0..n;
+//dvar int shift_assign[SHIFTS][DAYS] in 0..n;
+dvar int shift_assign[AGENTS][DAYS] in 0..3; 
 
 // OBJECTIVE FUNCTION UTILS
 // Number of day where an agent does evening and morning the next day.
-dexpr int SM[a in AGENTS] = sum(i in 1..d-1) (shift_assign[evening][i] == shift_assign[morning][i+1]);
+dexpr int SM[a in AGENTS] = sum(i in 1..d-1) (shift_assign[a][i] == shift[evening] && shift_assign[a][i+1] == shift[morning]);
 // Number of consecutive days where we do the same shift
 int CONSECUTIVE_DAYS = 3;
-dexpr int sameShift[a in AGENTS][c in 2..CONSECUTIVE_DAYS] = sum(i in 1..d-c+1, s in SHIFTS) (sum(j in 0..c-1) (shift_assign[s][i+j] == a) == c);
+dexpr int sameShift[a in AGENTS][c in 2..CONSECUTIVE_DAYS] = 0; // A CHANGER sum(i in 1..d-c+1, s in SHIFTS) (sum(j in 0..c-1) (shift_assign[s][i+j] == a) == c);
 
 // Number of preferences respected for each agent
-dexpr int preferences[a in AGENTS] = sum(d in DAYS, s in SHIFTS) (shift_assign[s][d] == a && shift_preference[a][d] == s) ;
-// Number of forbidden respected for each agent
-dexpr int interdictions[a in AGENTS] = sum(d in DAYS, s in SHIFTS) (shift_assign[s][d] == a && shift_forbidden[a][d] == s) ;
+dexpr int preferences[a in AGENTS] = 0; //A CHANGER sum(d in DAYS, s in SHIFTS) (shift_assign[a][d] == shift[s] && is_preference[a][d][s] == 1) ;
+// Number of forbidden not respected for each agent
+dexpr int interdictions[a in AGENTS] = 0; //A CHANGER sum(d in DAYS, s in SHIFTS) (shift_assign[a][d] == shift[s] && is_forbidden[a][d][s] == 1) ;
 
 // Evaluation for each agent
 dexpr int objectiveValuePerAgent[a in AGENTS] = 10*SM[a] - sameShift[a][2] + 4*interdictions[a] - preferences[a];
@@ -81,26 +86,28 @@ subject to{
 	///////////////////////
 	// If there is a demand, there is an agent
 	forall(s in SHIFTS, d in DAYS)
-		if(demands[s][d] != 0) shift_assign[s][d] != 0;
+		demands[s][d] == sum(a in AGENTS) (shift_assign[a][d] == shift[s]);
 
 	forall(d in DAYS, a in AGENTS){
 		// If the shift is already shift, then we must respect it	
-		if(fixedShift[a][d] != 0) shift_assign[timetable[a][d]][d] == a;
+		if(fixedShift[a][d] == 1) shift_assign[a][d] == shift[timetable[a][d]];
 		// If an agent must work a certain day, then he must have a shift
-		fixedWork[a][d] == sum(s in SHIFTS) (shift_assign[s][d] == a);
+		if(fixedWork[a][d] == 1) shift_assign[a][d] != 0;
+		if(fixedWork[a][d] == 0) shift_assign[a][d] == 0;
+	}
+	
+	// If an agent has only one day for hebdomary break, then he must have more than 36 hours of break
+ 	forall(i in 2..d-1, a in AGENTS){
+ 		if(fixedWork[a][i] == 0 && fixedWork[a][i-1] == 1 && fixedWork[a][i+1] == 1 && (fixedShift[a][i-1] == 0 || fixedShift[a][i+1] == 0)){
+ 			(shift_assign[a][i-1] == shift[evening]) + (shift_assign[a][i+1] == shift[morning]) + (shift_assign[a][i+1] == shift[day]) <= 1;
+		}
 	}
  	
  	/////////////////////////////
  	// ADDITIONNAL CONSTRAINTS //
  	/////////////////////////////
  	
- 	forall(i in 2..d-1, a in AGENTS){ 	
- 		// If an agent has only one day for hebdomary break, then he must have more than 36 hours of break
- 		if(timetable[a][d] == hebdomary_break && timetable[a][d-1] != hebdomary_break && timetable[a][d+1] != hebdomary_break){
- 		 	(shift_assign[evening][d-1] == a) + (shift_assign[morning][d+1] == a) <= 1;
- 		 	(shift_assign[evening][d-1] == a) + (shift_assign[day][d+1] == a) <= 1;
- 		}
- 	}
+ 		
  	 
 }
 
@@ -110,16 +117,10 @@ execute POSTPROCESS{
 	for(var d in DAYS) write(d + "\t");
 	writeln(); writeln();
 	for(var a in AGENTS) {
-		for(var d in DAYS) {
-			for(var s in SHIFTS){
-				if(shift_assign[s][d] == a) {
-					no_work = false;
-					write(s);				
-				}	
-			}
-			if(no_work) write("-");
+		for(var d in DAYS){
+			if(shift_assign[a][d] > 0) write(shift_s[shift_assign[a][d]]);
+			else write("-")
             write("\t");
-            no_work = true;
 		}                                                 
         writeln();
 	}       
