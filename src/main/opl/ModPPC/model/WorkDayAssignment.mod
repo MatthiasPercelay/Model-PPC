@@ -19,8 +19,6 @@ int breaksPerCycle[AGENTS] = ...;
   
 int breakPrefs[AGENTS][CYCLEDAYS] = ...;
  
-int demand[j in DAYS] = sum(k in SHIFTS) demands[k][j] + sum(i in AGENTS) (timetable[i][j] == "FO");
- 
 int startW[k in WEEKS] = DAYS_PER_WEEK * (k-1) + 1;
 
 int endW[k in WEEKS] = DAYS_PER_WEEK * k;

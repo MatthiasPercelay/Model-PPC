@@ -60,7 +60,7 @@ public class TimeTable implements ITimetable {
 		assert wb != null;
 		int namedCellIdx = wb.getNameIndex(cname);
 		Name aNamedCell = wb.getNameAt(namedCellIdx);
-		AreaReference aref = new AreaReference(aNamedCell.getRefersToFormula());
+		AreaReference aref = new AreaReference(aNamedCell.getRefersToFormula(), wb.getSpreadsheetVersion());
 		CellReference[] crefs = aref.getAllReferencedCells();
 		for (int i = 0; i < crefs.length; i++) {
 			Sheet s = wb.getSheet(crefs[i].getSheetName());

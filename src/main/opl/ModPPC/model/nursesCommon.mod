@@ -29,9 +29,10 @@
  
  {string} SHIFTS = {evening, morning, day};
  
- int demands[SHIFTS][DAYS] = ...;
- 
  string timetable[AGENTS][DAYS] = ...;
+ 
+ int demands[SHIFTS][DAYS] = ...;
+ int demand[j in DAYS] = sum(k in SHIFTS) demands[k][j] + sum(i in AGENTS) (timetable[i][j] == "FO");
  
  
  int fixedWork[i in AGENTS][j in DAYS] = timetable[i][j] == to_define || timetable[i][j] == morning || timetable[i][j] == day || timetable[i][j] == evening || timetable[i][j] == "FO";

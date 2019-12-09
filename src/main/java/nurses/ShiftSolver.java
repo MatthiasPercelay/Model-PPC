@@ -10,10 +10,10 @@ public class ShiftSolver implements IShiftSolver {
 		// TODO Auto-generated constructor stub
 	}
 
+	
 	@Override
 	public void solve(IProblemInstance instance, IParetoArchive workdayArchive, IParetoArchive archive) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 }

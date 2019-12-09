@@ -1,28 +1,55 @@
 package nurses;
 
+import java.util.Arrays;
+
 import ilog.concert.IloException;
+import ilog.concert.IloIntVarMap;
 import ilog.opl.IloCplex;
-import ilog.opl.IloOplErrorHandler;
-import ilog.opl.IloOplFactory;
 import ilog.opl.IloOplModel;
-import ilog.opl.IloOplModelDefinition;
-import ilog.opl.IloOplModelSource;
-import ilog.opl.IloOplSettings;
+import nurses.pareto.MOSolution;
 import nurses.specs.IParetoArchive;
 import nurses.specs.IProblemInstance;
 import nurses.specs.IWorkdaySolver;
 
-public class WorkdaySolver implements IWorkdaySolver {
+public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 
+	public final String MODEL_FILE = "src/main/opl/ModPPC/model/testCustomData.mod";
+	
 	public WorkdaySolver() {}
 
+	protected Shift getShiftValue(Shift shift, double value) {
+		return shift == Shift.NA ? 
+				(value == 0 ? Shift.B : Shift.W) : shift; 
+	}
+	
+	protected void storeSolution(IProblemInstance instance, IloOplModel opl, IParetoArchive archive, int soln) {
+		final IloIntVarMap work = opl.getElement("work").asIntVarMap();
+		final int n = instance.getNbAgents();
+		final int d = instance.getNbDays();
+		final Shift[][] solution = new Shift[n][d];
+		IloCplex cplex = opl.getCplex();
+		System.out.println("SOLUTION");
+		try {
+			for (int i = 1; i <= n; i++) {
+				IloIntVarMap worki = work.getSub(i);
+				for (int j = 1; j <= d; j++) {
+					solution[i-1][j-1] = getShiftValue(
+							instance.getTimeTable().getShift(i-1, j-1),
+							cplex.getValue(worki.get(j), soln)
+							);
+				}
+				System.out.println(Arrays.toString(solution[i-1]));
+			}
+			archive.add(new MOSolution(solution, new double[] {0, 0}));
+		} catch (IloException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void solve(IProblemInstance instance, IParetoArchive archive) {
-		IloOplFactory oplF = new IloOplFactory();
-		IloOplErrorHandler errHandler = oplF.createOplErrorHandler(System.out);
-		IloOplModelSource modelSource = oplF.createOplModelSource("src/main/opl/ModPPC/model/testCustomData.mod");
-		IloOplSettings settings = oplF.createOplSettings(errHandler);
-		IloOplModelDefinition def=oplF.createOplModelDefinition(modelSource,settings);
+		setUp(MODEL_FILE);
 		IloCplex cplex;
 		try {
 			cplex = oplF.createCplex();
@@ -35,12 +62,12 @@ public class WorkdaySolver implements IWorkdaySolver {
 		opl.addDataSource(instance.toWorkdayDataSource(oplF));
 		opl.generate();
 
-
 		try {
-			//while(cplex.get)
-			if(cplex.solve()) {
-				// cplex.getValue(opl.getElement("x").asIntVar(), 1);
-				System.out.println(cplex.getSolnPoolNsolns());
+			if(cplex.solve()) {			
+				final int n = cplex.getSolnPoolNsolns();
+				for (int i = 0; i < n; i++) {
+					storeSolution(instance, opl, archive, i);
+				}
 				opl.postProcess();
 				opl.printSolution(System.out);
 			}
@@ -51,12 +78,9 @@ public class WorkdaySolver implements IWorkdaySolver {
 		// Do not change the instruction order !
 		cplex.end();
 		opl.end();
-		modelSource.end();
-		settings.end();
-		def.end();
-		errHandler.end();
-		oplF.end();
-
+		tearDown();
 	}
 
 }
+
+
