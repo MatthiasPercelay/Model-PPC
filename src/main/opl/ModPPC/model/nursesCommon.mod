@@ -32,7 +32,7 @@
  string timetable[AGENTS][DAYS] = ...;
  
  
- int fixedWork[i in AGENTS][j in DAYS] = timetable[i][j] == to_define || timetable[i][j] == morning || timetable[i][j] == day || timetable[i][j] == evening || timetable[i][j] == "JF";
- int fixedBreak[i in AGENTS][j in DAYS] = timetable[i][j] == "CA" || timetable[i][j] == "RH" || timetable[i][j] == "RTT" || timetable[i][j] == "RC" || timetable[i][j] == "RH" || timetable[i][j] == "MPR";
+ int fixedWork[i in AGENTS][j in DAYS] = timetable[i][j] == to_define || timetable[i][j] == morning || timetable[i][j] == day || timetable[i][j] == evening || timetable[i][j] == "FO";
+ int fixedBreak[i in AGENTS][j in DAYS] = timetable[i][j] == "CA" || timetable[i][j] == "RH" || timetable[i][j] == "RTT" || timetable[i][j] == "RC" || timetable[i][j] == "RH" || timetable[i][j] == "MPR" || timetable[i][j] == "JF";
  int fixedShift[i in AGENTS][j in DAYS] = timetable[i][j] == evening || timetable[i][j] == day || timetable[i][j] == morning;
  

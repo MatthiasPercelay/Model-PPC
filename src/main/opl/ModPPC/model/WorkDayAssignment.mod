@@ -35,8 +35,7 @@ constraint ctBreak[AGENTS][CYCLES];
 constraint ctSunday[AGENTS][CYCLES];
 constraint ct2ConsBreak[AGENTS][CYCLES];
 constraint ct6DaysMax[AGENTS][1..(d-(MAX_CONSECUTIVE_WORKING_DAYS))];
-//constraint ct5ConsDaysMax[AGENTS][1..(d-(PREF_CONSECUTIVE_WORKING_DAYS))];
-constraint ct5ConsDaysMax[AGENTS][DAYS];
+constraint ct5ConsDaysMax[AGENTS][1..(d-(PREF_CONSECUTIVE_WORKING_DAYS))];
  
 //-------------------------------- Definition of variable --------------------------------
  
