@@ -1,7 +1,7 @@
 /*********************************************
  * OPL 12.8.0.0 Model
  * Author: steve
- * Creation Date: 9 déc. 2019 at 10:23:52
+ * Creation Date: 9 dï¿½c. 2019 at 10:23:52
  *********************************************/
 
  int DAYS_PER_WEEK = 7;
@@ -21,10 +21,11 @@
  int d = DAYS_PER_WEEK * w;		// number of days of the work period
  range DAYS = 1..d;
  
- string morning = ...;
- string evening = ...;
- string day = ...;
- string to_define = ...;
+ // TODO Remove or define as constants (in uppercase) if really needed
+ string morning = "M";
+ string evening = "S";
+ string day = "J";
+ string to_define = "W";
  
  {string} SHIFTS = {evening, morning, day};
  

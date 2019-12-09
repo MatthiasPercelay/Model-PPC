@@ -27,40 +27,114 @@ public class NRProblemInstance implements IProblemInstance {
 		demands= new int[][]{
 			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0 }
+			{ 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0 }
 		};
 
 		breakPreferences= new int[][]{
-            { 1, 0, 0, 0, 0, 1, 1 },
-            { 0, 0, 0, 0, 0, 1, 1 },
-            { 0, 0, 1, 0, 0, 1, 1 },
-            { 0, 0, 1, 0, 0, 0, 1 },
-            { 2, 0, 0, 0, 1, 0, 0 },
-            { 0, 0, 1, 0, 0, 1, 1 },
-            { 1, 0, 0, 0, 0, 1, 1 },
-            { 0, 0, 0, 0, 0, 1, 1 },
-            { 0, 0, 1, 0, 0, 1, 1 },
-            { 0, 0, 1, 0, 0, 0, 1 },
-            { 2, 0, 0, 0, 1, 0, 0 },
-            { 0, 0, 1, 0, 0, 1, 1 }
+			{ 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1 },
+			{ 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1 },
+			{ 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1 },
+			{ 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1,},
+			{ 2, 0, 0, 0, 1, 0, 0, 2, 0, 0, 0, 1, 0, 0 },
+			{ 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1 },
 		};
 
 		shiftPreferences= new int[][][]{
 			{
-                { 1, 0, 0 },    // L
-                { 0, 0, 0 },    // M
-                { 0, 0, 1 },    // M
-                { 0, 0, 1 },    // J
-                { 0, 0, 0 },    // V
-                { 0, 0, 0 },    // S
-                { 0, 0, 1 },    // D
-                { 1, 0, 0 },    // L
-                { 0, 0, 0 },    // M
-                { 0, 0, 1 },    // M
-                { 0, 0, 1 },    // J
-                { 0, 0, 0 },    // V
-                { 0, 0, 0 },    // SWorkDayAssignment,mod
-                { 0, 0, 1 }     // D
+				{ 1, 0, 0 },    // L
+				{ 0, 0, 0 },    // M
+				{ 0, 0, 1 },    // M
+				{ 0, 0, 1 },    // J
+				{ 0, 0, 0 },    // V
+				{ 0, 0, 0 },    // S
+				{ 0, 0, 1 },    // D
+				{ 1, 0, 0 },    // L
+				{ 0, 0, 0 },    // M
+				{ 0, 0, 1 },    // M
+				{ 0, 0, 1 },    // J
+				{ 0, 0, 0 },    // V
+				{ 0, 0, 0 },    // S
+				{ 0, 0, 1 }     // D
+			}, 
+			{
+				{ 1, 0, 0 },    // L
+				{ 0, 0, 0 },    // M
+				{ 0, 0, 1 },    // M
+				{ 0, 0, 1 },    // J
+				{ 0, 0, 0 },    // V
+				{ 0, 0, 0 },    // S
+				{ 0, 0, 1 },    // D
+				{ 1, 0, 0 },    // L
+				{ 0, 0, 0 },    // M
+				{ 0, 0, 1 },    // M
+				{ 0, 0, 1 },    // J
+				{ 0, 0, 0 },    // V
+				{ 0, 0, 0 },    // S
+				{ 0, 0, 1 }     // D
+			},
+			{
+				{ 1, 0, 0 },    // L
+				{ 0, 0, 0 },    // M
+				{ 0, 0, 1 },    // M
+				{ 0, 0, 1 },    // J
+				{ 0, 0, 0 },    // V
+				{ 0, 0, 0 },    // S
+				{ 0, 0, 1 },    // D
+				{ 1, 0, 0 },    // L
+				{ 0, 0, 0 },    // M
+				{ 0, 0, 1 },    // M
+				{ 0, 0, 1 },    // J
+				{ 0, 0, 0 },    // V
+				{ 0, 0, 0 },    // S
+				{ 0, 0, 1 }     // D
+			},
+			{
+				{ 1, 0, 0 },    // L
+				{ 0, 0, 0 },    // M
+				{ 0, 0, 1 },    // M
+				{ 0, 0, 1 },    // J
+				{ 0, 0, 0 },    // V
+				{ 0, 0, 0 },    // S
+				{ 0, 0, 1 },    // D
+				{ 1, 0, 0 },    // L
+				{ 0, 0, 0 },    // M
+				{ 0, 0, 1 },    // M
+				{ 0, 0, 1 },    // J
+				{ 0, 0, 0 },    // V
+				{ 0, 0, 0 },    // S
+				{ 0, 0, 1 }     // D
+			},
+			{
+				{ 1, 0, 0 },    // L
+				{ 0, 0, 0 },    // M
+				{ 0, 0, 1 },    // M
+				{ 0, 0, 1 },    // J
+				{ 0, 0, 0 },    // V
+				{ 0, 0, 0 },    // S
+				{ 0, 0, 1 },    // D
+				{ 1, 0, 0 },    // L
+				{ 0, 0, 0 },    // M
+				{ 0, 0, 1 },    // M
+				{ 0, 0, 1 },    // J
+				{ 0, 0, 0 },    // V
+				{ 0, 0, 0 },    // S
+				{ 0, 0, 1 }     // D
+			},
+			{
+				{ 1, 0, 0 },    // L
+				{ 0, 0, 0 },    // M
+				{ 0, 0, 1 },    // M
+				{ 0, 0, 1 },    // J
+				{ 0, 0, 0 },    // V
+				{ 0, 0, 0 },    // S
+				{ 0, 0, 1 },    // D
+				{ 1, 0, 0 },    // L
+				{ 0, 0, 0 },    // M
+				{ 0, 0, 1 },    // M
+				{ 0, 0, 1 },    // J
+				{ 0, 0, 0 },    // V
+				{ 0, 0, 0 },    // S
+				{ 0, 0, 1 }     // D
 			}
 		};
 
@@ -137,6 +211,11 @@ public class NRProblemInstance implements IProblemInstance {
 			handler.endElement();
 
 			///////////////////////////
+			handler.startElement("useRelaxation");
+			handler.addIntItem(0);
+			handler.endElement();
+
+			///////////////////////////
 			handler.startElement("timetable");
 			handler.startArray();
 			for (int i=1;i<=getNbAgents();i++) {
@@ -160,54 +239,53 @@ public class NRProblemInstance implements IProblemInstance {
 			}
 			handler.endArray();
 			handler.endElement();
-			
-			if(isWorkdayAssignment) {
-				///////////////////////////
-				handler.startElement("workDays");
-				handler.startArray();
-				for (int i=1;i<=workDays.length;i++) {
-					handler.addIntItem(workDays[i-1]);
-				}
-				handler.endArray();
-				handler.endElement();
 
-				///////////////////////////
-				handler.startElement("breaksPerCycle");
-				handler.startArray();
-				for (int i=1;i<=breaksPerCycle.length;i++) {
-					handler.addIntItem(breaksPerCycle[i-1]);
-				}
-				handler.endArray();
-				handler.endElement();
-
-				///////////////////////////
-				handler.startElement("breakPrefs");
-				handler.startArray();
-				for (int i=1;i<=breakPreferences.length;i++) {
-					handler.startArray();
-					for (int j=1;j<=breakPreferences[i-1].length;j++)
-						handler.addIntItem(breakPreferences[i-1][j-1]);
-					handler.endArray();
-				}
-				handler.endArray();
-				handler.endElement();
-			} else {
-				///////////////////////////
-				handler.startElement("shiftPrefs");
-				handler.startArray();
-				for (int i=1;i<=shiftPreferences.length;i++) {
-					handler.startArray();
-					for (int j=1;j<=shiftPreferences[i-1].length;j++) {
-						handler.startArray();
-						for (int k=1;k<=shiftPreferences[i-1][j-1].length;j++)
-							handler.addIntItem(shiftPreferences[i-1][j-1][k-1]);
-						handler.endArray();
-							}
-					handler.endArray();
-				}
-				handler.endArray();
-				handler.endElement();
+			///////////////////////////
+			handler.startElement("workDays");
+			handler.startArray();
+			for (int i=1;i<=workDays.length;i++) {
+				handler.addIntItem(workDays[i-1]);
 			}
+			handler.endArray();
+			handler.endElement();
+
+			///////////////////////////
+			handler.startElement("breaksPerCycle");
+			handler.startArray();
+			for (int i=1;i<=breaksPerCycle.length;i++) {
+				handler.addIntItem(breaksPerCycle[i-1]);
+			}
+			handler.endArray();
+			handler.endElement();
+
+			///////////////////////////
+			handler.startElement("breakPrefs");
+			handler.startArray();
+			for (int i=1;i<=breakPreferences.length;i++) {
+				handler.startArray();
+				for (int j=1;j<=breakPreferences[i-1].length;j++)
+					handler.addIntItem(breakPreferences[i-1][j-1]);
+				handler.endArray();
+			}
+			handler.endArray();
+			handler.endElement();
+			///////////////////////////
+			handler.startElement("shiftPrefs");			
+			handler.startArray();
+			for (int i=1;i<=shiftPreferences.length;i++) {
+				handler.startArray();
+				for (int j=1;j<=shiftPreferences[i-1].length;j++) {
+					handler.startArray();
+					for (int k=1;k<=shiftPreferences[i-1][j-1].length;k++) {
+						handler.addIntItem(shiftPreferences[i-1][j-1][k-1]);
+					}
+					
+					handler.endArray();
+				}
+				handler.endArray();
+			}
+			handler.endArray();
+			handler.endElement();
 		}
 	}
 
