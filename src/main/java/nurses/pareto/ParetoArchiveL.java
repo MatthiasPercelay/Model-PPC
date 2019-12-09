@@ -1,6 +1,6 @@
-package nurses.specs;
+package nurses.pareto;
 
-import nurses.pareto.MOSolution;
+import nurses.specs.IParetoArchive;
 
 
 import java.util.ArrayList;

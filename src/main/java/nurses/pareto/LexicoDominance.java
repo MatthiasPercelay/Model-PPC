@@ -1,6 +1,12 @@
-package nurses.specs;
+package nurses.pareto;
 
-public class LexicoDominance implements IDominanceComparator {
+
+import nurses.pareto.MOSolution;
+import nurses.specs.IDominanceComparator;
+
+import java.util.Comparator;
+
+public class LexicoDominance implements IDominanceComparator, Comparator<MOSolution> {
 
     @Override
     public int compare(double[] objective1, double[] objective2) {
@@ -10,5 +16,9 @@ public class LexicoDominance implements IDominanceComparator {
             if(objective1[i] > objective2[i]) { return 1; }
         }
         return 0;
+    }
+    @Override
+    public int compare(MOSolution s1, MOSolution s2) {
+        return compare(s1.objective, s2.objective);
     }
 }
