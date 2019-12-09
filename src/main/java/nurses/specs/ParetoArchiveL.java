@@ -36,19 +36,21 @@ public class ParetoArchiveL implements IParetoArchive {
 
     @Override
     public void forEach(Consumer<MOSolution> consumer) {
-
+        for (MOSolution s : solutions) {
+            consumer.accept(s);
+        }
     }
 
     @Override
     public int size() {
-        return 0;
+        return solutions.size();
     }
 
     public List<MOSolution> getSolutions() {
         return solutions;
     }
 
-    public void removeNowDominated(){
+    private void removeNowDominated() {
         for (MOSolution s : solutions) {
             if (isDominated(s)) {
                 solutions.remove(s);
