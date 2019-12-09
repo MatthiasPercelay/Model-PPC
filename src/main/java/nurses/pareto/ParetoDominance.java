@@ -1,4 +1,6 @@
-package nurses.specs;
+package nurses.pareto;
+
+import nurses.specs.IDominanceComparator;
 
 public class ParetoDominance implements IDominanceComparator {
 
@@ -8,8 +10,8 @@ public class ParetoDominance implements IDominanceComparator {
      * @param objective1 the first objective list
      * @param objective2 the second objective list
      * @return {@code -1} if {@code solution1} is minimal compared to {@code solution2},
-     *          {@code 1} if {@code solution2} is minimal compared to {@code solution1}, and
-     *          {@code 0} if the solutions are non-dominated
+     * {@code 1} if {@code solution2} is minimal compared to {@code solution1}, and
+     * {@code 0} if the solutions are non-dominated
      */
     @Override
     public int compare(double[] objective1, double[] objective2) {

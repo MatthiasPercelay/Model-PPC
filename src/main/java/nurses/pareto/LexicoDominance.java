@@ -1,7 +1,8 @@
-package nurses.specs;
+package nurses.pareto;
 
 
 import nurses.pareto.MOSolution;
+import nurses.specs.IDominanceComparator;
 
 import java.util.Comparator;
 

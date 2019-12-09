@@ -1,7 +1,7 @@
-package nurses;
+package nurses.pareto;
 
 import nurses.specs.IDominanceComparator;
-import nurses.specs.ParetoDominance;
+import nurses.pareto.ParetoDominance;
 import org.junit.Before;
 import org.junit.Test;
 

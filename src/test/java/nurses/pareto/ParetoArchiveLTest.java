@@ -1,8 +1,8 @@
-package nurses;
+package nurses.pareto;
 
 import nurses.pareto.MOSolution;
-import nurses.specs.LexicoDominance;
-import nurses.specs.ParetoArchiveL;
+import nurses.pareto.LexicoDominance;
+import nurses.pareto.ParetoArchiveL;
 import org.junit.Before;
 import org.junit.Test;
 
