@@ -19,7 +19,7 @@ range SHIFTS2 = 1..3;
 int shiftPrefs[AGENTS][CYCLEDAYS][SHIFTS2] = ...;
 
 execute POSTPROCESS{
-	write(n, c, useRelaxation);
+	write(n, " ", c, " ", useRelaxation);
 	writeln(timetable);
 	writeln(demands);
 	writeln(workDays);

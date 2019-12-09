@@ -190,11 +190,8 @@ public class NRProblemInstance implements IProblemInstance {
 
 	private class NRPOplDataSource extends IloCustomOplDataSource {
 
-		private final boolean isWorkdayAssignment;
-
-		public NRPOplDataSource(IloOplFactory oplEnv, boolean isWorkdayAssignment) {
+		public NRPOplDataSource(IloOplFactory oplEnv) {
 			super(oplEnv);
-			this.isWorkdayAssignment = isWorkdayAssignment;
 		}
 
 		@Override
@@ -270,7 +267,9 @@ public class NRProblemInstance implements IProblemInstance {
 			handler.endArray();
 			handler.endElement();
 			///////////////////////////
-			handler.startElement("shiftPrefs");			
+			handler.startElement("shiftPrefs");
+			
+			
 			handler.startArray();
 			for (int i=1;i<=shiftPreferences.length;i++) {
 				handler.startArray();
@@ -291,12 +290,12 @@ public class NRProblemInstance implements IProblemInstance {
 
 	@Override
 	public IloCustomOplDataSource toWorkdayDataSource(IloOplFactory oplF) {
-		return new NRPOplDataSource(oplF, true);
+		return new NRPOplDataSource(oplF);
 	}
 
 	@Override
 	public IloCustomOplDataSource toShiftDataSource(IloOplFactory oplF) {
-		return new NRPOplDataSource(oplF, false);
+		return new NRPOplDataSource(oplF);
 	}
 
 }
