@@ -14,97 +14,105 @@ int MIN_BREAKS_PER_WEEK = 1;
 int MAX_CONSECUTIVE_WORKING_DAYS = 6;
 int PREF_CONSECUTIVE_WORKING_DAYS = 5;
 
- int n = ...; // number of agents
- range AGENTS = 1..n;
- int c = ...; // number of work cycles
- range CYCLES = 1..c;
+int n = ...; // number of agents
+range AGENTS = 1..n;
+int c = ...; // number of work cycles
+range CYCLES = 1..c;
+int relaxation = ...; // if the .dat is hard then relaxation = 1 else relaxation = 0
  
- int w = WEEKS_PER_CYCLE * c; // number of weeks of the work period
- range WEEKS = 1..w;
+int w = WEEKS_PER_CYCLE * c; // number of weeks of the work period
+range WEEKS = 1..w;
  
- int d = DAYS_PER_WEEK * w; // number of days of the work period
- range DAYS = 1..d;
+int d = DAYS_PER_WEEK * w; // number of days of the work period
+range DAYS = 1..d;
  
- {string} SHIFTS = {"M", "J", "S"};
- int demands[SHIFTS][DAYS] = ...;
+{string} SHIFTS = {"M", "J", "S"};
+int demands[SHIFTS][DAYS] = ...;
  
- int workDays[AGENTS] = ...;
+int workDays[AGENTS] = ...;
  
- int breaksPerCycle[AGENTS] = ...;
+int breaksPerCycle[AGENTS] = ...;
  
- string planning[AGENTS][DAYS] = ...;
- int fixedWork[i in AGENTS][j in DAYS] = planning[i][j] == "M" || planning[i][j] == "J" || planning[i][j] == "S" || planning[i][j] == "JF";
- int fixedBreak[i in AGENTS][j in DAYS] = planning[i][j] == "CA" || planning[i][j] == "RH" || planning[i][j] == "RTT" || planning[i][j] == "RC" || planning[i][j] == "RH" || planning[i][j] == "MPR";
+string timetable[AGENTS][DAYS] = ...;
+int fixedWork[i in AGENTS][j in DAYS] = timetable[i][j] == "M" || timetable[i][j] == "J" || timetable[i][j] == "S" || timetable[i][j] == "JF";
+int fixedBreak[i in AGENTS][j in DAYS] = timetable[i][j] == "CA" || timetable[i][j] == "RH" || timetable[i][j] == "RTT" || timetable[i][j] == "RC" || timetable[i][j] == "RH" || timetable[i][j] == "MPR";
  
- int breakPrefs[AGENTS][WEEKDAYS] = ...;
+int breakPrefs[AGENTS][WEEKDAYS] = ...;
  
- int demand[j in DAYS] = sum(k in SHIFTS) demands[k][j] + sum(i in AGENTS) (planning[i][j] == "FO");
+int demand[j in DAYS] = sum(k in SHIFTS) demands[k][j] + sum(i in AGENTS) (timetable[i][j] == "FO");
  
- int startW[k in WEEKS] = DAYS_PER_WEEK * (k-1) + 1;
- 
- int endW[k in WEEKS] = DAYS_PER_WEEK * k;
- 
- int startC[k in CYCLES] = WEEKS_PER_CYCLE * (k-1) + 1;
- int endC[k in CYCLES] = WEEKS_PER_CYCLE * k;
- 
- //-------------------------------- Definition of constraint ------------------------------
- constraint ctDemand[DAYS];
- constraint ctBreak[AGENTS][CYCLES];
- constraint ctSunday[AGENTS][CYCLES];
- constraint ct2ConsBreak[AGENTS][CYCLES];
- constraint ct6DaysMax[AGENTS][1..(d-(MAX_CONSECUTIVE_WORKING_DAYS))];
- constraint ct5ConsDaysMax[AGENTS][1..(d-(PREF_CONSECUTIVE_WORKING_DAYS))];
- int DemandRelax[j in DAYS] = demand[j] - 1; 
- 
- //-------------------------------- Definition of variable --------------------------------
-  
- dvar boolean work[AGENTS][DAYS];	
+int startW[k in WEEKS] = DAYS_PER_WEEK * (k-1) + 1;
 
- dexpr int break[i in AGENTS][j in DAYS] = 1 - work[i][j];
+int endW[k in WEEKS] = DAYS_PER_WEEK * k;
  
- dexpr int break2Days[i in AGENTS][j in DAYS] = (j==d) ? 0 : minl( break[i][j], break[i][j+1]); // break2Days[i][j] = 1 means that the agent i  have a 2days break (j is the first day)
+int startC[k in CYCLES] = WEEKS_PER_CYCLE * (k-1) + 1;
+int endC[k in CYCLES] = WEEKS_PER_CYCLE * k;
  
- dexpr int work5Days[i in AGENTS][j in DAYS] = (j>=d-3) ? 0 : minl( break[i][j], break[i][j+1],break[i][j+2],break[i][j+3],break[i][j+4]); // work5days[i][j] = 1 means that the agent i  will work 5 consecutif days starting from the day j.
+//-------------------------------- Definition of constraint ------------------------------
+constraint ctDemand[DAYS];
+constraint ctBreak[AGENTS][CYCLES];
+constraint ctSunday[AGENTS][CYCLES];
+constraint ct2ConsBreak[AGENTS][CYCLES];
+constraint ct6DaysMax[AGENTS][1..(d-(MAX_CONSECUTIVE_WORKING_DAYS))];
+constraint ct5ConsDaysMax[AGENTS][1..(d-(PREF_CONSECUTIVE_WORKING_DAYS))];
+int DemandRelax[j in DAYS] = demand[j] - 1; 
  
- dexpr int realWorkDay[i in AGENTS] = sum(j in DAYS) work[i][j];
+//-------------------------------- Definition of variable --------------------------------
  
- dexpr float workDayDiff[i in AGENTS] = abs(workDays[i] - realWorkDay[i]); // difference between the work done in the planning  and the work intended to do
+dvar boolean work[AGENTS][DAYS];	
+
+dexpr int break[i in AGENTS][j in DAYS] = 1 - work[i][j];
  
- //for each agent this is the score of his preferences for each week
- dexpr int breakprefpW[i in AGENTS][w in WEEKS] = sum(j in 1..DAYS_PER_WEEK)(break[i][startW[w]+(j-1)]*breakPrefs[i][j]);
- // global score of the preferences
- dexpr int TOTALbreakPrefpW =sum(i in AGENTS, w in WEEKS)breakprefpW[i in AGENTS][w in WEEKS];
+// break2Days[i][j] = 1 means that the agent i  have a 2days break (j is the first day) 
+dexpr int break2Days[i in AGENTS][j in DAYS] = (j==d) ? 0 : minl( break[i][j], break[i][j+1]); 
+ 
+// work5days[i][j] = 1 means that the agent i  will work 5 consecutif days starting from the day j. 
+dexpr int work5Days[i in AGENTS][j in DAYS] = (j>=d-3) ? 0 : minl( break[i][j], break[i][j+1],break[i][j+2],break[i][j+3],break[i][j+4]); 
+ 
+dexpr int realWorkDay[i in AGENTS] = sum(j in DAYS) work[i][j];
+ 
+// difference between the number of working days in the timetable  and the number of working days expected to do
+dexpr float workDayDiff[i in AGENTS] = abs(workDays[i] - realWorkDay[i]); 
+ 
+//for each agent this is the score of his preferences for each week
+dexpr int breakprefpW[i in AGENTS][w in WEEKS] = sum(j in 1..DAYS_PER_WEEK)(break[i][startW[w]+(j-1)]*breakPrefs[i][j]);
+
+// global score of the preferences
+dexpr int TOTALbreakPrefpW =sum(i in AGENTS, w in WEEKS)breakprefpW[i in AGENTS][w in WEEKS];
 
 // number of nurse working the day j
- dexpr int realDemand[j in DAYS] = sum(i in AGENTS) work[i][j];
+dexpr int realDemand[j in DAYS] = sum(i in AGENTS) work[i][j];
  
- //diff between the number of nurse wanted and the real number of nurse working
- dexpr int diffDemand[j in DAYS] = demand[j]-realDemand[j];
- //dexpr float diffDemand[j in DAYS] = abs(demand[j]-realDemand[j]);
- 
- // if demand[j]< realDemand[j] then 0 else demand[j]-realDemand[j]
- dexpr float PositivDiffDemand[j in DAYS] = (abs(demand[j]-realDemand[j])+demand[j]-realDemand[j])/2;
- dexpr float PositivDiffDemandInv[j in DAYS] = (abs(realDemand[j]-demand[j])+realDemand[j]-demand[j])/2;
- 
- 
- // for each agent number of day worked by week
- dexpr int WdayPweek[i in AGENTS][w in WEEKS] = sum(j in 1..DAYS_PER_WEEK)(work[i][startW[w]+(j-1)]);
- //maximum of day work in a week for each agent
- dexpr int MAXWdayPweek[i in AGENTS]= sum(w in WEEKS)(WdayPweek[i][w]);
- //sum of max day worked in a week for each agent
- dexpr int TOTALMAXWdayPweek= sum(i in AGENTS)(MAXWdayPweek[i]);
- // minimize in first sum(j in DAYS) (PositivDiffDemand[j]) and then (sum(j in DAYS) (PositivDiffDemandInv[j])
- dexpr float objectif = (max(j in DAYS) demand[j]*d+1)*(sum(j in DAYS) PositivDiffDemand[j]) +(sum(j in DAYS) PositivDiffDemandInv[j]) ;
+// if demand[j] < realDemand[j] then 0 else demand[j]-realDemand[j] 
+dexpr float PositivDiffDemand[j in DAYS] = (abs(demand[j]-realDemand[j])+demand[j]-realDemand[j])/2;
 
- minimize objectif;
+// if demand[j] > realDemand[j] then 0 else realDemand[j]-demand[j]
+dexpr float PositivDiffDemandInv[j in DAYS] = (abs(realDemand[j]-demand[j])+realDemand[j]-demand[j])/2;
+ 
+ 
+// for each agent number of day worked by week
+dexpr int WdayPweek[i in AGENTS][w in WEEKS] = sum(j in 1..DAYS_PER_WEEK)(work[i][startW[w]+(j-1)]);
+
+//maximum of day work in a week for each agent
+dexpr int MAXWdayPweek[i in AGENTS]= sum(w in WEEKS)(WdayPweek[i][w]);
+
+//sum of max day worked in a week for each agent
+dexpr int TOTALMAXWdayPweek= sum(i in AGENTS)(MAXWdayPweek[i]);
+
+// if (relaxation == 1) then minimize in first sum(j in DAYS) (PositivDiffDemand[j]) and then (sum(j in DAYS) (PositivDiffDemandInv[j])
+//else minimize the difference between the number of days 
+dexpr float objectif = (relaxation==1) ? (max(j in DAYS) demand[j]*d+1)*(sum(j in DAYS) PositivDiffDemand[j]) +(sum(j in DAYS) PositivDiffDemandInv[j]) : sum(i in AGENTS) (workDayDiff[i]);
+
+minimize objectif;
 //minimize sum(i in AGENTS) (workDayDiff[i]); //previous objectif()
  
 subject to{
-
-/*    forall(j in DAYS) 
+	if(relaxation == 0){
+		    forall(j in DAYS) 
  		ctDemand[j]:
  		realDemand[j] >= demand[j]; // satisfy demand
-*/
+	}
+
  	forall(i in AGENTS) 
  		forall(c in CYCLES) 
  		 	ctBreak[i][c]:
@@ -140,10 +148,10 @@ subject to{
 execute POSTPROCESS{
         for(var i in AGENTS) {
             for(var j in DAYS) {
-                if(planning[i][j] == "NA") {
+                if(timetable[i][j] == "NA") {
                     write(work[i][j])                   
                 } else {
-                    write(planning[i][j])
+                    write(timetable[i][j])
                  }
                 write(", ")               
                }                                   
