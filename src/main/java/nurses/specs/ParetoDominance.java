@@ -1,8 +1,5 @@
 package nurses.specs;
 
-
-import nurses.pareto.MOSolution;
-
 public class ParetoDominance implements IDominanceComparator {
 
     /**
@@ -27,10 +24,8 @@ public class ParetoDominance implements IDominanceComparator {
             if(objective1[i] > objective2[i] && comp == -1) { return 0; }
             if(objective1[i] < objective2[i]) { comp = -1; }
             else if(objective1[i] > objective2[i]) { comp = 1; }
-
         }
 
         return comp;
     }
-
 }
