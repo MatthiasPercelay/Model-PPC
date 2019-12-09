@@ -9,6 +9,11 @@ timetable= [
 [ "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "JF", "NA", "NA", "NA", "NA" ],
 [ "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "JF", "CA", "CA", "RH", "RH" ]
 ];
+morning = "M";
+day = "J";
+evening = "S";
+to_define = "W";
+
 workDays= [ 10, 13, 10, 11, 17, 17 ];
 breaksPerCycle= [ 4, 4, 6, 6, 4, 4 ];
 demands= [

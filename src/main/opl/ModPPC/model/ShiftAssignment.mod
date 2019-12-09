@@ -22,7 +22,7 @@
 //string morning = ...;
 //string evening = ...;
 //string day = ...;
-string to_define = ...;
+//string to_define = ...;
 string hebdomary_break = ...;
 
 // IMPORTANT ! Same order as the demands array !!
@@ -30,13 +30,13 @@ string hebdomary_break = ...;
 
 // MAIN DATA
 //int demands[SHIFTS][DAYS] = ...;			// demands per shift per days
-string timetable[AGENTS][DAYS] = ...;		// already established planning
+//string timetable[AGENTS][DAYS] = ...;		// already established planning
 string shift_preference[AGENTS][DAYS] = ...;      // what each agent wants
 string shift_forbidden[AGENTS][DAYS] = ...; // what each agent does not want
 
 // DAY OF WORK AND FIXED SHIFT
-int fixedWork[a in AGENTS][d in DAYS] = timetable[a][d] == to_define || timetable[a][d] == evening || timetable[a][d] == day || timetable[a][d] == morning;
-int fixedShift[a in AGENTS][d in DAYS] = timetable[a][d] == evening || timetable[a][d] == day || timetable[a][d] == morning;
+//int fixedWork[a in AGENTS][d in DAYS] = timetable[a][d] == to_define || timetable[a][d] == evening || timetable[a][d] == day || timetable[a][d] == morning;
+//int fixedShift[a in AGENTS][d in DAYS] = timetable[a][d] == evening || timetable[a][d] == day || timetable[a][d] == morning;
 
 // VARIABLES
 // Assign an agent to a shift

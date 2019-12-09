@@ -2,11 +2,10 @@
  * OPL 12.8.0.0 Model
  * Author: Thomas
  * Creation Date: 25 nov. 2019 at 14:11:57
- *********************************************/
-int DAYS_PER_WEEK = 7;
-range WEEKDAYS = 1..DAYS_PER_WEEK;
+ *********************************************/ 
+include "nursesCommon.mod";
  
-int WEEKS_PER_CYCLE = 2;
+ 
 int SUNDAYS_PER_CYCLE = 1;
 int MIN_BREAKS_PER_CYCLE = 4;
 int TWODAYS_BREAKS_PER_CYCLE = 1;
@@ -14,29 +13,12 @@ int MIN_BREAKS_PER_WEEK = 1;
 int MAX_CONSECUTIVE_WORKING_DAYS = 6;
 int PREF_CONSECUTIVE_WORKING_DAYS = 5;
 
-int n = ...; // number of agents
-range AGENTS = 1..n;
-int c = ...; // number of work cycles
-range CYCLES = 1..c;
 int relaxation = ...; // if the .dat is hard then relaxation = 1 else relaxation = 0
- 
-int w = WEEKS_PER_CYCLE * c; // number of weeks of the work period
-range WEEKS = 1..w;
- 
-int d = DAYS_PER_WEEK * w; // number of days of the work period
-range DAYS = 1..d;
- 
-{string} SHIFTS = {"M", "J", "S"};
-int demands[SHIFTS][DAYS] = ...;
- 
+   
 int workDays[AGENTS] = ...;
  
 int breaksPerCycle[AGENTS] = ...;
- 
-string timetable[AGENTS][DAYS] = ...;
-int fixedWork[i in AGENTS][j in DAYS] = timetable[i][j] == "M" || timetable[i][j] == "J" || timetable[i][j] == "S" || timetable[i][j] == "JF";
-int fixedBreak[i in AGENTS][j in DAYS] = timetable[i][j] == "CA" || timetable[i][j] == "RH" || timetable[i][j] == "RTT" || timetable[i][j] == "RC" || timetable[i][j] == "RH" || timetable[i][j] == "MPR";
- 
+  
 int breakPrefs[AGENTS][WEEKDAYS] = ...;
  
 int demand[j in DAYS] = sum(k in SHIFTS) demands[k][j] + sum(i in AGENTS) (timetable[i][j] == "FO");
@@ -50,6 +32,7 @@ int endC[k in CYCLES] = WEEKS_PER_CYCLE * k;
  
 //-------------------------------- Definition of constraint ------------------------------
 constraint ctDemand[DAYS];
+constraint ctWorkDays[AGENTS];
 constraint ctBreak[AGENTS][CYCLES];
 constraint ctSunday[AGENTS][CYCLES];
 constraint ct2ConsBreak[AGENTS][CYCLES];
@@ -104,14 +87,17 @@ dexpr int TOTALMAXWdayPweek= sum(i in AGENTS)(MAXWdayPweek[i]);
 dexpr float objectif = (relaxation==1) ? (max(j in DAYS) demand[j]*d+1)*(sum(j in DAYS) PositivDiffDemand[j]) +(sum(j in DAYS) PositivDiffDemandInv[j]) : sum(i in AGENTS) (workDayDiff[i]);
 
 minimize objectif;
-//minimize sum(i in AGENTS) (workDayDiff[i]); //previous objectif()
- 
+//changer le cas ou relaxation = 0; pour le moment , emploie au maximum  qui a isurcharger la demande
 subject to{
 	if(relaxation == 0){
 		    forall(j in DAYS) 
  		ctDemand[j]:
  		realDemand[j] >= demand[j]; // satisfy demand
 	}
+	
+	forall(i in AGENTS)
+	   ctWorkDays[i]:
+	   sum(j in DAYS) work[i][j] <= workDays[i];
 
  	forall(i in AGENTS) 
  		forall(c in CYCLES) 
