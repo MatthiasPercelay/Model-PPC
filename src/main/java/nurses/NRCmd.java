@@ -65,7 +65,7 @@ public class NRCmd  {
 	}
 	private final CmdLineParser parser;
 
-	@Option(name = "-f", aliases = { "-file", "--file" }, usage = "Random Seed.", required = true)
+	@Option(name = "-f", aliases = { "-file", "--file" }, usage = "XLS Problem Instance File.", required = true)
 	private File instanceFile;
 
 	@Option(name = "-s", aliases = { "-seed", "--seed" }, usage = "Random Seed.")
@@ -104,8 +104,7 @@ public class NRCmd  {
 
 
 	public final static IProblemInstance parseInstance(File instanceFile) {
-		// TODO 
-		return null;
+		return new NRProblemInstance(instanceFile);
 	}
 	
 	public final static IParetoArchive createArchive() {
@@ -113,13 +112,13 @@ public class NRCmd  {
 		return null;
 	}
 	
-	public final static IWorkdaySolver createWorkdaySolver() {
+	public final static IWorkdaySolver createWorkdaySolver(IProblemInstance instance) {
         IloOplFactory.setDebugMode(true);
         IloOplFactory oplF = new IloOplFactory();
 
        
         IloOplErrorHandler errHandler = oplF.createOplErrorHandler(System.out);
-        IloOplModelSource modelSource = oplF.createOplModelSource("src/main/opl/ModPPC/model/WorkDayAssignment,mod");
+        IloOplModelSource modelSource = oplF.createOplModelSource("src/main/opl/ModPPC/model/WorkDayAssignment.mod");
         IloOplSettings settings = oplF.createOplSettings(errHandler);
         IloOplModelDefinition def=oplF.createOplModelDefinition(modelSource,settings);
         IloCplex cplex;
@@ -130,11 +129,16 @@ public class NRCmd  {
 		}
 		
         IloOplModel opl=oplF.createOplModel(def,cplex);
-
-        //IloOplDataSource dataSource=new MyCustomDataSource(oplF);
-        //opl.addDataSource(dataSource);
+        opl.addDataSource(instance.toWorkdayDataSource(oplF));
         opl.generate();
         oplF.end();
+
+        try {
+			cplex.solve();
+		} catch (IloException e) {
+			e.printStackTrace();
+		}
+        
 
         // from  customdatasource example
 //        IloOplDataHandler handler = getDataHandler();
@@ -166,7 +170,7 @@ public class NRCmd  {
 		runtime = - System.nanoTime();
 		// TODO
 		final IProblemInstance instance = parseInstance(instanceFile);
-		final IWorkdaySolver workdaySolver = createWorkdaySolver();
+		final IWorkdaySolver workdaySolver = createWorkdaySolver(instance);
 		final IParetoArchive workdayArchive = createArchive();
 		workdaySolver.solve(instance, workdayArchive);
 		final IShiftSolver shiftSolver = createShiftSolver();	
