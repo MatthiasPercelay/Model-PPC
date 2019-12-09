@@ -7,6 +7,7 @@
  int DAYS_PER_WEEK = 7;
  range WEEKDAYS = 1..DAYS_PER_WEEK;
  int WEEKS_PER_CYCLE = 2;
+ range CYCLEDAYS= 1..DAYS_PER_WEEK*WEEKS_PER_CYCLE;
  
  int n = ...; 					// number of agents
  range AGENTS = 1..n;
