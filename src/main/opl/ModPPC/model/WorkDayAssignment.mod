@@ -53,24 +53,21 @@ dexpr int break2Days[i in AGENTS][j in DAYS] = (j==d) ? 0 : minl( break[i][j], b
 dexpr int supplyWorkDay[i in AGENTS] = sum(j in DAYS) work[i][j];
  
 // difference between the number of working days in the timetable  and the number of working days expected to do
-dexpr float workDayDiff[i in AGENTS] = abs(workDays[i] - supplyWorkDay[i]); 
+dexpr int workDayDiff[i in AGENTS] = maxl(workDays[i],supplyWorkDay[i])-minl(workDays[i],supplyWorkDay[i]); 
  
 //for each agent this is the score of his preferences for each week
 dexpr int breakprefpW[i in AGENTS][l in CYCLES] = sum(j in 1..WEEKS_PER_CYCLE*DAYS_PER_WEEK)(break[i][startW[startC[l]]+(j-1)]*breakPrefs[i][j]);
-
-// global score of the preferences
-dexpr int TOTALbreakPrefpW = sum(i in AGENTS, l in CYCLES) breakprefpW[i][l];
 
 // number of nurse working the day j in the timetable
 dexpr int supply[j in DAYS] = sum(i in AGENTS) work[i][j];
  
 // if demand[j] < supply[j] then 0 else demand[j]-supply[j] 
-dexpr float underDemand[j in DAYS] = (abs(demand[j]-supply[j])+demand[j]-supply[j])/2;
+dexpr int underDemand[j in DAYS] = maxl(demand[j]-supply[j],0);
 
 // if demand[j] > supply[j] then 0 else supply[j]-demand[j]
-dexpr float upperDemand[j in DAYS] = (abs(supply[j]-demand[j])+supply[j]-demand[j])/2;
+dexpr int upperDemand[j in DAYS] = maxl(supply[j]-demand[j],0);
  
- 
+/* 
 // for each agent number of day worked by week
 dexpr int WdayPweek[i in AGENTS][w in WEEKS] = sum(j in 1..DAYS_PER_WEEK)(work[i][startW[w]+(j-1)]);
 
@@ -78,11 +75,29 @@ dexpr int WdayPweek[i in AGENTS][w in WEEKS] = sum(j in 1..DAYS_PER_WEEK)(work[i
 dexpr int MAXWdayPweek[i in AGENTS]= sum(w in WEEKS)(WdayPweek[i][w]);
 
 //sum of max day worked in a week for each agent
-dexpr int TOTALMAXWdayPweek= sum(i in AGENTS)(MAXWdayPweek[i]);
+dexpr int TOTALMAXWdayPweek= sum(i in AGENTS)(MAXWdayPweek[i]);*/
+
+//coeff de la contrainte 2
+dexpr int coeff1=(max(j in DAYS) demand[j]*d+1);
+//coeff de la contrainte 3
+dexpr int coeff2=(max(j in DAYS) demand[j]+1);
+//coeff de la contrainte 4
+dexpr int coeff3=(14*c*n);
+
+//contrainte 1
+dexpr int TOTALunderDemand=sum(j in DAYS) underDemand[j];
+//contrainte 2
+dexpr int TOTALupperDemand=sum(j in DAYS) upperDemand[j];
+//contrainte 3
+dexpr int MAXDIFFworkSupply=max(j in DAYS)(demand[j]-supply[j]);
+//contrainte 4
+// global score of the preferences
+dexpr int TOTALbreakPrefpW = sum(i in AGENTS, l in CYCLES) breakprefpW[i][l];
+
 
 // if (relaxation == 1) then minimize in first sum(j in DAYS) (underDemand[j]) and then (sum(j in DAYS) (upperDemand[j])
 //else minimize the difference between the number of days 
-dexpr float objectif = (relaxation==1) ? (max(j in DAYS) demand[j]*d+1)*(sum(j in DAYS) underDemand[j]) +(sum(j in DAYS) upperDemand[j]) : sum(i in AGENTS) (workDayDiff[i]);
+dexpr int objectif = (relaxation==1) ? (coeff1*coeff2*coeff3)*(TOTALunderDemand) +(coeff2*coeff3)*(TOTALupperDemand)+coeff3*(MAXDIFFworkSupply)+TOTALbreakPrefpW : sum(i in AGENTS) (workDayDiff[i]);
 
 minimize objectif;
 //changer le cas ou relaxation = 0; pour le moment , emploie au maximum  qui a isurcharger la demande
@@ -95,7 +110,7 @@ subject to{
 	
 	forall(i in AGENTS)
 	   ctWorkDays[i]:
-	   sum(j in DAYS) work[i][j] <= workDays[i]; // satisfy the maximum number of working days for each agents.
+	   supplyWorkDay[i] <= workDays[i]; // satisfy the maximum number of working days for each agents.
 
  	forall(i in AGENTS) 
  		forall(c in CYCLES) 
