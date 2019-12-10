@@ -16,8 +16,8 @@ import nurses.planning.checker.rules.SundayBreak;
 import nurses.planning.checker.rules.ThirtySixHourBreak;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 import static nurses.Shift.*;
+import static org.junit.Assert.assertTrue;
 
 public class PlanningCheckerTest {
 
@@ -27,7 +27,7 @@ public class PlanningCheckerTest {
         Shift[][] shifts = {{RH, S,	RA, J, J, M, M, J, J, RA, S, J, RH, RH, S, S, RH, J, RA, RH, RH, RTT, J, RA, S, J, RH, RH},
                             {S, RH, S, S, S, RH, RH, M, M, M, M, RTT, RH, RH, CA, CA, CA, CA, CA, RH, RH, CA, CA, CA, RTT, RTT, RH, RH},
                             {RH, M, M, M, M, RH, RH, S, S, S, RH, S, S, S, RH, RTT, M, M, M, RH, RH, J, S, S, RH, RH, M, M}};
-        planning.setDays(shifts);
+        planning.setShifts(shifts);
         PlanningChecker legalityChecker = new PlanningChecker(planning);
 
         legalityChecker.addRule(new ConsecutiveWorkDays());
