@@ -1,0 +1,42 @@
+/*********************************************
+ * OPL 12.8.0.0 Data
+ * Author: Thomas
+ * Creation Date: 9 déc. 2019 at 15:01:31
+ *********************************************/
+n=9;
+c=2;
+relaxation=0;
+timetable= [
+[ "NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","RTT","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA" ],
+[ "NA","NA","NA","RTT","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","RTT","NA","NA","NA","NA","NA","NA" ],
+["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","CA","CA","CA","CA","CA","NA","NA"],
+[ "CA","CA","CA","CA","CA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA" ],
+[ "NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA" ],
+[ "NA","NA","NA","NA","NA","NA","NA","CA","CA","CA","CA","CA","NA","NA","CA","CA","CA","CA","CA","NA","NA","NA","NA","NA","NA","RTT","NA","NA" ],
+[ "RTT","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA" ],
+[ "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA" ],
+[ "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA" ]
+];
+morning = "M";
+day = "J";
+evening = "S";
+to_define = "W";
+
+workDays= [ 19, 19, 13, 14, 18, 9, 19, 4, 4 ]; //todo
+breaksPerCycle= [ 4, 4, 6, 6, 4, 4 ];//todo
+demands= [
+[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 ],
+[ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 ],
+[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+];
+breakPrefs= [
+[ 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1 ],
+[ 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1 ],
+[ 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1 ],
+[ 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1 ],
+[ 2, 0, 0, 0, 1, 0, 0, 2, 0, 0, 0, 1, 0, 0 ],
+[ 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1 ],
+[ 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1 ],
+[ 2, 0, 0, 0, 1, 0, 0, 2, 0, 0, 0, 1, 0, 0 ],
+[ 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1 ]
+];//todo
