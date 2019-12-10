@@ -1,9 +1,19 @@
+/**
+ * This file is part of nurse-rostering-solver, https://github.com/MatthiasPercelay/Model-PPC
+ *
+ * Copyright (c) 2019, Université Nice Sophia Antipolis. All rights reserved.
+ *
+ * Licensed under the BSD 3-clause license.
+ * See LICENSE file in the project root for full license information.
+ */
 package nurses.planning.checker.rules;
 
 import nurses.NRCmd;
 import nurses.Shift;
 
-import java.util.logging.Logger;
+import java.util.HashSet;
+
+import static java.lang.Math.min;
 
 public class ThirtySixHourBreak implements IRule {
     @Override
@@ -17,38 +27,53 @@ public class ThirtySixHourBreak implements IRule {
      */
     @Override
     public boolean check(Shift[] agentSchedule) {
-        int nbNiceBreaks;
-        for (int w = 0; w < agentSchedule.length - 6; w += 7) {    // for each week in the schedule
-            nbNiceBreaks = 0;
-            for (int i = 0; i < 6; i++) {   // for each day in the week
-                if (agentSchedule[w + i].isBreak() && i > 0) {    // a "nice" break is a break that is not surrounded by S-M of S-J
-                    if (agentSchedule[w + i - 1] == Shift.S) {
-                        if (agentSchedule[w + i + 1] != Shift.M &&
-                                agentSchedule[w + i + 1] != Shift.J) {
-                            nbNiceBreaks++;
-                        }
-                    } else {
-                        nbNiceBreaks++;
-                    }
+        for (int i = 0; i < agentSchedule.length; i+=7) {
+            if (!goodInWeek(agentSchedule, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean goodInWeek(Shift[] agentSchedule, int w) {
+        int end = min(w+8, agentSchedule.length);
+        boolean hasGoodBreak = false;   // is there a 36-hour break this week ?
+
+        for (int i = w; i < end; i++) {
+            if (agentSchedule[i].isBreak()) {
+                if (!isBadBreak(agentSchedule, i)) {    // if the break is 36 hours long then we're good
+                    hasGoodBreak = true;
+                    break;
                 }
             }
-            if (nbNiceBreaks == 0) {
-                if (agentSchedule[w + 5] == Shift.S && agentSchedule[w + 6] == Shift.B) {   // if we don't have a break until sunday
-                    if (w != agentSchedule.length - 7) {    // if it's not the last sunday we check the next monday
-                        if (agentSchedule[w+7] == Shift.M || agentSchedule[w+7] == Shift.J) {
-                            return false;
-                        } else {
-                            continue;
-                        }
-                    } else {    // if it is the last sunday we give a warning
-                        NRCmd.LOGGER.info("Warning : can't work on the first monday morning of next month");
-                        continue;
-                    }
+        }
+
+        if (agentSchedule[w] == Shift.B && !hasGoodBreak) {
+            NRCmd.LOGGER.info("\t Warning: could know if the break on the first day of the month was 36h");
+            return true;
+        }
+
+        return hasGoodBreak;
+    }
+
+    private boolean isBadBreak(Shift[] agentSchedule, int d) {
+        if (d == 0) {
+            if (agentSchedule[d+1] == Shift.M || agentSchedule[d+1] == Shift.J) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (d == agentSchedule.length - 1 && agentSchedule[d-1] == Shift.S) {
+                NRCmd.LOGGER.info("\t Warning: Agent can't work a morning or day shift the first monday of next month");
+                return false;
+            } else {
+                if (agentSchedule[d-1] == Shift.S && (agentSchedule[d+1] == Shift.M || agentSchedule[d+1] == Shift.J)) {
+                    return true;
                 } else {
                     return false;
                 }
             }
         }
-        return true;
     }
 }
