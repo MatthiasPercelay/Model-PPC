@@ -19,6 +19,12 @@
 			<ref name="data/shift/ShiftAssignment.dat" type="data">
 			</ref>
 		</config>
+		<config default="false" name="Test Data Source" category="opl">
+			<ref name="model/testCustomData.mod" type="model">
+			</ref>
+			<ref name="data/test-custom-data-source.dat" type="data">
+			</ref>
+		</config>
 	</configs>
 	
 </project>
