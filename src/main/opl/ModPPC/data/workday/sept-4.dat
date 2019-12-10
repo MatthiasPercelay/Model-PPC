@@ -1,0 +1,37 @@
+/*********************************************
+ * OPL 12.8.0.0 Data
+ * Author: Thomas
+ * Creation Date: 9 déc. 2019 at 15:04:28
+ *********************************************/
+n=6;
+c=2;
+relaxation=0;
+timetable= [ // TO FINISH
+[ "NA","NA","NA","NA","NA","NA","NA","CA","CA","CA","CA","CA","NA","NA","CA","CA","CA","CA","CA","NA","NA","NA","NA","NA","RTT","RTT","NA","NA" ],
+[ "NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA" ],
+[ "CA","NA","NA","NA","NA","NA","NA","NA","NA","C","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","JD" ],
+[ "CA","CA","CA","CA","CA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","RTT","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA" ],
+[ "NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","RTT","NA","NA","NA" ],
+[ "NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","RTT","NA","NA","NA","NA"," NA","NA","NA","NA","NA","NA","NA","NA","NA" ]
+];
+morning = "M";
+day = "J";
+evening = "S";
+to_define = "W";
+
+workDays= [ 8, 8, 18, 14, 20, 18 ];
+breaksPerCycle= [ 4, 4, 4, 4, 4, 4 ];
+demands= [
+[ 1, 1, 2, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+[ 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1 ],
+[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+];
+breakPrefs= [
+[ 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1 ],
+[ 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1 ],
+[ 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1 ],
+[ 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1 ],
+[ 2, 0, 0, 0, 1, 0, 0, 2, 0, 0, 0, 1, 0, 0 ],
+[ 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1 ]
+];
+// change it to pref on a cycle 
