@@ -19,14 +19,15 @@ public class PlanningChecker {
      *
      * @return true if all the rules are satisfied for this planning
      */
-    public boolean check() {
+    public Report check() {
+        Report report = new Report();
         for (IRule r : this.rules) {
             for (int i = 0; i < this.planning.getNbAgents(); i++) {
                 if (!r.check(this.planning.getAgentsSchedule(i))) {
-                    return false;
+                    report.addFailedRule(r.getName(), i);
                 }
             }
         }
-        return true;
+        return report;
     }
 }

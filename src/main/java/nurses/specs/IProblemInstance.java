@@ -1,10 +1,16 @@
 package nurses.specs;
 
+import ilog.opl.IloCustomOplDataSource;
+import ilog.opl.IloOplFactory;
+import nurses.NRConstants;
+
 public interface IProblemInstance extends ITTDimension {
 
 	int getNbCycles();
 	
-	int getNbWeeks();
+	default int getNbWeeks() {
+		return NRConstants.WEEKS_PER_CYCLE * getNbCycles();
+	}
 			
 	default int getNbAgents() {
 		return getTimeTable().getNbAgents();
@@ -15,5 +21,19 @@ public interface IProblemInstance extends ITTDimension {
 	}
 
 	ITimetable getTimeTable();
+	
+	int[][] getDemands();
+	
+	int[] getWorkdays();
+	
+	int[] getBreaksPerCycle();
+	
+	int[][] getBreakPreferences();
+	
+	int[][][] getShiftPreferences();
+	
+	IloCustomOplDataSource toWorkdayDataSource(IloOplFactory oplF);
+	
+	IloCustomOplDataSource toShiftDataSource(IloOplFactory oplF);
 	
 }

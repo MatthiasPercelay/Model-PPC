@@ -1,6 +1,6 @@
-package nurses.specs;
+package nurses.pareto;
 
-import nurses.pareto.MOSolution;
+import nurses.specs.IParetoArchive;
 
 
 import java.util.ArrayList;
@@ -18,14 +18,16 @@ public class ParetoArchiveL implements IParetoArchive {
 
     @Override
     public void add(MOSolution mosol) {
-        solutions.add(mosol);
+        if (!isDominated(mosol)) {
+            removeNowDominated();
+            solutions.add(mosol);
+        }
     }
 
     @Override
     public boolean isDominated(double[] objective) {
         for (MOSolution s : solutions) {
-            if (s.getObjective() != objective // we are really comparing references here
-                    && comp.compare(s.getObjective(), objective) < 0) {
+            if (comp.compare(s.getObjective(), objective) < 0) {
                 return true;
             }
         }
@@ -34,11 +36,26 @@ public class ParetoArchiveL implements IParetoArchive {
 
     @Override
     public void forEach(Consumer<MOSolution> consumer) {
-
+        for (MOSolution s : solutions) {
+            consumer.accept(s);
+        }
     }
 
     @Override
     public int size() {
-        return 0;
+        return solutions.size();
+    }
+
+    public List<MOSolution> getSolutions() {
+        return solutions;
+    }
+
+    private void removeNowDominated() {
+        for (MOSolution s : solutions) {
+            if (isDominated(s)) {
+                solutions.remove(s);
+                return;
+            }
+        }
     }
 }

@@ -1,18 +1,27 @@
 package nurses.planning;
 
-import nurses.Shift;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import nurses.specs.ITimetable;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Name;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.AreaReference;
 import org.apache.poi.ss.util.CellReference;
+
+import ilog.opl.IloCustomOplDataSource;
+import ilog.opl.IloOplDataHandler;
+import ilog.opl.IloOplFactory;
+import nurses.Shift;
+import nurses.specs.ITimetable;
 
 public class TimeTable implements ITimetable {
     private Shift[][] shifts;
@@ -77,6 +86,41 @@ public class TimeTable implements ITimetable {
         }
     }
 
+	public void customRead(IloOplDataHandler handler) {
+		handler.startElement("timetable");
+		handler.startArray();
+		for (int i=1;i<=shifts.length;i++) {
+			handler.startArray();
+			for (int j=1;j<=shifts[i].length;j++)
+				handler.addStringItem(shifts[i][j].toString());
+			handler.endArray();
+		}
+		handler.endArray();
+		handler.endElement();
+	}
+
+
+
+	/**
+	 * Exports the contents of the current planning to an Excel file
+	 * @param filename name of the output file
+	 */
+	public void exportToExcel(String filename) {
+		Workbook wb = new HSSFWorkbook();
+		Sheet sheet = wb.createSheet("Planning");
+		Row row1 = sheet.createRow(0);
+		String[] letters = weekdayLetters(this.cycles);
+		for (int i = 0; i < 14 * this.cycles; i++) {
+			row1.createCell(i + 1).setCellValue(letters[i]);
+		}
+
+		for (int i = 0; i < agents; i++) {
+			Row currentRow = sheet.createRow(i+1);
+			currentRow.createCell(0).setCellValue("A" + (i+1));
+			for (int j = 0; j < 14 * cycles; j++) {
+				currentRow.createCell(j + 1).setCellValue(shifts[i][j].toString());
+			}
+		}
     /**
      * Exports the contents of the current planning to an Excel file
      * @param filename name of the output file
@@ -101,23 +145,23 @@ public class TimeTable implements ITimetable {
         AreaReference aref = new AreaReference(corner1, corner2);
         String sref = aref.toString();
 
-        try (OutputStream fileOut = new FileOutputStream(filename)) {
-            wb.write(fileOut);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+		try (OutputStream fileOut = new FileOutputStream(filename)) {
+			wb.write(fileOut);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    private String[] weekdayLetters(int cycles) {
-        String[] week = new String[]{"L", "M", "M", "J", "V", "S", "D"};
-        String[] res = new String[14 * cycles];
-        for (int i = 0; i < 2 * cycles; i++) {
-            for (int j = 0; j < 7; j++) {
-                res[7 * i + j] = week[j];
-            }
-        }
-        return res;
-    }
+	private String[] weekdayLetters(int cycles) {
+		String[] week = new String[]{"L", "M", "M", "J", "V", "S", "D"};
+		String[] res = new String[14 * cycles];
+		for (int i = 0; i < 2 * cycles; i++) {
+			for (int j = 0; j < 7; j++) {
+				res[7 * i + j] = week[j];
+			}
+		}
+		return res;
+	}
 
     /**
      *
@@ -153,10 +197,10 @@ public class TimeTable implements ITimetable {
         return true;
     }
 
-    @Override
-    public int getNbAgents() {
-        return agents;
-    }
+	@Override
+	public int getNbAgents() {
+		return agents;
+	}
 
     @Override
     public int getNbDays() {

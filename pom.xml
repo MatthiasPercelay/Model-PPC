@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    This file is part of nurse-rostering-solver, https://github.com/MatthiasPercelay/Model-PPC
-
-    Copyright (c) 2019, Université Nice Sophia Antipolis. All rights reserved.
-
-    Licensed under the BSD 3-clause license.
-    See LICENSE file in the project root for full license information.
-
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<!-- This file is part of nurse-rostering-solver, https://github.com/MatthiasPercelay/Model-PPC 
+	Copyright (c) 2019, Université Nice Sophia Antipolis. All rights reserved. 
+	Licensed under the BSD 3-clause license. See LICENSE file in the project 
+	root for full license information. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.unice</groupId>
@@ -17,8 +12,8 @@
 	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>nurse-rostering-solver</name>
-<!-- 	<description>TODO</description> -->
-	<url>https://github.com/MatthiasPercelay/Model-PPC</url> 
+	<!-- <description>TODO</description> -->
+	<url>https://github.com/MatthiasPercelay/Model-PPC</url>
 	<licenses>
 		<license>
 			<name>BSD 3-Clause License</name>
@@ -45,7 +40,8 @@
 		<maven.build.timestamp.format>yyyy</maven.build.timestamp.format>
 		<!-- Java source/target to use for compilation. -->
 		<javac.target>1.8</javac.target>
-		</properties>
+		<cplex.home>${env.CPLEX_HOME}</cplex.home>
+	</properties>
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/args4j/args4j -->
 		<dependency>
@@ -68,6 +64,13 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>3.15</version>
+		</dependency>
+		<dependency>
+			<groupId>cplex</groupId>
+			<artifactId>cplex</artifactId>
+			<version>12.9.0</version>
+			<scope>system</scope>
+			<systemPath>${cplex.home}/opl/lib/oplall.jar</systemPath>
 		</dependency>
 	</dependencies>
 	<build>

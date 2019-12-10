@@ -22,6 +22,17 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
+import ilog.concert.IloException;
+import ilog.opl.IloCplex;
+import ilog.opl.IloOplDataHandler;
+import ilog.opl.IloOplDataSource;
+import ilog.opl.IloOplErrorHandler;
+import ilog.opl.IloOplFactory;
+import ilog.opl.IloOplModel;
+import ilog.opl.IloOplModelDefinition;
+import ilog.opl.IloOplModelSource;
+import ilog.opl.IloOplRunConfiguration;
+import ilog.opl.IloOplSettings;
 import nurses.specs.IParetoArchive;
 import nurses.specs.IProblemInstance;
 import nurses.specs.IShiftSolver;
@@ -54,7 +65,7 @@ public class NRCmd  {
 	}
 	private final CmdLineParser parser;
 
-	@Option(name = "-f", aliases = { "-file", "--file" }, usage = "Random Seed.", required = true)
+	@Option(name = "-f", aliases = { "-file", "--file" }, usage = "XLS Problem Instance File.", required = true)
 	private File instanceFile;
 
 	@Option(name = "-s", aliases = { "-seed", "--seed" }, usage = "Random Seed.")
@@ -93,8 +104,7 @@ public class NRCmd  {
 
 
 	public final static IProblemInstance parseInstance(File instanceFile) {
-		// TODO 
-		return null;
+		return new NRProblemInstance(instanceFile);
 	}
 	
 	public final static IParetoArchive createArchive() {
@@ -102,8 +112,47 @@ public class NRCmd  {
 		return null;
 	}
 	
-	public final static IWorkdaySolver createWorkdaySolver() {
-		// TODO See for instance CPLEX_Studio129/opl/examples/opl_interfaces/java/oplrunsample/OplRunSample.java
+	public final static IWorkdaySolver createWorkdaySolver(IProblemInstance instance) {
+        IloOplFactory.setDebugMode(true);
+        IloOplFactory oplF = new IloOplFactory();
+
+       
+        IloOplErrorHandler errHandler = oplF.createOplErrorHandler(System.out);
+        IloOplModelSource modelSource = oplF.createOplModelSource("src/main/opl/ModPPC/model/WorkDayAssignment.mod");
+        IloOplSettings settings = oplF.createOplSettings(errHandler);
+        IloOplModelDefinition def=oplF.createOplModelDefinition(modelSource,settings);
+        IloCplex cplex;
+		try {
+			cplex = oplF.createCplex();
+		} catch (IloException e) {
+			return null;
+		}
+		
+        IloOplModel opl=oplF.createOplModel(def,cplex);
+        opl.addDataSource(instance.toWorkdayDataSource(oplF));
+        opl.generate();
+        oplF.end();
+
+        try {
+			cplex.solve();
+		} catch (IloException e) {
+			e.printStackTrace();
+		}
+        
+
+        // from  customdatasource example
+//        IloOplDataHandler handler = getDataHandler();
+//        IloOplErrorHandler errHandler = oplF.createOplErrorHandler();
+//        IloOplRunConfiguration rc = null;
+//            if (_cl.getDataFileNames().size() == 0) {
+//                rc = oplF.createOplRunConfiguration(_cl.getModelFileName());
+//            } else {
+//                String[] dataFiles = _cl.getDataFileNames().toArray(
+//                        new String[_cl.getDataFileNames().size()]);
+//                rc = oplF.createOplRunConfiguration(_cl.getModelFileName(),
+//                        dataFiles);
+//            }
+
 		return null;
 	}
 	
@@ -121,7 +170,7 @@ public class NRCmd  {
 		runtime = - System.nanoTime();
 		// TODO
 		final IProblemInstance instance = parseInstance(instanceFile);
-		final IWorkdaySolver workdaySolver = createWorkdaySolver();
+		final IWorkdaySolver workdaySolver = createWorkdaySolver(instance);
 		final IParetoArchive workdayArchive = createArchive();
 		workdaySolver.solve(instance, workdayArchive);
 		final IShiftSolver shiftSolver = createShiftSolver();	
