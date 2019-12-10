@@ -1,3 +1,11 @@
+/**
+ * This file is part of nurse-rostering-solver, https://github.com/MatthiasPercelay/Model-PPC
+ *
+ * Copyright (c) 2019, Université Nice Sophia Antipolis. All rights reserved.
+ *
+ * Licensed under the BSD 3-clause license.
+ * See LICENSE file in the project root for full license information.
+ */
 package nurses.planning.checker;
 
 import java.util.ArrayList;
@@ -14,5 +22,9 @@ public class Report {
 
     public void addFailedRule(String ruleName, int agentNb) {
         this.invalidRules.put(ruleName, agentNb);
+    }
+
+    public boolean getValidity() {
+        return invalidRules.isEmpty();
     }
 }
