@@ -15,32 +15,27 @@ import org.apache.poi.ss.util.AreaReference;
 import org.apache.poi.ss.util.CellReference;
 
 public class TimeTable implements ITimetable {
-    private Shift[][] days;
+    private Shift[][] shifts;
+    private int days;
     private int cycles;
     private int agents;
 
-    public TimeTable(int cycles, int agents) {
-        this.cycles = cycles;
+    public TimeTable(int days, int agents) {
+        this.days = days;
+        this.cycles = days / 14;
         this.agents = agents;
-        this.days = new Shift[agents][14 * cycles];
+        this.shifts = new Shift[agents][days];
     }
 
     private void setShift(Shift shift, int day, int agent) {
-        this.days[agent][day] = shift;
-    }
-
-    public int getCycles() {
-        return cycles;
+        this.shifts[agent][day] = shift;
     }
 
     /**
      * Importing constructor that populates the planning from an Excel file
      * @param file The .xls file to read from
-     * @param cycles The number of cycles to plan for
-     * @param agents The number of agents to plan for
      */
-    public TimeTable(File file, int cycles, int agents) {
-        this(cycles, agents);
+    public TimeTable(File file) {
         org.apache.poi.ss.usermodel.Workbook wb = null;
         try {
             wb = WorkbookFactory.create(file);
@@ -52,6 +47,16 @@ public class TimeTable implements ITimetable {
         int namedCellIdx = wb.getNameIndex(cname);
         Name aNamedCell = wb.getNameAt(namedCellIdx);
         AreaReference aref = new AreaReference(aNamedCell.getRefersToFormula());
+        CellReference corner1 = aref.getFirstCell();
+        CellReference corner2 = aref.getLastCell();
+        int height = Math.abs(corner1.getRow() - corner2.getRow());
+        int length = Math.abs(corner1.getCol() - corner2.getCol());
+
+        this.days = length;
+        this.cycles = days / 14;
+        this.agents = height;
+        this.shifts = new Shift[agents][days];
+
         CellReference[] crefs = aref.getAllReferencedCells();
         for (int i = 0; i < crefs.length; i++) {
             Sheet s = wb.getSheet(crefs[i].getSheetName());
@@ -67,8 +72,8 @@ public class TimeTable implements ITimetable {
             } else {
                 shift = Shift.valueOf(cont);
             }
-            System.out.println("" + day + ", " + agent + ", " + cont);
-            this.setShift(shift, day - 1, agent - 1);
+            //System.out.println("" + day + ", " + agent + ", " + cont);
+            this.shifts[agent - 1][day - 1] = shift;
         }
     }
 
@@ -81,17 +86,20 @@ public class TimeTable implements ITimetable {
         Sheet sheet = wb.createSheet("Planning");
         Row row1 = sheet.createRow(0);
         String[] letters = weekdayLetters(this.cycles);
-        for (int i = 0; i < 14 * this.cycles; i++) {
+        for (int i = 0; i < days; i++) {
             row1.createCell(i + 1).setCellValue(letters[i]);
         }
-
         for (int i = 0; i < agents; i++) {
             Row currentRow = sheet.createRow(i+1);
             currentRow.createCell(0).setCellValue("A" + (i+1));
-            for (int j = 0; j < 14 * cycles; j++) {
-                currentRow.createCell(j + 1).setCellValue(days[i][j].toString());
+            for (int j = 0; j < days; j++) {
+                currentRow.createCell(j + 1).setCellValue(shifts[i][j].toString());
             }
         }
+        CellReference corner1 = new CellReference(1, 1);
+        CellReference corner2 = new CellReference(agents, days);
+        AreaReference aref = new AreaReference(corner1, corner2);
+        String sref = aref.toString();
 
         try (OutputStream fileOut = new FileOutputStream(filename)) {
             wb.write(fileOut);
@@ -117,19 +125,19 @@ public class TimeTable implements ITimetable {
      * @return agent k's schedule on this planning
      */
     public Shift[] getAgentsSchedule(int k) {
-        return days[k];
+        return shifts[k];
     }
 
     @Override
     public Shift getShift(int i, int j) {
-        return days[i][j];
+        return shifts[i][j];
     }
 
     @Override
     public boolean isWorkdayAssignment() {
-        for (int i = 0; i < days.length; i++) {
-            for (int j = 0; j < days[i].length; j++) {
-                if (days[i][j] == Shift.NA) return false;
+        for (int i = 0; i < shifts.length; i++) {
+            for (int j = 0; j < shifts[i].length; j++) {
+                if (shifts[i][j] == Shift.NA) return false;
             }
         }
         return true;
@@ -137,9 +145,9 @@ public class TimeTable implements ITimetable {
 
     @Override
     public boolean isShiftAssignment() {
-        for (int i = 0; i < days.length; i++) {
-            for (int j = 0; j < days[i].length; j++) {
-                if (days[i][j] == Shift.NA || days[i][j] == Shift.W) return false;
+        for (int i = 0; i < shifts.length; i++) {
+            for (int j = 0; j < shifts[i].length; j++) {
+                if (shifts[i][j] == Shift.NA || shifts[i][j] == Shift.W) return false;
             }
         }
         return true;
@@ -152,6 +160,10 @@ public class TimeTable implements ITimetable {
 
     @Override
     public int getNbDays() {
-        return cycles * 14;
+        return days;
+    }
+
+    public int getNbCycles() {
+        return cycles;
     }
 }
