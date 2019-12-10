@@ -174,7 +174,7 @@ public class TimeTable implements ITimetable {
         return cycles;
     }
 
-	public void setDays(Shift[][] days) {
+	public void setShifts(Shift[][] days) {
 		this.shifts = days;
 	}
 }
