@@ -1,3 +1,11 @@
+/**
+ * This file is part of nurse-rostering-solver, https://github.com/MatthiasPercelay/Model-PPC
+ *
+ * Copyright (c) 2019, Université Nice Sophia Antipolis. All rights reserved.
+ *
+ * Licensed under the BSD 3-clause license.
+ * See LICENSE file in the project root for full license information.
+ */
 package nurses.planning;
 
 import java.io.File;
@@ -118,39 +126,39 @@ public class TimeTable implements ITimetable {
 		return res;
 	}
 
-    /**
-     *
-     * @param k an agent
-     * @return agent k's schedule on this planning
-     */
-    public Shift[] getAgentsSchedule(int k) {
-        return shifts[k];
-    }
+	/**
+	 *
+	 * @param k an agent
+	 * @return agent k's schedule on this planning
+	 */
+	public Shift[] getAgentsSchedule(int k) {
+		return shifts[k];
+	}
 
-    @Override
-    public Shift getShift(int i, int j) {
-        return shifts[i - 1][j - 1];
-    }
+	@Override
+	public Shift getShift(int i, int j) {
+		return shifts[i][j];
+	}
 
-    @Override
-    public boolean isWorkdayAssignment() {
-        for (int i = 0; i < shifts.length; i++) {
-            for (int j = 0; j < shifts[i].length; j++) {
-                if (shifts[i][j] == Shift.NA) return false;
-            }
-        }
-        return true;
-    }
+	@Override
+	public boolean isWorkdayAssignment() {
+		for (int i = 0; i < shifts.length; i++) {
+			for (int j = 0; j < shifts[i].length; j++) {
+				if (shifts[i][j] == Shift.NA) return false;
+			}
+		}
+		return true;
+	}
 
-    @Override
-    public boolean isShiftAssignment() {
-        for (int i = 0; i < shifts.length; i++) {
-            for (int j = 0; j < shifts[i].length; j++) {
-                if (shifts[i][j] == Shift.NA || shifts[i][j] == Shift.W) return false;
-            }
-        }
-        return true;
-    }
+	@Override
+	public boolean isShiftAssignment() {
+		for (int i = 0; i < shifts.length; i++) {
+			for (int j = 0; j < shifts[i].length; j++) {
+				if (shifts[i][j] == Shift.NA || shifts[i][j] == Shift.W) return false;
+			}
+		}
+		return true;
+	}
 
 	@Override
 	public int getNbAgents() {
@@ -165,4 +173,8 @@ public class TimeTable implements ITimetable {
     public int getNbCycles() {
         return cycles;
     }
+
+	public void setDays(Shift[][] days) {
+		this.shifts = days;
+	}
 }
