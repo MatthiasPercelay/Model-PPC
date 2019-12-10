@@ -22,12 +22,12 @@
  range DAYS = 1..d;
  
  // TODO Remove or define as constants (in uppercase) if really needed
- string morning = "M";
- string evening = "S";
- string day = "J";
- string to_define = "W";
+ int EVENING = 1;
+ int MORNING = 2;
+ int DAY = 3;
  
- {string} SHIFTS = {evening, morning, day};
+ range SHIFTS = 1..3;
+ int SHIFT[{"S", "M", "J"}] = [1, 2, 3];
  
  string timetable[AGENTS][DAYS] = ...;
  
@@ -35,7 +35,7 @@
  int demand[j in DAYS] = sum(k in SHIFTS) demands[k][j] + sum(i in AGENTS) (timetable[i][j] == "FO");
  
  
- int fixedWork[i in AGENTS][j in DAYS] = timetable[i][j] == to_define || timetable[i][j] == morning || timetable[i][j] == day || timetable[i][j] == evening || timetable[i][j] == "FO";
+ int fixedWork[i in AGENTS][j in DAYS] = timetable[i][j] == "W" || timetable[i][j] == "M" || timetable[i][j] == "J" || timetable[i][j] == "S" || timetable[i][j] == "FO";
  int fixedBreak[i in AGENTS][j in DAYS] = timetable[i][j] == "CA" || timetable[i][j] == "RH" || timetable[i][j] == "RTT" || timetable[i][j] == "RC" || timetable[i][j] == "RH" || timetable[i][j] == "MPR" || timetable[i][j] == "JF";
- int fixedShift[i in AGENTS][j in DAYS] = timetable[i][j] == evening || timetable[i][j] == day || timetable[i][j] == morning;
+ int fixedShift[i in AGENTS][j in DAYS] = timetable[i][j] == "M" || timetable[i][j] == "J" || timetable[i][j] == "S";
  

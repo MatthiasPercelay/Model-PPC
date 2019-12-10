@@ -3,21 +3,16 @@
  * Author: JUNG
  * Creation Date: 25 nov. 2019 at 13:45:45
  *********************************************/
- include "nursesCommon.mod";
- 
- 
-string hebdomary_break = ...;
+include "nursesCommon.mod";
 
-// IMPORTANT ! Same order as the demands array !!
-int shift[SHIFTS] = [1, 2, 3];
-string shift_s[1..3] = [evening, morning, day];
+string hebdomary_break = ...;
 
 // MAIN DATA
 int shift_preference[AGENTS][DAYS][SHIFTS] = ...;    // what each agent wants or doesn't want
 
 // DAY OF WORK AND FIXED SHIFT
-int is_preference[a in AGENTS][d in DAYS][s in SHIFTS] = shift_preference[a][d][s] > 0;
-int is_forbidden[a in AGENTS][d in DAYS][s in SHIFTS] = shift_preference[a][d][s] < 0;
+int is_preference[i in AGENTS][j in DAYS][s in SHIFTS] = shift_preference[i][j][s] > 0;
+int is_forbidden[i in AGENTS][j in DAYS][s in SHIFTS] = shift_preference[i][j][s] < 0;
 
 // VARIABLES
 // Assign a shift to an agent
@@ -27,32 +22,36 @@ dvar int shift_assign[AGENTS][DAYS] in 0..3;
 // OBJECTIVE FUNCTION UTILS //
 //////////////////////////////
 
-// Number of day where an agent does evening and morning the next day.
-dexpr int SM[a in AGENTS] = sum(i in 1..d-1) (shift_assign[a][i] == shift[evening] && shift_assign[a][i+1] == shift[morning]);
-// Number of consecutive days where we do the same shift
+// Number of DAY where an agent does EVENING and MORNING the next DAY.
+dexpr int SM[i in AGENTS] = sum(j in 1..d-1) (shift_assign[i][j] == EVENING && shift_assign[i][j+1] == MORNING);
+// Number of consecutive DAYs where we do the same shift
 int CONSECUTIVE_DAYS = 3;
-dexpr int sameShift[a in AGENTS][c in 2..CONSECUTIVE_DAYS] = sum(i in 1..d-c+1, s in SHIFTS) (sum(j in 0..c-1) (shift_assign[a][i+j] == shift[s]) == c);
-// Number of time the agent switch shift from one day to the next one.
-dexpr int shiftSwitch[a in AGENTS] = sum(i in 1..d-1, s in SHIFTS) ((shift_assign[a][i] == shift[s] && shift_assign[a][i+1] != shift[s]) * fixedWork[a][i+1]); 
+dexpr int sameShift[i in AGENTS][c in 2..CONSECUTIVE_DAYS] = sum(j in 1..d-c+1, s in SHIFTS) (sum(k in 0..c-1) (shift_assign[i][j+k] == s) == c);
+// Number of time the agent switch shift from one DAY to the next one.
+dexpr int shiftSwitch[i in AGENTS] = sum(j in 1..d-1, s in SHIFTS) ((shift_assign[i][j] == s && shift_assign[i][j+1] != s) * fixedWork[i][j+1]); 
 
 // Number of preferences respected for each agent
-dexpr int preferences[a in AGENTS] = sum(d in DAYS, s in SHIFTS) (shift_assign[a][d] == shift[s] && is_preference[a][d][s] == 1) ;
+dexpr int preferences[i in AGENTS] = sum(j in DAYS, s in SHIFTS) (shift_assign[i][j] == s && is_preference[i][j][s] == 1) ;
 // Number of forbidden not respected for each agent
-dexpr int interdictions[a in AGENTS] = sum(d in DAYS, s in SHIFTS) (shift_assign[a][d] == shift[s] && is_forbidden[a][d][s] == 1) ;
+dexpr int interdictions[i in AGENTS] = sum(j in DAYS, s in SHIFTS) (shift_assign[i][j] == s && is_forbidden[i][j][s] == 1) ;
 
 // Evaluation for each agent
-dexpr int objectiveValuePerAgent[a in AGENTS] = 2*SM[a] + sameShift[a][2] + 4*interdictions[a] - preferences[a] + 2*shiftSwitch[a];
+dexpr int objectiveValuePerAgent[i in AGENTS] = 2*SM[i] + sameShift[i][2] + 4*interdictions[i] - preferences[i] + 2*shiftSwitch[i];
 // Global evaluation of the solution
-dexpr int objectiveValue = sum(a in AGENTS) objectiveValuePerAgent[a];
+dexpr int objectiveValue = sum(i in AGENTS) objectiveValuePerAgent[i];
 // Difference of value to the average for each agent
-dexpr float differenceToAveragePerAgent[a in AGENTS] = abs(objectiveValue - objectiveValuePerAgent[a]*n) / n;
+dexpr float differenceToAveragePerAgent[i in AGENTS] = abs(objectiveValue - objectiveValuePerAgent[i]*n) / n;
 // Global difference to average
-dexpr float differenceToAverage = sum(a in AGENTS) differenceToAveragePerAgent[a];
+dexpr float differenceToAverage = sum(i in AGENTS) differenceToAveragePerAgent[i];
 
+// Evening + Break + Morning/Day
+dexpr int SBMJ[i in AGENTS][j in 2..d-1] = 
+		(fixedWork[i][j] == 0 && fixedWork[i][j-1] == 1 && fixedWork[i][j+1] == 1 && (fixedShift[i][j-1] == 0 || fixedShift[i][j+1] == 0))
+		* ((shift_assign[i][j-1] == EVENING) + (shift_assign[i][j+1] == MORNING) + (shift_assign[i][j+1] == DAY));
 
 /*	OBJECTIVE FUNCTION
 	GOALS :
-		- Minimize the shift sequence evening + morning
+		- Minimize the shift sequence EVENING + MORNING
 		- Maximize the sequence of length 2 of the same shift
 		- Maximize the preference satisfaction
 		- Maximize the interdictions satisfaction
@@ -67,22 +66,20 @@ subject to{
 	// BASIC CONSTRAINTS //
 	///////////////////////
 	// If there is a demand, there is an agent
-	forall(s in SHIFTS, d in DAYS)
-		demands[s][d] == sum(a in AGENTS) (shift_assign[a][d] == shift[s]);
+	forall(s in SHIFTS, j in DAYS)
+		demands[s][j] == sum(i in AGENTS) (shift_assign[i][j] == s);
 
-	forall(d in DAYS, a in AGENTS){
+	forall(j in DAYS, i in AGENTS){
 		// If the shift is already shift, then we must respect it	
-		if(fixedShift[a][d] == 1) shift_assign[a][d] == shift[timetable[a][d]];
-		// If an agent must work a certain day, then he must have a shift
-		if(fixedWork[a][d] == 1 && timetable[a][d] != "FO") shift_assign[a][d] != 0;
-		if(fixedWork[a][d] == 0 || timetable[a][d] == "FO") shift_assign[a][d] == 0;
+		if(fixedShift[i][j] == 1) shift_assign[i][j] == SHIFT[timetable[i][j]];
+		// If an agent must work a certain DAY, then he must have a shift
+		if(fixedWork[i][j] == 1 && timetable[i][j] != "FO") shift_assign[i][j] != 0;
+		if(fixedWork[i][j] == 0 || timetable[i][j] == "FO") shift_assign[i][j] == 0;
 	}
 	
-	// If an agent has only one day for hebdomary break, then he must have more than 36 hours of break
- 	forall(i in 2..d-1, a in AGENTS){
- 		if(fixedWork[a][i] == 0 && fixedWork[a][i-1] == 1 && fixedWork[a][i+1] == 1 && (fixedShift[a][i-1] == 0 || fixedShift[a][i+1] == 0)){
- 			(shift_assign[a][i-1] == shift[evening]) + (shift_assign[a][i+1] == shift[morning]) + (shift_assign[a][i+1] == shift[day]) <= 1;
-		}
+	// If an agent has only one DAY for hebdomary break, then he must have more than 36 hours of break
+ 	forall(j in 2..d-1, i in AGENTS){
+ 		SBMJ[i][j] <= 1;
 	}
  	
  	/////////////////////////////
@@ -96,11 +93,11 @@ subject to{
 // PRINT THE RESULT
 execute POSTPROCESS{
 	var no_work = true;
-	for(var d in DAYS) write(d + "\t");
+	for(var j in DAYS) write(j + "\t");
 	writeln(); writeln();
-	for(var a in AGENTS) {
-		for(var d in DAYS){
-			if(shift_assign[a][d] > 0) write(shift_s[shift_assign[a][d]]);
+	for(var i in AGENTS) {
+		for(var j in DAYS){
+			if(shift_assign[i][j] > 0) write(shift_assign[i][j]);
 			else write("-")
             write("\t");
 		}                                                 
