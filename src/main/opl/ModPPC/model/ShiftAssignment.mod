@@ -7,12 +7,9 @@ include "nursesCommon.mod";
 
 string hebdomary_break = ...;
 
-// MAIN DATA
-int shift_preference[AGENTS][DAYS][SHIFTS] = ...;    // what each agent wants or doesn't want
-
 // DAY OF WORK AND FIXED SHIFT
-int is_preference[i in AGENTS][j in DAYS][s in SHIFTS] = shift_preference[i][j][s] > 0;
-int is_forbidden[i in AGENTS][j in DAYS][s in SHIFTS] = shift_preference[i][j][s] < 0;
+int is_preference[i in AGENTS][j in DAYS][s in SHIFTS] = shiftPrefs[i][j][s] > 0;
+int is_forbidden[i in AGENTS][j in DAYS][s in SHIFTS] = shiftPrefs[i][j][s] < 0;
 
 // VARIABLES
 // Assign a shift to an agent
