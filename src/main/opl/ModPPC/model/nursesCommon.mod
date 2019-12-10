@@ -26,13 +26,7 @@
  int d = DAYS_PER_WEEK * w;		// number of days of the work period
  range DAYS = 1..d;
  
- // TODO Remove or define as constants (in uppercase) if really needed
- int EVENING = 1;
- int MORNING = 2;
- int DAY = 3;
- 
  range SHIFTS = 1..3;
- int SHIFT[{"S", "M", "J"}] = [1, 2, 3];
  
  string timetable[AGENTS][DAYS] = ...;
  
@@ -40,7 +34,7 @@
  int demand[j in DAYS] = sum(k in SHIFTS) demands[k][j] + sum(i in AGENTS) (timetable[i][j] == "FO");
  
  
- int fixedWork[i in AGENTS][j in DAYS] = timetable[i][j] == "W" || timetable[i][j] == "M" || timetable[i][j] == "J" || timetable[i][j] == "S" || timetable[i][j] == "FO";
+ int fixedWork[i in AGENTS][j in DAYS] = timetable[i][j] == "M" || timetable[i][j] == "J" || timetable[i][j] == "S" || timetable[i][j] == "FO";
  int fixedBreak[i in AGENTS][j in DAYS] = timetable[i][j] == "CA" || timetable[i][j] == "RH" || timetable[i][j] == "RTT" || timetable[i][j] == "RC" || timetable[i][j] == "RH" || timetable[i][j] == "MPR" || timetable[i][j] == "JF";
  int fixedShift[i in AGENTS][j in DAYS] = timetable[i][j] == "M" || timetable[i][j] == "J" || timetable[i][j] == "S";
  
