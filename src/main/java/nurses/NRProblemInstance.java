@@ -30,6 +30,7 @@ public class NRProblemInstance implements IProblemInstance {
 	private final int[][][] shiftPreferences;
 
 
+	//TODO : WIP constructor, do not use
 	public NRProblemInstance(File instanceFile, int dummy) {
 		XLSParser parser = new XLSParser(instanceFile);
 		try {
