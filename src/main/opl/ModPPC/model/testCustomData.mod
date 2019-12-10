@@ -6,17 +6,6 @@
 
 include "nursesCommon.mod";
  
-int useRelaxation = ...; 
-
-int workDays[AGENTS] = ...;
- 
-int breaksPerCycle[AGENTS] = ...;
-  
-int breakPrefs[AGENTS][CYCLEDAYS] = ...;
-
-range SHIFTS2 = 1..3;
-int shiftPrefs[AGENTS][CYCLEDAYS][SHIFTS2] = ...;
-
 dvar boolean work[AGENTS][DAYS];	
 
 minimize sum(i in AGENTS, j in DAYS) work[i][j];

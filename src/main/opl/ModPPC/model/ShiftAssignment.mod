@@ -7,11 +7,6 @@ include "nursesCommon.mod";
 
 string hebdomary_break = ...;
 
-int DAYS_PER_CYCLE = DAYS_PER_WEEK * WEEKS_PER_CYCLE;
-
-// MAIN DATA
-int shiftPrefs[AGENTS][CYCLEDAYS][SHIFTS] = ...;    // what each agent wants or doesn't want
-
 // DAY OF WORK AND FIXED SHIFT
 int is_preference[i in AGENTS][j in DAYS][s in SHIFTS] = shiftPrefs[i][((j-1)%DAYS_PER_CYCLE) + 1][s] > 0;
 int is_forbidden[i in AGENTS][j in DAYS][s in SHIFTS] = shiftPrefs[i][((j-1)%DAYS_PER_CYCLE) + 1][s] < 0;

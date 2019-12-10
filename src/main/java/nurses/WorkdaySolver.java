@@ -34,7 +34,7 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 				IloIntVarMap worki = work.getSub(i);
 				for (int j = 1; j <= d; j++) {
 					solution[i-1][j-1] = getShiftValue(
-							instance.getTimeTable().getShift(i-1, j-1),
+							instance.getTimeTable().getShift(i, j),
 							cplex.getValue(worki.get(j), soln)
 							);
 				}

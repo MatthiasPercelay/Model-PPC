@@ -8,6 +8,7 @@
  */
 package nurses;
 import java.io.File;
+import java.io.IOException;
 
 import ilog.opl.IloCustomOplDataSource;
 import ilog.opl.IloOplDataHandler;
@@ -15,6 +16,8 @@ import ilog.opl.IloOplFactory;
 import nurses.planning.TimeTable;
 import nurses.specs.IProblemInstance;
 import nurses.specs.ITimetable;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 public class NRProblemInstance implements IProblemInstance {
 
@@ -27,9 +30,26 @@ public class NRProblemInstance implements IProblemInstance {
 	private final int[][][] shiftPreferences;
 
 
+	//TODO : WIP constructor, do not use
+	public NRProblemInstance(File instanceFile, int dummy) {
+		XLSParser parser = new XLSParser(instanceFile);
+		try {
+			parser.setUp();
+		} catch (EncryptedDocumentException | InvalidFormatException | IOException e) {
+			e.printStackTrace();
+		}
+		timetable = new TimeTable(instanceFile);
+		nbCycles = timetable.getNbDays() / 14;
+		workDays = parser.getIntRange("workDays");
+		breaksPerCycle = parser.getIntRange("breaksperCycle");
+		demands = parser.getIntMatrix("demands");
+		breakPreferences = parser.getIntMatrix("breakPrefs");
+		shiftPreferences = null;
+	}
+
 	public NRProblemInstance(File instanceFile) {
 		nbCycles = 2;
-		timetable = new TimeTable(instanceFile, 2, 6);
+		timetable = new TimeTable(instanceFile);
 		workDays = new int[] {10, 13, 10, 11, 17, 17};
 		breaksPerCycle= new int[]{4, 4, 6, 6, 4, 4 };
 		demands= new int[][]{
@@ -226,7 +246,7 @@ public class NRProblemInstance implements IProblemInstance {
 			for (int i=1;i<=getNbAgents();i++) {
 				handler.startArray();
 				for (int j=1;j<=getNbDays();j++) {
-					handler.addStringItem(timetable.getShift(i-1, j-1).toString());
+					handler.addStringItem(timetable.getShift(i, j).toString());
 				}
 				handler.endArray();
 			}

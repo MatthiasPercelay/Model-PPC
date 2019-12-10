@@ -4,21 +4,7 @@
  * Creation Date: 25 nov. 2019 at 14:11:57
  *********************************************/ 
 include "nursesCommon.mod";
- 
- 
-int SUNDAYS_PER_CYCLE = 1;
-int TWODAYS_BREAKS_PER_CYCLE = 1;
-int MAX_CONSECUTIVE_WORKING_DAYS = 6;
-int PREF_CONSECUTIVE_WORKING_DAYS = 5;
-
-int relaxation = ...; // if the .dat is hard then relaxation = 1 else relaxation = 0
-   
-int workDays[AGENTS] = ...;
- 
-int breaksPerCycle[AGENTS] = ...;
   
-int breakPrefs[AGENTS][CYCLEDAYS] = ...;
- 
 int startW[k in WEEKS] = DAYS_PER_WEEK * (k-1) + 1;
 
 int endW[k in WEEKS] = DAYS_PER_WEEK * k;
@@ -95,12 +81,12 @@ dexpr int TOTALbreakPrefpW = sum(i in AGENTS, l in CYCLES) breakprefpW[i][l];
 
 // if (relaxation == 1) then minimize in first sum(j in DAYS) (underDemand[j]) and then (sum(j in DAYS) (upperDemand[j])
 //else minimize the difference between the number of days 
-dexpr int objectif = (relaxation==1) ? (coeff1*coeff2*coeff3)*(TOTALunderDemand) +(coeff2*coeff3)*(TOTALupperDemand)+coeff3*(MAXDIFFworkSupply)+TOTALbreakPrefpW : sum(i in AGENTS) (workDayDiff[i]);
+dexpr int objectif = (useRelaxation==1) ? (coeff1*coeff2*coeff3)*(TOTALunderDemand) +(coeff2*coeff3)*(TOTALupperDemand)+coeff3*(MAXDIFFworkSupply)+TOTALbreakPrefpW : sum(i in AGENTS) (workDayDiff[i]);
 
 minimize objectif;
 //changer le cas ou relaxation = 0; pour le moment , emploie au maximum  qui a isurcharger la demande
 subject to{
-	if(relaxation == 0){
+	if(useRelaxation == 0){
 		    forall(j in DAYS) 
  		ctDemand[j]:
  		supply[j] >= demand[j]; // satisfy demand

@@ -1,5 +1,6 @@
 package nurses;
 
+import java.awt.geom.Area;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -67,7 +68,34 @@ public class XLSParser {
 		.getCell(cref.getCol());
 	}
 
-	
+	public int getRegionHeight(String namedRegion) {
+		final Name aNamedCell = wb.getName(namedRegion);
+		final AreaReference aref = new AreaReference(aNamedCell.getRefersToFormula(), wb.getSpreadsheetVersion());
+		AreaDimension adim = new AreaDimension(aref);
+		return adim.m;
+	}
+
+	public int getRegionWidth(String namedRegion) {
+		final Name aNamedCell = wb.getName(namedRegion);
+		final AreaReference aref = new AreaReference(aNamedCell.getRefersToFormula(), wb.getSpreadsheetVersion());
+		AreaDimension adim = new AreaDimension(aref);
+		return adim.n;
+	}
+
+	public int[] getIntRange(String namedRegion) {
+		final Name aNamedCell = wb.getName(namedRegion);
+		final AreaReference aref = new AreaReference(aNamedCell.getRefersToFormula(), wb.getSpreadsheetVersion());
+		AreaDimension adim = new AreaDimension(aref);
+
+		final int[] values = new int[adim.getLength()];
+		CellReference[] crefs = aref.getAllReferencedCells();
+		for (int i = 0; i < values.length; i++) {
+			final Cell c = getCell(crefs[i]);
+			values[i] = (int) c.getNumericCellValue();
+		}
+		return values;
+	}
+
 	public  int[][] getIntMatrix(String namedRegion) {
 		final Name aNamedCell = wb.getName(namedRegion);
 		final AreaReference aref = new AreaReference(aNamedCell.getRefersToFormula(), wb.getSpreadsheetVersion());
@@ -82,7 +110,45 @@ public class XLSParser {
 		return values;
 	}
 	
-	
+	public String[][] getStringMatrix(String namedRegion) {
+		final Name aNamedCell = wb.getName(namedRegion);
+		final AreaReference aref = new AreaReference(aNamedCell.getRefersToFormula(), wb.getSpreadsheetVersion());
+		AreaDimension adim = new AreaDimension(aref);
+
+		final String[][] values = new String[adim.n][adim.m];
+		CellReference[] crefs = aref.getAllReferencedCells();
+		for (int i = 0; i < crefs.length; i++) {
+			final Cell c = getCell(crefs[i]);
+			values[adim.getX(crefs[i])][adim.getY(crefs[i])] = c.getStringCellValue();
+		}
+		return values;
+	}
+
+	public Shift[][] getShiftMatrix(String namedRegion) {
+		String[][] strings = getStringMatrix(namedRegion);
+		Shift[][] res = new Shift[strings.length][strings[0].length];
+		for (int i = 0; i < strings.length; i++) {
+			for (int j = 0; j < strings[i].length; j++) {
+				Shift shift;
+				String val = strings[i][j];
+				if (val.equals("")) {
+					shift = Shift.NA;
+				} else {
+					shift = Shift.valueOf(val);
+				}
+				res[i][j] = shift;
+			}
+		}
+		return res;
+	}
+
+	/*public int[][][] getPrefsMatrix(String namedRegion) {
+		final String[][] strings = getStringMatrix(namedRegion);
+
+		for (int i = 0; i < strings.length / 3; i++) {
+
+		}
+	}*/
 
 	public static void main(String[] args) throws EncryptedDocumentException, InvalidFormatException, IOException {
 		XLSParser parser = new XLSParser(new File("src/test/data/ucl-planning-december-19.xls"));

@@ -13,6 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import com.sun.org.apache.bcel.internal.generic.IFEQ;
+import nurses.XLSParser;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -32,98 +34,79 @@ import nurses.Shift;
 import nurses.specs.ITimetable;
 
 public class TimeTable implements ITimetable {
-	private Shift[][] days;
-	private int cycles;
-	private int agents;
+    private Shift[][] shifts;
+    private int days;
+    private int cycles;
+    private int agents;
 
-	public TimeTable(int cycles, int agents) {
-		this.cycles = cycles;
-		this.agents = agents;
-		this.days = new Shift[agents][14 * cycles];
-	}
+    public TimeTable(int days, int agents) {
+        this.days = days;
+        this.cycles = days / 14;
+        this.agents = agents;
+        this.shifts = new Shift[agents][days];
+    }
 
-	private void setShift(Shift shift, int day, int agent) {
-		this.days[agent][day] = shift;
-	}
+    private void setShift(Shift shift, int day, int agent) {
+        this.shifts[agent][day] = shift;
+    }
 
-	public int getCycles() {
-		return cycles;
-	}
+    /**
+     * Importing constructor that populates the planning from an Excel file
+     * @param file The .xls file to read from
+     */
+    public TimeTable(File file) {
+        XLSParser parser = new XLSParser(file);
 
-	/**
-	 * Importing constructor that populates the planning from an Excel file
-	 * @param file The .xls file to read from
-	 * @param cycles The number of cycles to plan for
-	 * @param agents The number of agents to plan for
-	 */
-	public TimeTable(File file, int cycles, int agents) {
-		this(cycles, agents);
-		org.apache.poi.ss.usermodel.Workbook wb = null;
-		try {
-			wb = WorkbookFactory.create(file);
-		} catch (EncryptedDocumentException | InvalidFormatException | IOException e) {
-			e.printStackTrace();
-		}
-		String cname = "planning";
-		assert wb != null;
-		int namedCellIdx = wb.getNameIndex(cname);
-		Name aNamedCell = wb.getNameAt(namedCellIdx);
-		AreaReference aref = new AreaReference(aNamedCell.getRefersToFormula(), wb.getSpreadsheetVersion());
-		CellReference[] crefs = aref.getAllReferencedCells();
-		for (int i = 0; i < crefs.length; i++) {
-			Sheet s = wb.getSheet(crefs[i].getSheetName());
-			int agent = crefs[i].getRow();
-			Row r = s.getRow(agent);
-			int day = crefs[i].getCol();
+        try {
+            parser.setUp();
+        } catch (EncryptedDocumentException | InvalidFormatException | IOException e) {
+            e.printStackTrace();
+        }
 
-			Cell c = r.getCell(agent);
-			String cont = c.getStringCellValue().toUpperCase();
-			Shift shift;
-			if (cont.equals("")) {
-				shift = Shift.NA;
-			} else {
-				shift = Shift.valueOf(cont);
-			}
-			System.out.println("" + day + ", " + agent + ", " + cont);
-			this.setShift(shift, day - 1, agent - 1);
-		}
-	}
+        String regionName = "planning";
+
+        this.days = parser.getRegionWidth(regionName);
+        this.cycles = days / 14;
+        this.agents = parser.getRegionHeight(regionName);
+        this.shifts = parser.getShiftMatrix(regionName);
+    }
 
 	public void customRead(IloOplDataHandler handler) {
 		handler.startElement("timetable");
 		handler.startArray();
-		for (int i=1;i<=days.length;i++) {
+		for (int i=1;i<=shifts.length;i++) {
 			handler.startArray();
-			for (int j=1;j<=days[i].length;j++)
-				handler.addStringItem(days[i][j].toString());
+			for (int j=1;j<=shifts[i].length;j++)
+				handler.addStringItem(shifts[i][j].toString());
 			handler.endArray();
 		}
 		handler.endArray();
 		handler.endElement();
 	}
 
-
-
-	/**
-	 * Exports the contents of the current planning to an Excel file
-	 * @param filename name of the output file
-	 */
-	public void exportToExcel(String filename) {
-		Workbook wb = new HSSFWorkbook();
-		Sheet sheet = wb.createSheet("Planning");
-		Row row1 = sheet.createRow(0);
-		String[] letters = weekdayLetters(this.cycles);
-		for (int i = 0; i < 14 * this.cycles; i++) {
-			row1.createCell(i + 1).setCellValue(letters[i]);
-		}
-
-		for (int i = 0; i < agents; i++) {
-			Row currentRow = sheet.createRow(i+1);
-			currentRow.createCell(0).setCellValue("A" + (i+1));
-			for (int j = 0; j < 14 * cycles; j++) {
-				currentRow.createCell(j + 1).setCellValue(days[i][j].toString());
-			}
-		}
+    /**
+     * Exports the contents of the current planning to an Excel file
+     * @param filename name of the output file
+     */
+    public void exportToExcel(String filename) {
+        Workbook wb = new HSSFWorkbook();
+        Sheet sheet = wb.createSheet("Planning");
+        Row row1 = sheet.createRow(0);
+        String[] letters = weekdayLetters(this.cycles);
+        for (int i = 0; i < days; i++) {
+            row1.createCell(i + 1).setCellValue(letters[i]);
+        }
+        for (int i = 0; i < agents; i++) {
+            Row currentRow = sheet.createRow(i+1);
+            currentRow.createCell(0).setCellValue("A" + (i+1));
+            for (int j = 0; j < days; j++) {
+                currentRow.createCell(j + 1).setCellValue(shifts[i][j].toString());
+            }
+        }
+        CellReference corner1 = new CellReference(1, 1);
+        CellReference corner2 = new CellReference(agents, days);
+        AreaReference aref = new AreaReference(corner1, corner2);
+        String sref = aref.toString();
 
 		try (OutputStream fileOut = new FileOutputStream(filename)) {
 			wb.write(fileOut);
@@ -149,19 +132,19 @@ public class TimeTable implements ITimetable {
 	 * @return agent k's schedule on this planning
 	 */
 	public Shift[] getAgentsSchedule(int k) {
-		return days[k];
+		return shifts[k];
 	}
 
 	@Override
 	public Shift getShift(int i, int j) {
-		return days[i][j];
+		return shifts[i][j];
 	}
 
 	@Override
 	public boolean isWorkdayAssignment() {
-		for (int i = 0; i < days.length; i++) {
-			for (int j = 0; j < days[i].length; j++) {
-				if (days[i][j] == Shift.NA) return false;
+		for (int i = 0; i < shifts.length; i++) {
+			for (int j = 0; j < shifts[i].length; j++) {
+				if (shifts[i][j] == Shift.NA) return false;
 			}
 		}
 		return true;
@@ -169,9 +152,9 @@ public class TimeTable implements ITimetable {
 
 	@Override
 	public boolean isShiftAssignment() {
-		for (int i = 0; i < days.length; i++) {
-			for (int j = 0; j < days[i].length; j++) {
-				if (days[i][j] == Shift.NA || days[i][j] == Shift.W) return false;
+		for (int i = 0; i < shifts.length; i++) {
+			for (int j = 0; j < shifts[i].length; j++) {
+				if (shifts[i][j] == Shift.NA || shifts[i][j] == Shift.W) return false;
 			}
 		}
 		return true;
@@ -182,12 +165,16 @@ public class TimeTable implements ITimetable {
 		return agents;
 	}
 
-	@Override
-	public int getNbDays() {
-		return cycles * 14;
-	}
+    @Override
+    public int getNbDays() {
+        return days;
+    }
 
-	public void setDays(Shift[][] days) {
-		this.days = days;
+    public int getNbCycles() {
+        return cycles;
+    }
+
+	public void setShifts(Shift[][] days) {
+		this.shifts = days;
 	}
 }
