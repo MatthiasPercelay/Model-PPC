@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import com.sun.org.apache.bcel.internal.generic.IFEQ;
+import nurses.XLSParser;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -45,45 +47,20 @@ public class TimeTable implements ITimetable {
      * @param file The .xls file to read from
      */
     public TimeTable(File file) {
-        org.apache.poi.ss.usermodel.Workbook wb = null;
+        XLSParser parser = new XLSParser(file);
+
         try {
-            wb = WorkbookFactory.create(file);
+            parser.setUp();
         } catch (EncryptedDocumentException | InvalidFormatException | IOException e) {
             e.printStackTrace();
         }
-        String cname = "planning";
-        assert wb != null;
-        int namedCellIdx = wb.getNameIndex(cname);
-        Name aNamedCell = wb.getNameAt(namedCellIdx);
-        AreaReference aref = new AreaReference(aNamedCell.getRefersToFormula());
-        CellReference corner1 = aref.getFirstCell();
-        CellReference corner2 = aref.getLastCell();
-        int height = Math.abs(corner1.getRow() - corner2.getRow());
-        int length = Math.abs(corner1.getCol() - corner2.getCol());
 
-        this.days = length;
+        String regionName = "planning";
+
+        this.days = parser.getRegionWidth(regionName);
         this.cycles = days / 14;
-        this.agents = height;
-        this.shifts = new Shift[agents][days];
-
-        CellReference[] crefs = aref.getAllReferencedCells();
-        for (int i = 0; i < crefs.length; i++) {
-            Sheet s = wb.getSheet(crefs[i].getSheetName());
-            int agent = crefs[i].getRow();
-            Row r = s.getRow(agent);
-            int day = crefs[i].getCol();
-
-            Cell c = r.getCell(agent);
-            String cont = c.getStringCellValue().toUpperCase();
-            Shift shift;
-            if (cont.equals("")) {
-                shift = Shift.NA;
-            } else {
-                shift = Shift.valueOf(cont);
-            }
-            //System.out.println("" + day + ", " + agent + ", " + cont);
-            this.shifts[agent - 1][day - 1] = shift;
-        }
+        this.agents = parser.getRegionHeight(regionName);
+        this.shifts = parser.getShiftMatrix(regionName);
     }
 
 	public void customRead(IloOplDataHandler handler) {
@@ -99,28 +76,6 @@ public class TimeTable implements ITimetable {
 		handler.endElement();
 	}
 
-
-
-	/**
-	 * Exports the contents of the current planning to an Excel file
-	 * @param filename name of the output file
-	 */
-	public void exportToExcel(String filename) {
-		Workbook wb = new HSSFWorkbook();
-		Sheet sheet = wb.createSheet("Planning");
-		Row row1 = sheet.createRow(0);
-		String[] letters = weekdayLetters(this.cycles);
-		for (int i = 0; i < 14 * this.cycles; i++) {
-			row1.createCell(i + 1).setCellValue(letters[i]);
-		}
-
-		for (int i = 0; i < agents; i++) {
-			Row currentRow = sheet.createRow(i+1);
-			currentRow.createCell(0).setCellValue("A" + (i+1));
-			for (int j = 0; j < 14 * cycles; j++) {
-				currentRow.createCell(j + 1).setCellValue(shifts[i][j].toString());
-			}
-		}
     /**
      * Exports the contents of the current planning to an Excel file
      * @param filename name of the output file
@@ -174,7 +129,7 @@ public class TimeTable implements ITimetable {
 
     @Override
     public Shift getShift(int i, int j) {
-        return shifts[i][j];
+        return shifts[i - 1][j - 1];
     }
 
     @Override
