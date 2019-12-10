@@ -33,6 +33,8 @@ import ilog.opl.IloOplModelDefinition;
 import ilog.opl.IloOplModelSource;
 import ilog.opl.IloOplRunConfiguration;
 import ilog.opl.IloOplSettings;
+import nurses.pareto.ParetoArchiveL;
+import nurses.pareto.TimetableReports;
 import nurses.specs.IParetoArchive;
 import nurses.specs.IProblemInstance;
 import nurses.specs.IShiftSolver;
@@ -65,7 +67,7 @@ public class NRCmd  {
 	}
 	private final CmdLineParser parser;
 
-	@Option(name = "-f", aliases = { "-file", "--file" }, usage = "Random Seed.", required = true)
+	@Option(name = "-f", aliases = { "-file", "--file" }, usage = "XLS Problem Instance File.", required = true)
 	private File instanceFile;
 
 	@Option(name = "-s", aliases = { "-seed", "--seed" }, usage = "Random Seed.")
@@ -76,7 +78,7 @@ public class NRCmd  {
 
 	@Option(name = "-t", aliases = { "--threads" }, usage = "Number of threads.")
 	private int numThreads = 4;
-	
+
 	private long runtime;
 
 	public NRCmd() {
@@ -96,7 +98,6 @@ public class NRCmd  {
 	public void setUp(String... args) throws CmdLineException { 
 		readArgs(args);
 		LOGGER.setLevel(Level.parse(level));
-		
 		if (LOGGER.isLoggable(Level.INFO)) {
 			LOGGER.info(String.format(Locale.US, "i %s\nc SEED %d", "TODO", seed));			
 		}
@@ -104,69 +105,30 @@ public class NRCmd  {
 
 
 	public final static IProblemInstance parseInstance(File instanceFile) {
-		// TODO 
-		return null;
+		return new NRProblemInstance(instanceFile);
 	}
-	
+
 	public final static IParetoArchive createArchive() {
-		// TODO 
-		return null;
+		return new ParetoArchiveL();
 	}
-	
-	public final static IWorkdaySolver createWorkdaySolver() {
-        IloOplFactory.setDebugMode(true);
-        IloOplFactory oplF = new IloOplFactory();
 
-       
-        IloOplErrorHandler errHandler = oplF.createOplErrorHandler(System.out);
-        IloOplModelSource modelSource = oplF.createOplModelSource("src/main/opl/ModPPC/model/WorkDayAssignment,mod");
-        IloOplSettings settings = oplF.createOplSettings(errHandler);
-        IloOplModelDefinition def=oplF.createOplModelDefinition(modelSource,settings);
-        IloCplex cplex;
-		try {
-			cplex = oplF.createCplex();
-		} catch (IloException e) {
-			return null;
-		}
-		
-        IloOplModel opl=oplF.createOplModel(def,cplex);
-
-        //IloOplDataSource dataSource=new MyCustomDataSource(oplF);
-        //opl.addDataSource(dataSource);
-        opl.generate();
-        oplF.end();
-
-        // from  customdatasource example
-//        IloOplDataHandler handler = getDataHandler();
-//        IloOplErrorHandler errHandler = oplF.createOplErrorHandler();
-//        IloOplRunConfiguration rc = null;
-//            if (_cl.getDataFileNames().size() == 0) {
-//                rc = oplF.createOplRunConfiguration(_cl.getModelFileName());
-//            } else {
-//                String[] dataFiles = _cl.getDataFileNames().toArray(
-//                        new String[_cl.getDataFileNames().size()]);
-//                rc = oplF.createOplRunConfiguration(_cl.getModelFileName(),
-//                        dataFiles);
-//            }
-
-		return null;
+	public final static IWorkdaySolver createWorkdaySolver(IProblemInstance instance) {
+		return new WorkdaySolver();
 	}
-	
+
 	public final static IShiftSolver createShiftSolver() {
-		// TODO 
-		return null;
+		return new ShiftSolver();
 	}
-	
+
 	private final ITimetableReports createTimetableReports() {
-		// TODO Auto-generated method stub
-		return null;
+		return new TimetableReports();
 	}
-	
+
 	public void execute() {
+		IloOplFactory.setDebugMode(true);
 		runtime = - System.nanoTime();
-		// TODO
 		final IProblemInstance instance = parseInstance(instanceFile);
-		final IWorkdaySolver workdaySolver = createWorkdaySolver();
+		final IWorkdaySolver workdaySolver = createWorkdaySolver(instance);
 		final IParetoArchive workdayArchive = createArchive();
 		workdaySolver.solve(instance, workdayArchive);
 		final IShiftSolver shiftSolver = createShiftSolver();	
@@ -175,7 +137,7 @@ public class NRCmd  {
 		final ITimetableReports reporter = createTimetableReports();
 		reporter.generateReports(instance, shiftArchive);
 		runtime += System.nanoTime();
-		
+
 	}
 
 	private final static long NS2MS = 1000000;
