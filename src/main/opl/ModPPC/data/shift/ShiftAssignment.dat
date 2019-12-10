@@ -14,10 +14,6 @@ timetable=[
 ["BRK","W","W","BRK","BRK","BRK","W","W","BRK","W","BRK","BRK","BRK","BRK","W","BRK","W","W","W","W","BRK","W","W","JF","CA","CA","RH","RH"]
 ];
 
-morning = "M";
-day = "J";
-evening = "S";
-to_define = "W";
 hebdomary_break = "RH";
 
 demands= [
