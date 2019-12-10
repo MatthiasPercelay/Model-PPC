@@ -14,10 +14,6 @@ timetable= [
 [ "NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","RTT","NA","NA","CA","CA","CA","CA","CA","NA","NA","CA","CA","CA","RTT","RTT","NA","NA" ],
 [ "NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","RTT","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA" ]
 ];
-morning = "M";
-day = "J";
-evening = "S";
-to_define = "W";
 
 workDays= [ 10, 10, 16, 15, 10, 20 ];
 breaksPerCycle= [ 4, 4, 4, 4, 4, 4 ];
@@ -34,4 +30,3 @@ breakPrefs= [
 [ 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1 ],
 [ 2, 0, 0, 0, 1, 0, 0, 2, 0, 0, 0, 1, 0, 0 ]
 ];
-// change it to pref on a cycle 

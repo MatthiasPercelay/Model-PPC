@@ -14,10 +14,6 @@ timetable= [
 [ "NA","NA","NA","NA","RTT","NA","NA","NA","NA","NA","NA","NA","NA","NA","CA","CA","CA","CA","CA","NA","NA","CA","CA","CA","CA","CA","NA","NA" ],
 [ "NA","NA","NA","NA","RTT","NA","NA","NA","NA","NA","NA","NA","NA","NA","CA","CA","CA","CA","CA","NA","NA","CA","CA","CA","CA","CA","NA","NA" ]
 ];
-morning = "M";
-day = "J";
-evening = "S";
-to_define = "W";
 
 workDays= [ 20, 19, 20, 11, 9, 11 ];
 breaksPerCycle= [ 4, 4, 4, 4, 4, 4 ];
