@@ -72,14 +72,14 @@ public class XLSParser {
 		final Name aNamedCell = wb.getName(namedRegion);
 		final AreaReference aref = new AreaReference(aNamedCell.getRefersToFormula(), wb.getSpreadsheetVersion());
 		AreaDimension adim = new AreaDimension(aref);
-		return adim.m;
+		return adim.n;
 	}
 
 	public int getRegionWidth(String namedRegion) {
 		final Name aNamedCell = wb.getName(namedRegion);
 		final AreaReference aref = new AreaReference(aNamedCell.getRefersToFormula(), wb.getSpreadsheetVersion());
 		AreaDimension adim = new AreaDimension(aref);
-		return adim.n;
+		return adim.m;
 	}
 
 	public int[] getIntRange(String namedRegion) {
@@ -142,20 +142,60 @@ public class XLSParser {
 		return res;
 	}
 
-	/*public int[][][] getPrefsMatrix(String namedRegion) {
+	public int[][][] getPrefsMatrix(String namedRegion) {
 		final String[][] strings = getStringMatrix(namedRegion);
+		final int width = getRegionWidth(namedRegion);
+		final int height = getRegionHeight(namedRegion);
+
+		String[][] matin = new String[height / 3][width];
+		String[][] jour = new String[height / 3][width];
+		String[][] soir = new String[height / 3][width];
 
 		for (int i = 0; i < strings.length / 3; i++) {
-
+			matin[i] = strings[3 * i];
+			jour[i] = strings[3 * i + 1];
+			soir[i] = strings[3 * i + 2];
 		}
-	}*/
+
+		int[][][] prefints = new int[height / 3][width][3];
+		for (int i = 0; i < matin.length; i++) {
+			for (int j = 0; j < matin[0].length; j++) {
+				prefints[i][j] = prefInts(matin[i][j], jour[i][j], soir[i][j]);
+			}
+		}
+		return prefints;
+	}
+
+	private int[] prefInts(String matin, String jour, String soir) {
+		int[] res = new int[3];
+		res[0] = prefFromString(matin);
+		res[1] = prefFromString(jour);
+		res[2] = prefFromString(soir);
+		return res;
+	}
+
+	private int prefFromString(String pref) {
+		String val = pref.toUpperCase();
+		if (val.equals("NON")) return -1;
+		else if (val.equals("OUI")) return 1;
+		else return 0;
+	}
 
 	public static void main(String[] args) throws EncryptedDocumentException, InvalidFormatException, IOException {
 		XLSParser parser = new XLSParser(new File("src/test/data/ucl-planning-december-19.xls"));
 		parser.setUp();
 		int[][] matrix = parser.getIntMatrix("demands");
 		System.out.println(Arrays.deepToString(matrix));
+		System.out.println("shiftPrefs width: "+parser.getRegionWidth("shiftPrefs"));
+		System.out.println("shiftPrefs height: "+parser.getRegionHeight("shiftPrefs"));
+		System.out.println("demands width: "+parser.getRegionWidth("demands"));
+		System.out.println("demands height: "+parser.getRegionHeight("demands"));
 
+
+		int[][][] prefs = parser.getPrefsMatrix("shiftPrefs");
+		System.out.println(Arrays.deepToString(prefs));
+		String[][] sprefs = parser.getStringMatrix("shiftPrefs");
+		System.out.println(Arrays.deepToString(sprefs));
 	}
 
 }

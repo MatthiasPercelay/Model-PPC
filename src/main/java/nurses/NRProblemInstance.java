@@ -30,7 +30,6 @@ public class NRProblemInstance implements IProblemInstance {
 	private final int[][][] shiftPreferences;
 
 
-	//TODO : WIP constructor, do not use
 	public NRProblemInstance(File instanceFile, int dummy) {
 		XLSParser parser = new XLSParser(instanceFile);
 		try {
@@ -44,7 +43,7 @@ public class NRProblemInstance implements IProblemInstance {
 		breaksPerCycle = parser.getIntRange("breaksperCycle");
 		demands = parser.getIntMatrix("demands");
 		breakPreferences = parser.getIntMatrix("breakPrefs");
-		shiftPreferences = null;
+		shiftPreferences = parser.getPrefsMatrix("shiftPrefs");
 	}
 
 	public NRProblemInstance(File instanceFile) {
