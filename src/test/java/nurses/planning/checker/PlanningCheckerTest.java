@@ -14,11 +14,10 @@ import nurses.planning.checker.rules.ConsecutiveBreakDays;
 import nurses.planning.checker.rules.ConsecutiveWorkDays;
 import nurses.planning.checker.rules.SundayBreak;
 import nurses.planning.checker.rules.ThirtySixHourBreak;
-import nurses.specs.ITimetable;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 import static nurses.Shift.*;
+import static org.junit.Assert.assertTrue;
 
 public class PlanningCheckerTest {
 

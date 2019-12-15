@@ -16,6 +16,8 @@
 		<config default="false" name="ShiftAssignment" category="opl">
 			<ref name="model/ShiftAssignment.mod" type="model">
 			</ref>
+			<ref name="data/workday/ucl-planning-december-19.dat" type="data">
+			</ref>
 			<ref name="data/shift/ShiftAssignment.dat" type="data">
 			</ref>
 		</config>

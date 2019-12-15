@@ -22,7 +22,7 @@ public class ThirtySixHourBreakTest {
 
         Shift[] s1 = {S, J, S, J, B, S, M,
                       S, J, S, J, B, S, M};
-        //assertTrue(checker.check(s1));
+        assertTrue(checker.check(s1));
 
         Shift[] s2 = {S, B, M, S, B, J, B,
                       S, J, S, J, B, S, M};
