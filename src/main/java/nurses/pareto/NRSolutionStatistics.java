@@ -1,20 +1,35 @@
 package nurses.pareto;
 
+import nurses.Shift;
+import nurses.planning.TimeTable;
 import nurses.specs.IProblemInstance;
 import nurses.specs.ITimetable;
 
 public class NRSolutionStatistics {
-    private IProblemInstance instance;
+
     private ITimetable timetable;
 
-    public NRSolutionStatistics(IProblemInstance instance) {
-        this.instance = instance;
-        this.timetable = instance.getTimeTable();
+    public NRSolutionStatistics(ITimetable timetable) {
+        this.timetable = timetable;
+    }
+
+    public static MOSolution makeMOSolution(IProblemInstance instance,  Shift[][] shifts) {
+        NRSolutionStatistics sol = new NRSolutionStatistics(new TimeTable(shifts));
+        return new MOSolution(new TimeTable(shifts), sol.getObjectiveArray());
+    }
+
+    public double[] getObjectiveArray() {
+        double[] res = new double[4];
+        res[0] = -(double)getTotalWork();
+        res[1] = (double)getTotalWeekends();
+        res[2] = -(double)getTotalFiveDays();
+        res[3] = -(double)getTotalSixDays();
+        return res;
     }
 
     public int getTotalWork(int agent) {
         int worked = 0;
-        for (int day = 1; day <= instance.getNbDays(); day++) {
+        for (int day = 1; day <= timetable.getNbDays(); day++) {
             if (timetable.getShift(agent, day).isWork()) {
                 worked++;
             }
@@ -25,7 +40,7 @@ public class NRSolutionStatistics {
     public int getTotalWeekends(int agent) {
         int weekend = 0;
 
-        for (int day = 1; day <= instance.getNbDays(); day++) {
+        for (int day = 1; day <= timetable.getNbDays(); day++) {
 
             // we have a break on a sunday and the previous saturday is a break too
             if (day % 7 == 0 && timetable.getShift(agent, day).isBreak() && timetable.getShift(agent, day - 1).isBreak()) {
@@ -38,7 +53,7 @@ public class NRSolutionStatistics {
     private int getTotalNDays(int agent, int days) {
         int nDays = 0;
         int daysInARow = 0;
-        for (int day = 1; day <= instance.getNbDays(); day++) {
+        for (int day = 1; day <= timetable.getNbDays(); day++) {
             if (timetable.getShift(agent, day).isWork()) {
                 daysInARow++;
             }
@@ -91,9 +106,5 @@ public class NRSolutionStatistics {
             total += getTotalSixDays(i);
         }
         return total;
-    }
-
-    public IProblemInstance getInstance() {
-        return this.instance;
     }
 }

@@ -3,12 +3,11 @@
  * Author: JUNG
  * Creation Date: 25 nov. 2019 at 13:45:45
  *********************************************/
-
 workday=[
 ["S",	"RH",	"M",	"M",	"M",	"RH",	"RH",	"J",	"J",	"RH",	"J",	"S",	"S",	"S",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR"],
 ["CA",	"CA",	"CA",	"CA",	"CA",	"RH",	"RH",	"RH",	"W",	"W",	"W",	"W",	"B",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"B",	"B",	"B",	"JF",	"W",	"W",	"W",	"W"	],
 ["W",	"B",	"B",	"B",	"RA",	"B",	"B",	"W",	"B",	"RA",	"W",	"W",	"RH",	"RH",	"RA",	"RTT",	"RTT",	"RTT",	"RTT",	"RH",	"RH",	"RA",	"W",	"W",	"W",	"B",	"W",	"W"	],
 ["W",	"W",	"W",	"W",	"W",	"RH",	"RH",	"RTT",	"RTT",	"RTT",	"RA",	"RTT",	"RH",	"RH",	"RTT",	"W",	"RA",	"W",	"B",	"RH",	"RH",	"W",	"B",	"W",	"B",	"W",	"B",	"B"	],
-["W",	"W",	"0",	"W",	"W",	"W",	"W",	"B",	"B",	"W",	"W",	"B",	"W",	"B",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"W",	"JF",	"W",	"W",	"W",	"B"	],
+["W",	"W",	"W",	"W",	"W",	"W",	"W",	"B",	"B",	"W",	"W",	"B",	"W",	"B",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"W",	"JF",	"W",	"W",	"W",	"B"	],
 ["W",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"W",	"W",	"B",	"B",	"B",	"W",	"W",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"JF",	"CA",	"CA",	"RH",	"RH"]
 ];
