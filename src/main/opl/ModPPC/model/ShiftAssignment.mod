@@ -7,9 +7,6 @@ include "nursesCommon.mod";
 
 string workday[AGENTS][DAYS] = ...;
 
-int OBJECTIVE_SHIFT = ...;
-int OBJECTIVE_SHIFT_USE_AVERAGE = ...;
-
 // Constant used for lisibility (could hard code those)
 int MORNING = 1;
 int EVENING = 2;

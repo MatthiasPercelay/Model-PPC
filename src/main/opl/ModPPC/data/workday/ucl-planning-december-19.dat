@@ -1,6 +1,8 @@
 n=6;
 c=2;
 useRelaxation=0;
+OBJECTIVE_SHIFT = 1;
+OBJECTIVE_SHIFT_USE_AVERAGE = 0;
 timetable= [
 [ "S", "RH", "M", "M", "M", "RH", "RH", "J", "J", "RH", "J", "S", "S", "S", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR", "MPR" ],
 [ "CA", "CA", "CA", "CA", "CA", "RH", "RH", "RH", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "JF", "NA", "NA", "NA", "NA" ],

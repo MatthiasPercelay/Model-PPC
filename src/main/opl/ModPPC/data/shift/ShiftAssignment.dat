@@ -3,6 +3,7 @@
  * Author: JUNG
  * Creation Date: 25 nov. 2019 at 13:45:45
  *********************************************/
+ 
 workday=[
 ["S",	"RH",	"M",	"M",	"M",	"RH",	"RH",	"J",	"J",	"RH",	"J",	"S",	"S",	"S",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR"],
 ["CA",	"CA",	"CA",	"CA",	"CA",	"RH",	"RH",	"RH",	"W",	"W",	"W",	"W",	"B",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"B",	"B",	"B",	"JF",	"W",	"W",	"W",	"W"	],

@@ -26,6 +26,9 @@
  int d = DAYS_PER_WEEK * w;		// number of days of the work period
  range DAYS = 1..d;
  
+ int OBJECTIVE_SHIFT = ...;
+ int OBJECTIVE_SHIFT_USE_AVERAGE = ...;
+ 
  range SHIFTS = 1..3;
  
  string timetable[AGENTS][DAYS] = ...;
