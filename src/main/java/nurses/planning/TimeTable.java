@@ -127,7 +127,7 @@ public class TimeTable implements ITimetable {
 
 	@Override
 	public Shift getShift(int i, int j) {
-		return shifts[i][j];
+		return shifts[i - 1][j - 1];
 	}
 
 	@Override
