@@ -32,7 +32,7 @@ public final class MOSolution {
 		this.objective = objective;
 	}
 
-	public final Object getSolution() {
+	public final ITimetable getSolution() {
 		return solution;
 	}
 
