@@ -29,12 +29,10 @@ import java.io.OutputStream;
 public class TimeTable implements ITimetable {
     private Shift[][] shifts;
     private int days;
-    private int cycles;
     private int agents;
 
     public TimeTable(int days, int agents) {
         this.days = days;
-        this.cycles = days / 14;
         this.agents = agents;
         this.shifts = new Shift[agents][days];
     }
@@ -59,7 +57,6 @@ public class TimeTable implements ITimetable {
         String regionName = "planning";
 
         this.days = parser.getRegionWidth(regionName);
-        this.cycles = days / 14;
         this.agents = parser.getRegionHeight(regionName);
         this.shifts = parser.getShiftMatrix(regionName);
     }
@@ -85,7 +82,7 @@ public class TimeTable implements ITimetable {
         Workbook wb = new HSSFWorkbook();
         Sheet sheet = wb.createSheet("Planning");
         Row row1 = sheet.createRow(0);
-        String[] letters = weekdayLetters(this.cycles);
+        String[] letters = weekdayLetters(getNbCycles());
         for (int i = 0; i < days; i++) {
             row1.createCell(i + 1).setCellValue(letters[i]);
         }
@@ -164,7 +161,7 @@ public class TimeTable implements ITimetable {
     }
 
     public int getNbCycles() {
-        return cycles;
+        return days / 14;
     }
 
 	public void setShifts(Shift[][] days) {

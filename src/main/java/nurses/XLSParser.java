@@ -214,7 +214,14 @@ public class XLSParser {
 		System.out.println(Arrays.deepToString(prefs));
 		String[][] sprefs = parser.getStringMatrix("shiftPrefs");
 		System.out.println(Arrays.deepToString(sprefs));*/
-		NRProblemInstance instance = new NRProblemInstance(new File("src/test/data/ucl-planning-december-19.xls"), 0);
+		NRProblemInstance instance = new NRProblemInstance(new File("src/test/data/ucl-planning-december-19.xls"));
+		Shift[][] shifts = parser.getShiftMatrix("planning");
+		System.out.println(Arrays.deepToString(shifts));
+		System.out.println(Arrays.toString(instance.getWorkdays()));
+		System.out.println(Arrays.toString(instance.getBreaksPerCycle()));
+		System.out.println(Arrays.deepToString(instance.getBreakPreferences()));
+		System.out.println(Arrays.deepToString(instance.getDemands()));
+		System.out.println(Arrays.deepToString(instance.getShiftPreferences()));
 	}
 
 }

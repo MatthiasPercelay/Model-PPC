@@ -30,7 +30,7 @@ public class NRProblemInstance implements IProblemInstance {
 	private final int[][][] shiftPreferences;
 
 
-	public NRProblemInstance(File instanceFile, int dummy) {
+	public NRProblemInstance(File instanceFile) {
 		XLSParser parser = new XLSParser(instanceFile);
 		try {
 			parser.setUp();
@@ -46,7 +46,7 @@ public class NRProblemInstance implements IProblemInstance {
 		shiftPreferences = parser.getPrefsMatrix("shiftPrefs");
 	}
 
-	public NRProblemInstance(File instanceFile) {
+	/*public NRProblemInstance(File instanceFile) {
 		nbCycles = 2;
 		timetable = new TimeTable(instanceFile);
 		workDays = new int[] {10, 13, 10, 11, 17, 17};
@@ -165,7 +165,7 @@ public class NRProblemInstance implements IProblemInstance {
 			}
 		};
 
-	}
+	}*/
 
 	public NRProblemInstance(IProblemInstance instance, ITimetable timetable) {
 		super();
