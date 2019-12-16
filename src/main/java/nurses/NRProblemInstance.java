@@ -240,6 +240,22 @@ public class NRProblemInstance implements IProblemInstance {
 			handler.endElement();
 
 			///////////////////////////
+			// Decide the type of objective function used.
+			// DEFAULT : 0
+			handler.startElement("OBJECTIVE_SHIFT");
+			handler.addIntItem(0);
+			handler.endElement();
+
+			///////////////////////////
+			// For the shift assignment, we compute the average distance of objective rating for each agent to the average
+			// So we can balance the timetable for each agent (= trying to be fair)
+			// 1 : Use this parameter; 0 : Don't use. DEFAULT : 1
+			// The computation of the solution takes much more time using this parameter, but might be better.
+			handler.startElement("OBJECTIVE_SHIFT_USE_AVERAGE");
+			handler.addIntItem(1);
+			handler.endElement();
+
+			///////////////////////////
 			handler.startElement("timetable");
 			handler.startArray();
 			for (int i=1;i<=getNbAgents();i++) {
