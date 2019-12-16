@@ -33,14 +33,14 @@ public interface IParetoArchive {
 	}
 	void forEach(Consumer<MOSolution> consumer);
 
-	default <E> void forEachBi(final BiConsumer<E, double[]> consumer) {
+	default void forEachBi(final BiConsumer<ITimetable, double[]> consumer) {
 		// TODO handle type safety ?
-		forEach( (mosol) -> consumer.accept((E) mosol.solution, mosol.objective));
+		forEach( (mosol) -> consumer.accept(mosol.solution, mosol.objective));
 	}
 
-	default <E> void forEachSolution(final Consumer<E> consumer) {
+	default void forEachSolution(final Consumer<MOSolution> consumer) {
 		// TODO handle type safety ?
-		forEach( (mosol) -> consumer.accept((E) mosol.solution));
+		forEach( (mosol) -> consumer.accept(mosol));
 	}
 
 	default void forEachObjective(final Consumer<double[]> consumer) {
