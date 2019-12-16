@@ -12,8 +12,7 @@ public class TimetableReports implements ITimetableReports {
 
 	@Override
 	public void generateReports(IProblemInstance instance, IParetoArchive archive) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stu
 	}
 
 	

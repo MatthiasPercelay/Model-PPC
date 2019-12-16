@@ -1,7 +1,9 @@
 package nurses.pareto;
 
+import nurses.Shift;
 import nurses.specs.IProblemInstance;
 import nurses.specs.ITimetable;
+
 
 public class NRSolutionStatistics {
     private IProblemInstance instance;
@@ -96,4 +98,88 @@ public class NRSolutionStatistics {
     public IProblemInstance getInstance() {
         return this.instance;
     }
+
+    public int getTotalSM(int agent) {
+        // get the number of times the agent works an evening shift then a morning shift
+        int count = 0;
+        for (int day = 1; day <= instance.getNbDays()-1; day++) {
+            if (timetable.getShift(agent, day) ==Shift.S && timetable.getShift(agent, day+1) == Shift.M) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int getTotalSM() {
+        int count = 0;
+        for (int agent = 1; agent <= instance.getNbAgents(); agent++) {
+            count += getTotalSM(agent);
+        }
+        return count;
+    }
+
+    public int getTotalSameShift(int agent) {
+        // count how many times the agent works the same shift 2 days in a row
+        int count = 0;
+        for (int day = 1; day <= instance.getNbDays()-1; day++) {
+            if (timetable.getShift(agent, day) == timetable.getShift(agent, day+1)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int getTotalSameShift() {
+        int count = 0;
+        for (int agent = 1; agent <= instance.getNbAgents(); agent++) {
+            count += getTotalSameShift(agent);
+        }
+        return count;
+    }
+
+    private int shiftToPrefIndex(Shift s) {
+        if (s == Shift.M) return 0;
+        if (s == Shift.S) return 1;
+        else return 2;
+    }
+
+    private int getSatisfaction(int agent, int day) {
+        Shift s = timetable.getShift(agent, day);
+        if (timetable.getShift(agent, day).isBreak()) {
+            return 0;
+        }
+        return instance.getShiftPreferences()[agent-1][day-1][shiftToPrefIndex(s)];
+    }
+
+    public int getTotalSatisfaction(int agent) {
+        int count = 0;
+        for (int day = 1; day <= timetable.getNbDays(); day++) {
+            count += getSatisfaction(agent, day);
+        }
+        return count;
+    }
+
+    public int getTotalSatisfaction() {
+        int count = 0;
+        for (int agent = 1; agent <= timetable.getNbAgents(); agent++) {
+            count += getTotalSatisfaction(agent);
+        }
+        return count;
+    }
+
+    public double avgSatisfaction() {
+        return (double)getTotalSatisfaction() / (double)timetable.getNbAgents();
+    }
+
+    public double stdDevSatisfaction() {
+        // standard deviation of the satisfaction
+        double avgSat = avgSatisfaction();
+        double variation = 0;
+        for (int agent = 1; agent <= timetable.getNbAgents(); agent++) {
+            variation += Math.pow((getTotalSatisfaction(agent) - avgSat),2);
+        }
+        return Math.sqrt(variation / timetable.getNbAgents());
+    }
+
+
 }
