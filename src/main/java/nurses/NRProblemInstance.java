@@ -42,7 +42,7 @@ public class NRProblemInstance implements IProblemInstance {
 		workDays = parser.getIntRange("workDays");
 		breaksPerCycle = parser.getIntRange("breaksperCycle");
 		demands = parser.getIntMatrix("demands");
-		breakPreferences = parser.getIntMatrix("breakPrefs");
+		breakPreferences = parser.getBreaksMatrix("breakPrefs");
 		shiftPreferences = parser.getPrefsMatrix("shiftPrefs");
 	}
 

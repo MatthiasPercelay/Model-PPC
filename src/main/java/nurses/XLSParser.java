@@ -166,6 +166,18 @@ public class XLSParser {
 		return prefints;
 	}
 
+	public int[][] getBreaksMatrix(String namedRegion) {
+		String[][] strings = getStringMatrix(namedRegion);
+		int[][] res = new int[strings.length][strings[0].length];
+		for (int i = 0; i < strings.length; i++) {
+			for (int j = 0; j < strings[i].length; j++) {
+				int pref = breakFromString(strings[i][j]);
+				res[i][j] = pref;
+			}
+		}
+		return res;
+	}
+
 	private int[] prefInts(String matin, String jour, String soir) {
 		int[] res = new int[3];
 		res[0] = prefFromString(matin);
@@ -181,10 +193,16 @@ public class XLSParser {
 		else return 0;
 	}
 
+	private int breakFromString(String pref) {
+		String val = pref.toUpperCase();
+		if (val.equals("OUI")) return 1;
+		else return 0;
+	}
+
 	public static void main(String[] args) throws EncryptedDocumentException, InvalidFormatException, IOException {
 		XLSParser parser = new XLSParser(new File("src/test/data/ucl-planning-december-19.xls"));
 		parser.setUp();
-		int[][] matrix = parser.getIntMatrix("demands");
+		/*int[][] matrix = parser.getIntMatrix("demands");
 		System.out.println(Arrays.deepToString(matrix));
 		System.out.println("shiftPrefs width: "+parser.getRegionWidth("shiftPrefs"));
 		System.out.println("shiftPrefs height: "+parser.getRegionHeight("shiftPrefs"));
@@ -195,7 +213,8 @@ public class XLSParser {
 		int[][][] prefs = parser.getPrefsMatrix("shiftPrefs");
 		System.out.println(Arrays.deepToString(prefs));
 		String[][] sprefs = parser.getStringMatrix("shiftPrefs");
-		System.out.println(Arrays.deepToString(sprefs));
+		System.out.println(Arrays.deepToString(sprefs));*/
+		NRProblemInstance instance = new NRProblemInstance(new File("src/test/data/ucl-planning-december-19.xls"), 0);
 	}
 
 }
