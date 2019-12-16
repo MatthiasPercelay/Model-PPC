@@ -7,14 +7,16 @@ import nurses.specs.ITimetable;
 
 public class NRSolutionStatistics {
 
+    private IProblemInstance instance;
     private ITimetable timetable;
 
-    public NRSolutionStatistics(ITimetable timetable) {
+    public NRSolutionStatistics(IProblemInstance instance, ITimetable timetable) {
+        this.instance = instance;
         this.timetable = timetable;
     }
 
     public static MOSolution makeMOSolution(IProblemInstance instance,  Shift[][] shifts) {
-        NRSolutionStatistics sol = new NRSolutionStatistics(new TimeTable(shifts));
+        NRSolutionStatistics sol = new NRSolutionStatistics(instance, new TimeTable(shifts));
         return new MOSolution(new TimeTable(shifts), sol.getObjectiveArray());
     }
 
