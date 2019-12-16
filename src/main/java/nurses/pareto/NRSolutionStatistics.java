@@ -1,5 +1,7 @@
 package nurses.pareto;
 
+import nurses.Shift;
+import nurses.planning.TimeTable;
 import nurses.specs.IProblemInstance;
 import nurses.specs.ITimetable;
 
@@ -10,6 +12,20 @@ public class NRSolutionStatistics {
     public NRSolutionStatistics(IProblemInstance instance) {
         this.instance = instance;
         this.timetable = instance.getTimeTable();
+    }
+
+    public static MOSolution makeMOSolution(IProblemInstance instance,  Shift[][] shifts) {
+        NRSolutionStatistics sol = new NRSolutionStatistics(instance);
+        return new MOSolution(new TimeTable(shifts), sol.getObjectiveArray());
+    }
+
+    public double[] getObjectiveArray() {
+        double[] res = new double[4];
+        res[0] = -(double)getTotalWork();
+        res[1] = (double)getTotalWeekends();
+        res[2] = -(double)getTotalFiveDays();
+        res[3] = -(double)getTotalSixDays();
+        return res;
     }
 
     public int getTotalWork(int agent) {
