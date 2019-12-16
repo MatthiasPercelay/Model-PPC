@@ -11,42 +11,43 @@ package nurses.specs;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import nurses.Shift;
 import nurses.pareto.MOSolution;
 
 public interface IParetoArchive {
 
-	default void add(double[] objective) {
-		add(new MOSolution(null, objective));
+	default void add(Shift[][] solution, double[] objective) {
+		add(new MOSolution(solution, objective));
 	}
 
-	default void add(Object solution, double[] objective) {
-		add(new MOSolution(null, objective));
+	default void add(ITimetable solution, double[] objective) {
+		add(new MOSolution(solution, objective));
 	}
 
 	void add(MOSolution mosol);
-	
+
 	boolean isDominated(double[] objective);
-	
+
 	default boolean isDominated(MOSolution mosol) {
 		return isDominated(mosol.objective);
 	}
 	void forEach(Consumer<MOSolution> consumer);
-	
-	default <E> void forEachBi(final BiConsumer<E, double[]> consumer) {
+
+	default void forEachBi(final BiConsumer<ITimetable, double[]> consumer) {
 		// TODO handle type safety ?
-		forEach( (mosol) -> consumer.accept((E) mosol.solution, mosol.objective));
+		forEach( (mosol) -> consumer.accept(mosol.solution, mosol.objective));
 	}
-	
-	default <E> void forEachSolution(final Consumer<E> consumer) {
+
+	default void forEachSolution(final Consumer<MOSolution> consumer) {
 		// TODO handle type safety ?
-		forEach( (mosol) -> consumer.accept((E) mosol.solution));
+		forEach( (mosol) -> consumer.accept(mosol));
 	}
-	
+
 	default void forEachObjective(final Consumer<double[]> consumer) {
 		forEach( (mosol) -> consumer.accept(mosol.objective));
 	}
-	
+
 	int size();
-	
-	
+
+
 }

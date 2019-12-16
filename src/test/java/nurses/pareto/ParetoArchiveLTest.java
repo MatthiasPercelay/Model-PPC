@@ -1,13 +1,14 @@
 /**
  * This file is part of nurse-rostering-solver, https://github.com/MatthiasPercelay/Model-PPC
- *
+ * <p>
  * Copyright (c) 2019, Université Nice Sophia Antipolis. All rights reserved.
- *
+ * <p>
  * Licensed under the BSD 3-clause license.
  * See LICENSE file in the project root for full license information.
  */
 package nurses.pareto;
 
+import nurses.Shift;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,13 +20,15 @@ public class ParetoArchiveLTest {
 
     @Before
     public void setup() {
+        Shift[][] dummy = new Shift[1][1];
+        dummy[0][0] = Shift.B;
         sols = new MOSolution[]{
-                new MOSolution(new Object(), new double[]{1, 2, 1, 1}),
-                new MOSolution(new Object(), new double[]{5, 4, 3, 3}),
-                new MOSolution(new Object(), new double[]{1, 3, 1, 3}),
-                new MOSolution(new Object(), new double[]{0, 1, 0, 0}),// non dom
-                new MOSolution(new Object(), new double[]{2, 2, 2, 2}),
-                new MOSolution(new Object(), new double[]{0, 0, 1, 0}) // non dom
+            new MOSolution(dummy, new double[]{1, 2, 1, 1}),
+            new MOSolution(dummy, new double[]{5, 4, 3, 3}),
+            new MOSolution(dummy, new double[]{1, 3, 1, 3}),
+            new MOSolution(dummy, new double[]{0, 1, 0, 0}),// non dom
+            new MOSolution(dummy, new double[]{2, 2, 2, 2}),
+            new MOSolution(dummy, new double[]{0, 0, 1, 0}) // non dom
         };
 
         pareto = new ParetoArchiveL();
@@ -88,7 +91,7 @@ public class ParetoArchiveLTest {
     }
 
     @Test
-    public void sortByLexico(){
+    public void sortByLexico() {
         LexicoDominance d = new LexicoDominance();
 
         pareto.getSolutions().sort(d);

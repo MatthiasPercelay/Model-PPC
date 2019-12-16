@@ -7,13 +7,14 @@ import ilog.concert.IloIntVarMap;
 import ilog.opl.IloCplex;
 import ilog.opl.IloOplModel;
 import nurses.pareto.MOSolution;
+import nurses.pareto.NRSolutionStatistics;
 import nurses.specs.IParetoArchive;
 import nurses.specs.IProblemInstance;
 import nurses.specs.IWorkdaySolver;
 
 public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 
-	public final String MODEL_FILE = "src/main/opl/ModPPC/model/testCustomData.mod";
+	public final String MODEL_FILE = "src/main/opl/ModPPC/model/WorkDayAssignment.mod";
 	
 	public WorkdaySolver() {}
 
@@ -28,7 +29,7 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 		final int d = instance.getNbDays();
 		final Shift[][] solution = new Shift[n][d];
 		IloCplex cplex = opl.getCplex();
-		System.out.println("SOLUTION");
+		//System.out.println("SOLUTION");
 		try {
 			for (int i = 1; i <= n; i++) {
 				IloIntVarMap worki = work.getSub(i);
@@ -38,9 +39,11 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 							cplex.getValue(worki.get(j), soln)
 							);
 				}
-				System.out.println(Arrays.toString(solution[i-1]));
+				//System.out.println(Arrays.toString(solution[i-1]));
 			}
-			archive.add(new MOSolution(solution, new double[] {0, 0}));
+			MOSolution msol = NRSolutionStatistics.makeMOSolution(instance, solution);
+			archive.add(msol);
+			//archive.add(new MOSolution(solution, new double[] {0, 0}));
 		} catch (IloException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -68,8 +71,9 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 				for (int i = 0; i < n; i++) {
 					storeSolution(instance, opl, archive, i);
 				}
+                System.out.println("Number of solutions : " + archive.size());
 				opl.postProcess();
-				opl.printSolution(System.out);
+				//opl.printSolution(System.out);
 			}
 		} catch (IloException e) {
 			e.printStackTrace();
