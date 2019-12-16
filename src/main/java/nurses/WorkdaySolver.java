@@ -7,6 +7,7 @@ import ilog.concert.IloIntVarMap;
 import ilog.opl.IloCplex;
 import ilog.opl.IloOplModel;
 import nurses.pareto.MOSolution;
+import nurses.pareto.NRSolutionStatistics;
 import nurses.specs.IParetoArchive;
 import nurses.specs.IProblemInstance;
 import nurses.specs.IWorkdaySolver;
@@ -40,7 +41,9 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 				}
 				//System.out.println(Arrays.toString(solution[i-1]));
 			}
-			archive.add(new MOSolution(solution, new double[] {0, 0}));
+			MOSolution msol = NRSolutionStatistics.makeMOSolution(instance, solution);
+			archive.add(msol);
+			//archive.add(new MOSolution(solution, new double[] {0, 0}));
 		} catch (IloException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -68,6 +71,7 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 				for (int i = 0; i < n; i++) {
 					storeSolution(instance, opl, archive, i);
 				}
+                System.out.println("Number of solutions : " + archive.size());
 				opl.postProcess();
 				//opl.printSolution(System.out);
 			}

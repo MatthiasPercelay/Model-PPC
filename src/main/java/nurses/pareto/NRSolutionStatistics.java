@@ -14,7 +14,7 @@ public class NRSolutionStatistics {
     }
 
     public static MOSolution makeMOSolution(IProblemInstance instance,  Shift[][] shifts) {
-        NRSolutionStatistics sol = new NRSolutionStatistics(instance);
+        NRSolutionStatistics sol = new NRSolutionStatistics(new TimeTable(shifts));
         return new MOSolution(new TimeTable(shifts), sol.getObjectiveArray());
     }
 
