@@ -30,6 +30,10 @@ dexpr int break[i in AGENTS][j in DAYS] = 1 - work[i][j];
 // break2Days[i][j] = 1 means that the agent i  have a 2days break (j is the first day) 
 dexpr int break2Days[i in AGENTS][j in DAYS] = (j==d) ? 0 : minl( break[i][j], break[i][j+1]); 
  
+ 
+ //weekend = 1 si l'agent i a son week end pendant la semaine w'
+ dexpr int weekEnd[i in AGENTS][w in WEEKS] = minl(break[i][endW[w]],break[i][endW[w]-1]);
+ 
 // work5days[i][j] = 1 means that the agent i  will work 5 consecutif days starting from the day j. 
 //dexpr int work5Days[i in AGENTS][j in DAYS] = (j>=d-3) ? 0 : minl( work[i][j], work[i][j+1],work[i][j+2],work[i][j+3],work[i][j+4]); 
  
