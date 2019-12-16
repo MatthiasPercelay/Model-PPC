@@ -65,27 +65,74 @@ dexpr int MAXWdayPweek[i in AGENTS]= sum(w in WEEKS)(WdayPweek[i][w]);
 //sum of max day worked in a week for each agent
 dexpr int TOTALMAXWdayPweek= sum(i in AGENTS)(MAXWdayPweek[i]);*/
 
-//coeff de la contrainte 2
-dexpr int coeff1=(max(j in DAYS) demand[j]*d+1);
-//coeff de la contrainte 3
-dexpr int coeff2=(max(j in DAYS) demand[j]+1);
-//coeff de la contrainte 4
-dexpr int coeff3=(14*c*n);
 
+
+//Total sum of the under demand
 //contrainte 1
 dexpr int TOTALunderDemand=sum(j in DAYS) underDemand[j];
+//Total sum of the upper demand
 //contrainte 2
 dexpr int TOTALupperDemand=sum(j in DAYS) upperDemand[j];
+//Maximum difference between the demand and the subdemand for one day d
 //contrainte 3
 dexpr int MAXDIFFworkSupply=max(j in DAYS)(demand[j]-supply[j]);
 //contrainte 4
-// global score of the preferences
+// global  of the preferences
 dexpr int TOTALbreakPrefpW = sum(i in AGENTS, l in CYCLES) breakprefpW[i][l];
+//contrainte 5
+// total of the difference between the number of working days in the timetable and the number of working days expected to do
+dexpr int TotalworkDayDiff = sum(i in AGENTS) (workDayDiff[i]);
+//contrainte 6
+//total of the number of free weekend
+dexpr int TotalweekEnd=sum(i in AGENTS,w in WEEKS)weekEnd[i][w];
 
+
+
+//maximum de la contrainte TOTALunderDemand (1)
+dexpr int MAXValueOF_TOTALunderDemand=(max(j in DAYS) (demand[j])*d+1);
+//maximum de la contrainte TOTALupperDemand (2)
+dexpr int MAXValueOF_TOTALupperDemand=(max(j in DAYS) (n-demand[j])*d+1);
+//maximum de la contrainte MAXDIFFworkSupply (3)
+dexpr int MAXValueOF_MAXDIFFworkSupply=(max(j in DAYS) demand[j]+1);
+//maximum de la contrainte TOTALbreakPrefpW (4)
+dexpr int MAXValueOF_TOTALbreakPrefpW=(14*c*n);
+//maximum de la contrainte TotalworkDayDiff (5)
+dexpr int MAXValueOF_TotalworkDayDiff=((d+1)*n);
+//maximum de la contrainte TotalweekEnd (6)
+dexpr int MAXValueOF_TotalweekEnd=(w*n+1);
+
+//most interesting constraint with relaxation
+//combination of the constraints  1 2 3
+dexpr int ObjectifCombi123 = (MAXValueOF_TOTALupperDemand*MAXValueOF_MAXDIFFworkSupply)*(TOTALunderDemand) +(MAXValueOF_MAXDIFFworkSupply)*(TOTALupperDemand)+(MAXDIFFworkSupply);
+
+//combination of the constraints 1 2 3 4
+dexpr int ObjectifCombi1234 = MAXValueOF_TOTALbreakPrefpW*ObjectifCombi123+TOTALbreakPrefpW;
+//combination of the constraints 1 2 3 6
+dexpr int ObjectifCombi1236 = MAXValueOF_TotalweekEnd*ObjectifCombi123+TotalweekEnd;
+//combination of the constraints 1 2 3 4 6
+dexpr int ObjectifCombi12346 = MAXValueOF_TotalweekEnd*ObjectifCombi1234+TotalweekEnd;
+//combination of the constraints 1 2 3 6 4
+dexpr int ObjectifCombi12364 = MAXValueOF_TOTALbreakPrefpW*ObjectifCombi1236+TOTALbreakPrefpW;
+
+
+
+
+//most interesting constraint without relaxation -> 5
+
+//combination of the constraints 5 4
+dexpr int ObjectifCombi54 = MAXValueOF_TOTALbreakPrefpW*TotalworkDayDiff+TOTALbreakPrefpW;
+//combination of the constraints 5 6
+dexpr int ObjectifCombi56 = MAXValueOF_TotalweekEnd*TotalworkDayDiff+TotalweekEnd;
+//combination of the constraints 5 4 6
+dexpr int ObjectifCombi546 = MAXValueOF_TotalweekEnd*ObjectifCombi54+TotalweekEnd;
+//combination of the constraints 5 6 4
+dexpr int ObjectifCombi564 = MAXValueOF_TOTALbreakPrefpW*ObjectifCombi56+TOTALbreakPrefpW;
 
 // if (relaxation == 1) then minimize in first sum(j in DAYS) (underDemand[j]) and then (sum(j in DAYS) (upperDemand[j])
 //else minimize the difference between the number of days 
-dexpr int objectif = (useRelaxation==1) ? (coeff1*coeff2*coeff3)*(TOTALunderDemand) +(coeff2*coeff3)*(TOTALupperDemand)+coeff3*(MAXDIFFworkSupply)+TOTALbreakPrefpW : sum(i in AGENTS) (workDayDiff[i]);
+// (1 2 3 4) else (5)
+dexpr int objectif = (useRelaxation==1) ? ObjectifCombi1234 : TotalworkDayDiff;
+
 
 minimize objectif;
 //changer le cas ou relaxation = 0; pour le moment , emploie au maximum  qui a isurcharger la demande
