@@ -7,7 +7,6 @@ import nurses.specs.ITimetable;
 
 
 public class NRSolutionStatistics {
-
     private IProblemInstance instance;
     private ITimetable timetable;
 
