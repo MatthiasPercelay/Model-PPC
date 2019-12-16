@@ -148,19 +148,20 @@ public class XLSParser {
 		final int height = getRegionHeight(namedRegion);
 
 		String[][] matin = new String[height / 3][width];
-		String[][] jour = new String[height / 3][width];
 		String[][] soir = new String[height / 3][width];
+		String[][] jour = new String[height / 3][width];
+
 
 		for (int i = 0; i < strings.length / 3; i++) {
 			matin[i] = strings[3 * i];
-			jour[i] = strings[3 * i + 1];
-			soir[i] = strings[3 * i + 2];
+			soir[i] = strings[3 * i + 1];
+			jour[i] = strings[3 * i + 2];
 		}
 
 		int[][][] prefints = new int[height / 3][width][3];
 		for (int i = 0; i < matin.length; i++) {
 			for (int j = 0; j < matin[0].length; j++) {
-				prefints[i][j] = prefInts(matin[i][j], jour[i][j], soir[i][j]);
+				prefints[i][j] = prefInts(matin[i][j], soir[i][j], jour[i][j]);
 			}
 		}
 		return prefints;
@@ -178,11 +179,11 @@ public class XLSParser {
 		return res;
 	}
 
-	private int[] prefInts(String matin, String jour, String soir) {
+	private int[] prefInts(String matin, String soir, String jour) {
 		int[] res = new int[3];
 		res[0] = prefFromString(matin);
-		res[1] = prefFromString(jour);
-		res[2] = prefFromString(soir);
+		res[1] = prefFromString(soir);
+		res[2] = prefFromString(jour);
 		return res;
 	}
 
