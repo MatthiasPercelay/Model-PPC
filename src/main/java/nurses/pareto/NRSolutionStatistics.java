@@ -3,11 +3,11 @@ package nurses.pareto;
 import nurses.specs.IProblemInstance;
 import nurses.specs.ITimetable;
 
-public class NRSolution {
+public class NRSolutionStatistics {
     private IProblemInstance instance;
     private ITimetable timetable;
 
-    public NRSolution(IProblemInstance instance) {
+    public NRSolutionStatistics(IProblemInstance instance) {
         this.instance = instance;
         this.timetable = instance.getTimeTable();
     }
