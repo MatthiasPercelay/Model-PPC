@@ -61,6 +61,11 @@ public class TimeTable implements ITimetable {
         this.shifts = parser.getShiftMatrix(regionName);
     }
 
+    public TimeTable(Shift[][] shifts){
+    	this(shifts[0].length, shifts.length);
+    	setShifts(shifts);
+	}
+
 	public void customRead(IloOplDataHandler handler) {
 		handler.startElement("timetable");
 		handler.startArray();

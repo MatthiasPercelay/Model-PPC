@@ -8,18 +8,27 @@
  */
 package nurses.pareto;
 
+import nurses.Shift;
+import nurses.planning.TimeTable;
+import nurses.specs.ITimetable;
+
 import java.util.Arrays;
 
 public final class MOSolution {
 
-	// TODO Use ITimeTable instead of Object
-	public final Object solution;
+	public final ITimetable solution;
 
 	public final double[] objective;
 
-	public MOSolution(Object solution, double[] objective) {
+	public MOSolution(ITimetable solution, double[] objective) {
 		super();
 		this.solution = solution;
+		this.objective = objective;
+	}
+
+	public MOSolution(Shift[][] shifts, double[] objective){
+		super();
+		this.solution = new TimeTable(shifts);
 		this.objective = objective;
 	}
 
