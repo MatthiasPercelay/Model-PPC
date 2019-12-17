@@ -41,7 +41,11 @@ public interface IProblemInstance extends ITTDimension {
 	int[][][] getShiftPreferences();
 	
 	IloCustomOplDataSource toWorkdayDataSource(IloOplFactory oplF);
-	
+	IloCustomOplDataSource toWorkdayDataSource(IloOplFactory oplF, int useRelaxation, int objective);
+
+
 	IloCustomOplDataSource toShiftDataSource(IloOplFactory oplF);
-	
+	IloCustomOplDataSource toShiftDataSource(IloOplFactory oplF, int objective, int objective_average);
+
+
 }

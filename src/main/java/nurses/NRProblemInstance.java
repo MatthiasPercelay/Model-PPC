@@ -216,9 +216,22 @@ public class NRProblemInstance implements IProblemInstance {
 	}
 
 	private class NRPOplDataSource extends IloCustomOplDataSource {
+		private int useRelaxation;
+		private int objective;
+		private int objective_average;
 
 		public NRPOplDataSource(IloOplFactory oplEnv) {
 			super(oplEnv);
+			this.useRelaxation = 0;
+			this.objective = 0;
+			this.objective_average = 0;
+		}
+
+		public NRPOplDataSource(IloOplFactory oplEnv, int useRelaxation, int objective, int objective_average) {
+			super(oplEnv);
+			this.useRelaxation = useRelaxation;
+			this.objective = objective;
+			this.objective_average = objective_average;
 		}
 
 		@Override
@@ -236,14 +249,14 @@ public class NRProblemInstance implements IProblemInstance {
 
 			///////////////////////////
 			handler.startElement("useRelaxation");
-			handler.addIntItem(0);
+			handler.addIntItem(useRelaxation);
 			handler.endElement();
 
 			///////////////////////////
 			// Decide the type of objective function used.
 			// DEFAULT : 0
 			handler.startElement("OBJECTIVE_SHIFT");
-			handler.addIntItem(0);
+			handler.addIntItem(objective);
 			handler.endElement();
 
 			///////////////////////////
@@ -252,7 +265,7 @@ public class NRProblemInstance implements IProblemInstance {
 			// 1 : Use this parameter; 0 : Don't use. DEFAULT : 1
 			// The computation of the solution takes much more time using this parameter, but might be better.
 			handler.startElement("OBJECTIVE_SHIFT_USE_AVERAGE");
-			handler.addIntItem(1);
+			handler.addIntItem(objective_average);
 			handler.endElement();
 
 			///////////////////////////
@@ -335,10 +348,18 @@ public class NRProblemInstance implements IProblemInstance {
 	public IloCustomOplDataSource toWorkdayDataSource(IloOplFactory oplF) {
 		return new NRPOplDataSource(oplF);
 	}
+	@Override
+	public IloCustomOplDataSource toWorkdayDataSource(IloOplFactory oplF, int useRelaxation, int objective) {
+		return new NRPOplDataSource(oplF, useRelaxation, objective , 0);
+	}
 
 	@Override
 	public IloCustomOplDataSource toShiftDataSource(IloOplFactory oplF) {
 		return new NRPOplDataSource(oplF);
+	}
+	@Override
+	public IloCustomOplDataSource toShiftDataSource(IloOplFactory oplF, int objective, int objective_average) {
+		return new NRPOplDataSource(oplF, 0, objective, objective_average);
 	}
 
 }

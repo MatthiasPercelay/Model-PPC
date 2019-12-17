@@ -54,8 +54,10 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 	public void solve(IProblemInstance instance, IParetoArchive archive) {
 		setUp(MODEL_FILE);
 		IloCplex cplex;
+		IloCplex cplex1;
 		try {
 			cplex = oplF.createCplex();
+			cplex1 = oplF.createCplex();
 		} catch (IloException e) {
 			e.printStackTrace();
 			return;
@@ -65,6 +67,9 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 		opl.addDataSource(instance.toWorkdayDataSource(oplF));
 		opl.generate();
 
+		IloOplModel opl1 = oplF.createOplModel(def,cplex1);
+		opl1.addDataSource(instance.toWorkdayDataSource(oplF, 1, 0));
+		opl1.generate();
 		try {
 			if(cplex.solve()) {			
 				final int n = cplex.getSolnPoolNsolns();
@@ -74,6 +79,17 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
                 System.out.println("Number of solutions : " + archive.size());
 				opl.postProcess();
 				//opl.printSolution(System.out);
+			}else{
+				if(cplex1.solve()) {
+					final int n = cplex1.getSolnPoolNsolns();
+					for (int i = 0; i < n; i++) {
+						storeSolution(instance, opl1, archive, i);
+					}
+					System.out.println("Number of solutions : " + archive.size());
+					opl1.postProcess();
+					//opl1.printSolution(System.out);
+				}
+
 			}
 		} catch (IloException e) {
 			e.printStackTrace();
@@ -81,7 +97,9 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 		}
 		// Do not change the instruction order !
 		cplex.end();
+		cplex1.end();
 		opl.end();
+		opl1.end();
 		tearDown();
 	}
 
