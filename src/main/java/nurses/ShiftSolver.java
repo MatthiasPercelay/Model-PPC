@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 
 public class ShiftSolver extends NRSolver implements IShiftSolver {
 
-	public final String MODEL_FILE = "src/main/opl/ModPPC/model/WorkDayAssignment.mod";
+	public final String MODEL_FILE = "src/main/opl/ModPPC/model/XShiftAssignment.mod";
 	private int useRelaxation = 0;
 
 	public ShiftSolver() {
@@ -70,6 +70,7 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 			opl.addDataSource(shiftInstance.toWorkdayDataSource(oplF, useRelaxation, 0));
 			opl.generate();
 			try {
+				System.out.println("SHIFT ASSIGNMENT :");
 				if (cplex.solve()) {
 					final int n = cplex.getSolnPoolNsolns();
 					for (int i = 0; i < n; i++) {

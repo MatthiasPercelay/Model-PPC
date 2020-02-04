@@ -78,7 +78,8 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 				}
                 System.out.println("Number of solutions : " + archive.size());
 				opl.postProcess();
-				//opl.printSolution(System.out);
+				opl.printSolution(System.out);
+				System.out.println("SAT");
 			}else{
 				if(cplex1.solve()) {
 					final int n = cplex1.getSolnPoolNsolns();
@@ -87,7 +88,8 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 					}
 					System.out.println("Number of solutions : " + archive.size());
 					opl1.postProcess();
-					//opl1.printSolution(System.out);
+					opl1.printSolution(System.out);
+					System.out.println("UNSAT");
 				}
 
 			}
