@@ -30,7 +30,7 @@ dvar int work[AGENTS][DAYS] in 0..3;
 // Number of DAY where an agent does EVENING and MORNING the next DAY.
 dexpr int SM[i in AGENTS] = sum(j in 1..d-1) (work[i][j] == EVENING && work[i][j+1] == MORNING);
 // Number of consecutive DAYs where we do the same shift
-int CONSECUTIVE_DAYS = 3;
+int CONSECUTIVE_DAYS = 4;
 dexpr int sameShift[i in AGENTS][c in 2..CONSECUTIVE_DAYS] = sum(j in 1..d-c+1, s in SHIFTS) (sum(k in 0..c-1) (work[i][j+k] == s) == c);
 // Number of time the agent switch shift from one DAY to the next one.
 dexpr int shiftSwitch[i in AGENTS] = sum(j in 1..d-1, s in SHIFTS) ((work[i][j] == s && work[i][j+1] != s) * fixedWork_[i][j+1]); 
@@ -43,9 +43,9 @@ dexpr int interdictions[i in AGENTS] = sum(j in DAYS, s in SHIFTS) (work[i][j] =
 
 // Differents objectives
 // DEFAULT OBJECTIVE
-dexpr int objective_0[i in AGENTS] = 2*SM[i] + sameShift[i][2] + 2*shiftSwitch[i];
+dexpr int objective_0[i in AGENTS] = 2*SM[i] + sameShift[i][4] + 2*shiftSwitch[i];
 
-// LESS SPECIFIC CONSTRAINTS
+// LESS SPECIFIC OBJECTIVES
 dexpr int objective_1[i in AGENTS] = 2*SM[i] + shiftSwitch[i];
 dexpr int objective_2[i in AGENTS] = -sameShift[i][2];
 dexpr int objective_3[i in AGENTS] = 0;
