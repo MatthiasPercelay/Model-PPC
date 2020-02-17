@@ -3,7 +3,7 @@
 
     This file is part of nurse-rostering-solver, https://github.com/MatthiasPercelay/Model-PPC
 
-    Copyright (c) 2019, Université Nice Sophia Antipolis. All rights reserved.
+    Copyright (c) 2020, Université Nice Sophia Antipolis. All rights reserved.
 
     Licensed under the BSD 3-clause license.
     See LICENSE file in the project root for full license information.
@@ -46,7 +46,7 @@
 		<maven.build.timestamp.format>yyyy</maven.build.timestamp.format>
 		<!-- Java source/target to use for compilation. -->
 		<javac.target>1.8</javac.target>
-		<cplex.home>${env.CPLEX_HOME}</cplex.home>
+		<cplex.home>C:\Program Files\IBM\ILOG\CPLEX_Studio1210</cplex.home>
 	</properties>
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/args4j/args4j -->
@@ -74,7 +74,7 @@
 		<dependency>
 			<groupId>cplex</groupId>
 			<artifactId>cplex</artifactId>
-			<version>12.9.0</version>
+			<version>12.10.0</version>
 			<scope>system</scope>
 			<systemPath>${cplex.home}/opl/lib/oplall.jar</systemPath>
 		</dependency>
