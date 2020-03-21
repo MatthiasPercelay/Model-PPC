@@ -8,7 +8,8 @@
  */
 package nurses.specs;
 
+import nurses.pareto.ParetoArchiveL;
 public interface IShiftSolver {
 
-	void solve(IProblemInstance instance, IParetoArchive workdayArchive, IParetoArchive archive);
+	void solve(IProblemInstance instance, ParetoArchiveL workdayArchive, ParetoArchiveL archive);
 }

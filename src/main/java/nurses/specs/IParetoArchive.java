@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 
 import nurses.Shift;
 import nurses.pareto.MOSolution;
+import nurses.planning.TimeTable;
 
 public interface IParetoArchive {
 
@@ -20,7 +21,7 @@ public interface IParetoArchive {
 		add(new MOSolution(solution, objective));
 	}
 
-	default void add(ITimetable solution, double[] objective) {
+	default void add(TimeTable solution, double[] objective) {
 		add(new MOSolution(solution, objective));
 	}
 
@@ -33,7 +34,7 @@ public interface IParetoArchive {
 	}
 	void forEach(Consumer<MOSolution> consumer);
 
-	default void forEachBi(final BiConsumer<ITimetable, double[]> consumer) {
+	default void forEachBi(final BiConsumer<TimeTable, double[]> consumer) {
 		// TODO handle type safety ?
 		forEach( (mosol) -> consumer.accept(mosol.solution, mosol.objective));
 	}

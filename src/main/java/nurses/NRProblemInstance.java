@@ -28,6 +28,7 @@ public class NRProblemInstance implements IProblemInstance {
 	private final int[][] demands;
 	private final int[][] breakPreferences;
 	private final int[][][] shiftPreferences;
+	public Shift[][] workday;
 
 
 	public NRProblemInstance(File instanceFile) {
@@ -215,6 +216,16 @@ public class NRProblemInstance implements IProblemInstance {
 		return shiftPreferences;
 	}
 
+	public void set_workday(Shift[][] data){
+		for(int i = 0 ; i < data.length; i++){
+			for(int j = 0 ; j < data[i].length ; j++){
+				System.out.println(data[i][j]);
+				this.workday[i][j] = data[i][j];
+				
+			}
+		}
+	}
+
 	private class NRPOplDataSource extends IloCustomOplDataSource {
 
 		public NRPOplDataSource(IloOplFactory oplEnv) {
@@ -290,6 +301,17 @@ public class NRProblemInstance implements IProblemInstance {
 			handler.endElement();
 
 			///////////////////////////
+			// handler.startElement("workday");
+			// handler.startArray();
+			// for (int i=1;i<=workday.length;i++) {
+			// 	for(int j=1 ; j <= workday.length ; j++){
+			// 		handler.addStringItem(workday[i-1][j-1].pseudo_data);
+			// 	}
+			// }
+			// handler.endArray();
+			// handler.endElement();
+
+			///////////////////////////
 			handler.startElement("breaksPerCycle");
 			handler.startArray();
 			for (int i=1;i<=breaksPerCycle.length;i++) {
@@ -331,6 +353,68 @@ public class NRProblemInstance implements IProblemInstance {
 		}
 	}
 
+	private class NRPOplDataSource2 extends IloCustomOplDataSource {
+
+		public NRPOplDataSource2(IloOplFactory oplEnv) {
+			super(oplEnv);
+		}
+
+		@Override
+		public void customRead() {
+			final IloOplDataHandler handler = getDataHandler();
+
+
+			///////////////////////////
+			handler.startElement("n");
+			handler.addIntItem(getNbAgents());
+			handler.endElement();
+
+			///////////////////////////
+			handler.startElement("c");
+			handler.addIntItem(getNbCycles());
+			handler.endElement();
+
+			///////////////////////////
+			handler.startElement("useRelaxation");
+			handler.addIntItem(0);
+			handler.endElement();
+
+			///////////////////////////
+			// Decide the type of objective function used.
+			// DEFAULT : 0
+			handler.startElement("OBJECTIVE_SHIFT");
+			handler.addIntItem(0);
+			handler.endElement();
+
+			///////////////////////////
+			// For the shift assignment, we compute the average distance of objective rating for each agent to the average
+			// So we can balance the timetable for each agent (= trying to be fair)
+			// 1 : Use this parameter; 0 : Don't use. DEFAULT : 1
+			// The computation of the solution takes much more time using this parameter, but might be better.
+			handler.startElement("OBJECTIVE_SHIFT_USE_AVERAGE");
+			handler.addIntItem(1);
+			handler.endElement();
+
+			///////////////////////////
+			///////////////////////////
+			handler.startElement("workday");
+			handler.startArray();
+			for (int i=1;i<=workday.length;i++) {
+				for(int j=1 ; j <= workday.length ; j++){
+					handler.addStringItem(workday[i-1][j-1].pseudo_data);
+				}
+			}
+			handler.endArray();
+			handler.endElement();
+
+			///////////////////////////
+
+
+			///////////////////////////
+		}
+	}
+
+
 	@Override
 	public IloCustomOplDataSource toWorkdayDataSource(IloOplFactory oplF) {
 		return new NRPOplDataSource(oplF);
@@ -338,7 +422,7 @@ public class NRProblemInstance implements IProblemInstance {
 
 	@Override
 	public IloCustomOplDataSource toShiftDataSource(IloOplFactory oplF) {
-		return new NRPOplDataSource(oplF);
+		return new NRPOplDataSource2(oplF);
 	}
 
 }

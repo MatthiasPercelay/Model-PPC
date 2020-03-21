@@ -19,6 +19,7 @@ import nurses.pareto.NRSolutionStatistics;
 import nurses.specs.IParetoArchive;
 import nurses.specs.IProblemInstance;
 import nurses.specs.IWorkdaySolver;
+import nurses.pareto.ParetoArchiveL;
 
 public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 
@@ -31,7 +32,7 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 				(value == 0 ? Shift.B : Shift.W) : shift; 
 	}
 	
-	protected void storeSolution(IProblemInstance instance, IloOplModel opl, IParetoArchive archive, int soln) {
+	protected void storeSolution(IProblemInstance instance, IloOplModel opl, ParetoArchiveL archive, int soln) {
 		final IloIntVarMap work = opl.getElement("work").asIntVarMap();
 		final int n = instance.getNbAgents();
 		final int d = instance.getNbDays();
@@ -59,7 +60,7 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 	}
 	
 	@Override
-	public void solve(IProblemInstance instance, IParetoArchive archive) {
+	public void solve(IProblemInstance instance, ParetoArchiveL archive) {
 		setUp(MODEL_FILE);
 		IloCplex cplex;
 		try {

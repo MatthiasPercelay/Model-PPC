@@ -9,7 +9,7 @@
 package nurses;
 
 import java.util.Arrays;
-
+import java.util.List;
 import ilog.concert.IloException;
 import ilog.concert.IloIntVarMap;
 import ilog.opl.IloCplex;
@@ -19,7 +19,7 @@ import nurses.pareto.NRSolutionStatistics;
 import nurses.specs.IParetoArchive;
 import nurses.specs.IProblemInstance;
 import nurses.specs.IShiftSolver;
-
+import nurses.pareto.ParetoArchiveL;
 public class ShiftSolver extends NRSolver implements IShiftSolver {
 
 	public final String MODEL_FILE = "src/main/opl/ModPPC/model/ShiftAssignment.mod";
@@ -33,7 +33,7 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 	}
 
 
-	protected void storeSolution(IProblemInstance instance, IloOplModel opl, IParetoArchive archive, int soln) {
+	protected void storeSolution(IProblemInstance instance, IloOplModel opl, ParetoArchiveL archive, int soln) {
 		final IloIntVarMap work = opl.getElement("work").asIntVarMap();
 		final int n = instance.getNbAgents();
 		final int d = instance.getNbDays();
@@ -62,7 +62,7 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 
 	
 	@Override
-	public void solve(IProblemInstance instance, IParetoArchive workdayArchive, IParetoArchive archive) {
+	public void solve(IProblemInstance instance, ParetoArchiveL workdayArchive, ParetoArchiveL archive) {
 		setUp(this.MODEL_FILE);
 		IloCplex cplex;
 		try {
@@ -71,9 +71,18 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 			e.printStackTrace();
 			return;
 		}
+		List<MOSolution> data = workdayArchive.getSolutions();
+		MOSolution sol = data.get(0);
+		System.out.println("sol--------------------------------------------------------------------------------------");
+		Shift[][] s = sol.getSolution().getshifts();
+		System.out.println(s);
 
+
+		NRProblemInstance problem = new NRProblemInstance(instance,sol.getSolution());
+		problem.workday = sol.getSolution().getshifts();
 		IloOplModel opl=oplF.createOplModel(def,cplex);
-		opl.addDataSource(instance.toShiftDataSource(oplF));
+		//opl.addDataSource(instance.toShiftDataSource(oplF));
+		opl.addDataSource(problem.toShiftDataSource(oplF));
 		opl.generate();
 
 		try {

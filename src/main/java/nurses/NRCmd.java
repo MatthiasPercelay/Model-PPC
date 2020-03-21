@@ -108,7 +108,7 @@ public class NRCmd  {
 		return new NRProblemInstance(instanceFile);
 	}
 
-	public final static IParetoArchive createArchive() {
+	public final static ParetoArchiveL createArchive() {
 		return new ParetoArchiveL();
 	}
 
@@ -129,10 +129,10 @@ public class NRCmd  {
 		runtime = - System.nanoTime();
 		final IProblemInstance instance = parseInstance(instanceFile);
 		final IWorkdaySolver workdaySolver = createWorkdaySolver(instance);
-		final IParetoArchive workdayArchive = createArchive();
+		final ParetoArchiveL workdayArchive = createArchive();
 		workdaySolver.solve(instance, workdayArchive);
 		final IShiftSolver shiftSolver = createShiftSolver();	
-		final IParetoArchive shiftArchive = createArchive();
+		final ParetoArchiveL shiftArchive = createArchive();
 		shiftSolver.solve(instance, workdayArchive, shiftArchive);	
 		final ITimetableReports reporter = createTimetableReports();
 		reporter.generateReports(instance, shiftArchive);

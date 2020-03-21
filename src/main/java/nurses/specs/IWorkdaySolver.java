@@ -8,7 +8,9 @@
  */
 package nurses.specs;
 
+import nurses.pareto.ParetoArchiveL;
+
 public interface IWorkdaySolver {
 
-	void solve(IProblemInstance instance, IParetoArchive archive);
+	void solve(IProblemInstance instance, ParetoArchiveL archive);
 }

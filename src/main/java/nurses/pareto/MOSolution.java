@@ -16,11 +16,11 @@ import java.util.Arrays;
 
 public final class MOSolution {
 
-	public final ITimetable solution;
+	public final TimeTable solution;
 
 	public final double[] objective;
 
-	public MOSolution(ITimetable solution, double[] objective) {
+	public MOSolution(TimeTable solution, double[] objective) {
 		super();
 		this.solution = solution;
 		this.objective = objective;
@@ -32,7 +32,7 @@ public final class MOSolution {
 		this.objective = objective;
 	}
 
-	public final ITimetable getSolution() {
+	public final TimeTable getSolution() {
 		return solution;
 	}
 

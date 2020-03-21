@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class ParetoArchiveL implements IParetoArchive {
-    private List<MOSolution> solutions;
-    final private ParetoDominance comp;
+    public List<MOSolution> solutions;
+    final public ParetoDominance comp;
 
     public ParetoArchiveL() {
         solutions = new ArrayList<>();
