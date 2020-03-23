@@ -395,20 +395,96 @@ public class NRProblemInstance implements IProblemInstance {
 			handler.addIntItem(1);
 			handler.endElement();
 
+
 			///////////////////////////
-			///////////////////////////
-			handler.startElement("workday");
+			handler.startElement("timetable");
 			handler.startArray();
-			for (int i=1;i<=workday.length;i++) {
-				for(int j=1 ; j <= workday.length ; j++){
-					handler.addStringItem(workday[i-1][j-1].pseudo_data);
+			for (int i=1;i<=getNbAgents();i++) {
+				handler.startArray();
+				for (int j=1;j<=getNbDays();j++) {
+					handler.addStringItem(timetable.getShift(i, j).toString());
 				}
+				handler.endArray();
+			}
+			handler.endArray();
+			handler.endElement();
+
+			///////////////////////////
+			handler.startElement("demands");
+			handler.startArray();
+			for (int i=1;i<=demands.length;i++) {
+				handler.startArray();
+				for (int j=1;j<=demands[i-1].length;j++)
+					handler.addIntItem(demands[i-1][j-1]);
+				handler.endArray();
 			}
 			handler.endArray();
 			handler.endElement();
 
 			///////////////////////////
 
+			handler.startElement("workDays");
+			handler.startArray();
+			for (int i=1;i<=workDays.length;i++) {
+				handler.addIntItem(workDays[i-1]);
+			}
+			handler.endArray();
+			handler.endElement();
+
+			///////////////////////////
+			///////////////////////////
+			handler.startElement("workday");
+			handler.startArray();
+			for (int i=1;i<=workday.length;i++) {
+				handler.startArray();
+				for(int j=1 ; j <= workday[0].length ; j++){
+					handler.addStringItem(workday[i-1][j-1].pseudo_data);
+				}
+				handler.endArray();
+			}
+			handler.endArray();
+			handler.endElement();
+
+			///////////////////////////
+			///////////////////////////
+			handler.startElement("breaksPerCycle");
+			handler.startArray();
+			for (int i=1;i<=breaksPerCycle.length;i++) {
+				handler.addIntItem(breaksPerCycle[i-1]);
+			}
+			handler.endArray();
+			handler.endElement();
+
+			///////////////////////////
+			handler.startElement("breakPrefs");
+			handler.startArray();
+			for (int i=1;i<=breakPreferences.length;i++) {
+				handler.startArray();
+				for (int j=1;j<=breakPreferences[i-1].length;j++)
+					handler.addIntItem(breakPreferences[i-1][j-1]);
+				handler.endArray();
+			}
+			handler.endArray();
+			handler.endElement();
+			///////////////////////////
+			handler.startElement("shiftPrefs");
+			
+			
+			handler.startArray();
+			for (int i=1;i<=shiftPreferences.length;i++) {
+				handler.startArray();
+				for (int j=1;j<=shiftPreferences[i-1].length;j++) {
+					handler.startArray();
+					for (int k=1;k<=shiftPreferences[i-1][j-1].length;k++) {
+						handler.addIntItem(shiftPreferences[i-1][j-1][k-1]);
+					}
+					
+					handler.endArray();
+				}
+				handler.endArray();
+			}
+			handler.endArray();
+			handler.endElement();
 
 			///////////////////////////
 		}

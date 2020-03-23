@@ -75,7 +75,7 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 		MOSolution sol = data.get(0);
 		System.out.println("sol--------------------------------------------------------------------------------------");
 		Shift[][] s = sol.getSolution().getshifts();
-		System.out.println(s);
+		
 
 
 		NRProblemInstance problem = new NRProblemInstance(instance,sol.getSolution());
