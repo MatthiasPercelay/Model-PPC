@@ -40,6 +40,7 @@ import nurses.specs.IProblemInstance;
 import nurses.specs.IShiftSolver;
 import nurses.specs.ITimetableReports;
 import nurses.specs.IWorkdaySolver;
+import nurses.pareto.TimetableReports;
 
 public class NRCmd  {
 
@@ -120,7 +121,7 @@ public class NRCmd  {
 		return new ShiftSolver();
 	}
 
-	private final ITimetableReports createTimetableReports() {
+	private final TimetableReports createTimetableReports() {
 		return new TimetableReports();
 	}
 
@@ -134,7 +135,7 @@ public class NRCmd  {
 		final IShiftSolver shiftSolver = createShiftSolver();	
 		final ParetoArchiveL shiftArchive = createArchive();
 		shiftSolver.solve(instance, workdayArchive, shiftArchive);	
-		final ITimetableReports reporter = createTimetableReports();
+		final TimetableReports reporter = createTimetableReports();
 		reporter.generateReports(instance, shiftArchive);
 		runtime += System.nanoTime();
 

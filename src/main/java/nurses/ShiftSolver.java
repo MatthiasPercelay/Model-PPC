@@ -27,9 +27,11 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 
 	public ShiftSolver() {}
 
-	protected Shift getShiftValue(Shift shift, double value) {
-		return shift == Shift.NA ? 
-				(value == 0 ? Shift.B : Shift.W) : shift; 
+	protected Shift getShiftValue(double value) {
+		if (value == 1.0) return Shift.M;
+		else if (value == 2.0) return Shift.S;
+		else if (value == 3.0) return Shift.J;
+		else return Shift.B;
 	}
 
 
@@ -45,7 +47,6 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 				IloIntVarMap worki = work.getSub(i);
 				for (int j = 1; j <= d; j++) {
 					solution[i-1][j-1] = getShiftValue(
-							instance.getTimeTable().getShift(i, j),
 							cplex.getValue(worki.get(j), soln)
 							);
 				}
@@ -75,18 +76,38 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 		MOSolution sol = data.get(0);
 		System.out.println("sol--------------------------------------------------------------------------------------");
 		Shift[][] s = sol.getSolution().getshifts();
-		
 
+		// for(int ii = 0 ; ii < s.length ; ii++){
+		// 	for(int jj =0 ; jj < s[ii].length ; jj++){
+		// 		System.out.print(s[ii][jj]);
+		// 		System.out.print(" ");
+		// 	}
+		// 	System.out.print("\n");
+		// }
+
+
+		
+		Shift[][] hardcoded = new Shift[][]{
+			{Shift.S,Shift.RH,Shift.M,Shift.M,Shift.M,Shift.RH,Shift.RH,Shift.J,Shift.J,Shift.RH,Shift.J,Shift.S,Shift.S,Shift.S,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND},
+			{Shift.CA,Shift.CA,Shift.CA,Shift.CA,Shift.CA,Shift.RH,Shift.RH,Shift.RH,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.B,Shift.B,Shift.JF,Shift.W,Shift.W,Shift.W,Shift.W},
+			{Shift.W,Shift.B,Shift.B,Shift.B,Shift.RA,Shift.B,Shift.B,Shift.W,Shift.B,Shift.RA,Shift.W,Shift.W,Shift.RH,Shift.RH,Shift.RA,Shift.RTT,Shift.RTT,Shift.RTT,Shift.RTT,Shift.RH,Shift.RH,Shift.RA,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W},
+			{Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.RH,Shift.RH,Shift.RTT,Shift.RTT,Shift.RTT,Shift.RA,Shift.RTT,Shift.RH,Shift.RH,Shift.RTT,Shift.W,Shift.RA,Shift.W,Shift.B,Shift.RH,Shift.RH,Shift.W,Shift.B,Shift.W,Shift.B,Shift.W,Shift.B,Shift.B},
+			{Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.B,Shift.W,Shift.W,Shift.B,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.JF,Shift.W,Shift.W,Shift.W,Shift.B},
+			{Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.B,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.JF,Shift.CA,Shift.CA,Shift.RH,Shift.RH}
+		};
 
 		NRProblemInstance problem = new NRProblemInstance(instance,sol.getSolution());
-		problem.workday = sol.getSolution().getshifts();
+		// problem.workday = sol.getSolution().getshifts();
+		problem.workday = hardcoded;
 		IloOplModel opl=oplF.createOplModel(def,cplex);
 		//opl.addDataSource(instance.toShiftDataSource(oplF));
 		opl.addDataSource(problem.toShiftDataSource(oplF));
 		opl.generate();
 
 		try {
-			if(cplex.solve()) {			
+
+			if(cplex.solve()) {		
+				System.out.println("Solving .......................");	
 				final int n = cplex.getSolnPoolNsolns();
 				for (int i = 0; i < n; i++) {
 					storeSolution(instance, opl, archive, i);
@@ -96,6 +117,7 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 				//opl.printSolution(System.out);
 			}
 		} catch (IloException e) {
+			System.out.println("An exception happened");
 			e.printStackTrace();
 			return;
 		}

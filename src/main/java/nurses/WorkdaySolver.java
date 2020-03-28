@@ -47,6 +47,7 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 							instance.getTimeTable().getShift(i, j),
 							cplex.getValue(worki.get(j), soln)
 							);
+					System.out.println(solution[i-1][j-1]);
 				}
 				//System.out.println(Arrays.toString(solution[i-1]));
 			}

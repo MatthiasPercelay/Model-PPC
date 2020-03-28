@@ -8,7 +8,9 @@
  */
 package nurses.specs;
 
+import nurses.pareto.ParetoArchiveL;
+
 public interface ITimetableReports {
 
-	void generateReports(IProblemInstance instance, IParetoArchive archive);
+	void generateReports(IProblemInstance instance, ParetoArchiveL archive);
 }
