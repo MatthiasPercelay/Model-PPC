@@ -95,9 +95,9 @@ dexpr int MAXValueOF_TOTALupperDemand=(max(j in DAYS) (n-demand[j])*d+1);
 //maximum de la contrainte MAXDIFFworkSupply (3)
 dexpr int MAXValueOF_MAXDIFFworkSupply=(max(j in DAYS) demand[j]+1);
 //maximum de la contrainte TOTALbreakPrefpW (4)
-dexpr int MAXValueOF_TOTALbreakPrefpW=(14*c*n);
+dexpr int MAXValueOF_TOTALbreakPrefpW=(14*c*n + 1);
 //maximum de la contrainte TotalworkDayDiff (5)
-dexpr int MAXValueOF_TotalworkDayDiff=((d+1)*n);
+dexpr int MAXValueOF_TotalworkDayDiff=(d*n+1);
 //maximum de la contrainte TotalweekEnd (6)
 dexpr int MAXValueOF_TotalweekEnd=(w*n+1);
 
@@ -106,13 +106,13 @@ dexpr int MAXValueOF_TotalweekEnd=(w*n+1);
 dexpr int ObjectifCombi123 = (MAXValueOF_TOTALupperDemand*MAXValueOF_MAXDIFFworkSupply)*(TOTALunderDemand) +(MAXValueOF_MAXDIFFworkSupply)*(TOTALupperDemand)+(MAXDIFFworkSupply);
 
 //combination of the constraints 1 2 3 4
-dexpr int ObjectifCombi1234 = MAXValueOF_TOTALbreakPrefpW*ObjectifCombi123+TOTALbreakPrefpW;
+dexpr int ObjectifCombi1234 = MAXValueOF_TOTALbreakPrefpW*ObjectifCombi123-TOTALbreakPrefpW;
 //combination of the constraints 1 2 3 6
-dexpr int ObjectifCombi1236 = MAXValueOF_TotalweekEnd*ObjectifCombi123+TotalweekEnd;
+dexpr int ObjectifCombi1236 = MAXValueOF_TotalweekEnd*ObjectifCombi123-TotalweekEnd;
 //combination of the constraints 1 2 3 4 6
-dexpr int ObjectifCombi12346 = MAXValueOF_TotalweekEnd*ObjectifCombi1234+TotalweekEnd;
+dexpr int ObjectifCombi12346 = MAXValueOF_TotalweekEnd*ObjectifCombi1234-TotalweekEnd;
 //combination of the constraints 1 2 3 6 4
-dexpr int ObjectifCombi12364 = MAXValueOF_TOTALbreakPrefpW*ObjectifCombi1236+TOTALbreakPrefpW;
+dexpr int ObjectifCombi12364 = MAXValueOF_TOTALbreakPrefpW*ObjectifCombi1236-TOTALbreakPrefpW;
 
 
 
@@ -131,7 +131,7 @@ dexpr int ObjectifCombi564 = MAXValueOF_TOTALbreakPrefpW*ObjectifCombi56+TOTALbr
 // if (relaxation == 1) then minimize in first sum(j in DAYS) (underDemand[j]) and then (sum(j in DAYS) (upperDemand[j])
 //else minimize the difference between the number of days 
 // (1 2 3 4) else (5)
-dexpr int objectif = (useRelaxation==1) ? ObjectifCombi1234 : TotalworkDayDiff;
+dexpr int objectif = (useRelaxation==0) ? ObjectifCombi12346 : TotalworkDayDiff;
 
 
 minimize objectif;
