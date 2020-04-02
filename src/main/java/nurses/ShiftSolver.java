@@ -98,7 +98,7 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 
 		NRProblemInstance problem = new NRProblemInstance(instance,sol.getSolution());
 		// problem.workday = sol.getSolution().getshifts();
-		problem.workday = s;
+		problem.workday = hardcoded;
 		IloOplModel opl=oplF.createOplModel(def,cplex);
 		//opl.addDataSource(instance.toShiftDataSource(oplF));
 		opl.addDataSource(problem.toShiftDataSource(oplF));
