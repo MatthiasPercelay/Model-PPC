@@ -254,7 +254,7 @@ public class NRProblemInstance implements IProblemInstance {
 			// Decide the type of objective function used.
 			// DEFAULT : 0
 			handler.startElement("OBJECTIVE_SHIFT");
-			handler.addIntItem(0);
+			handler.addIntItem(1);
 			handler.endElement();
 
 			///////////////////////////
@@ -263,7 +263,7 @@ public class NRProblemInstance implements IProblemInstance {
 			// 1 : Use this parameter; 0 : Don't use. DEFAULT : 1
 			// The computation of the solution takes much more time using this parameter, but might be better.
 			handler.startElement("OBJECTIVE_SHIFT_USE_AVERAGE");
-			handler.addIntItem(1);
+			handler.addIntItem(0);
 			handler.endElement();
 
 			///////////////////////////
@@ -383,7 +383,7 @@ public class NRProblemInstance implements IProblemInstance {
 			// Decide the type of objective function used.
 			// DEFAULT : 0
 			handler.startElement("OBJECTIVE_SHIFT");
-			handler.addIntItem(0);
+			handler.addIntItem(1);
 			handler.endElement();
 
 			///////////////////////////
@@ -392,7 +392,7 @@ public class NRProblemInstance implements IProblemInstance {
 			// 1 : Use this parameter; 0 : Don't use. DEFAULT : 1
 			// The computation of the solution takes much more time using this parameter, but might be better.
 			handler.startElement("OBJECTIVE_SHIFT_USE_AVERAGE");
-			handler.addIntItem(1);
+			handler.addIntItem(0);
 			handler.endElement();
 
 
