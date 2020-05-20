@@ -36,9 +36,8 @@
  int demands[SHIFTS][DAYS] = ...;
  int demand[j in DAYS] = sum(k in SHIFTS) demands[k][j] + sum(i in AGENTS) (timetable[i][j] == "FO" || timetable[i][j]=="EX");
  
- 
  int fixedWork[i in AGENTS][j in DAYS] = timetable[i][j] == "M" || timetable[i][j] == "J" || timetable[i][j] == "S" || timetable[i][j] == "FO" || timetable[i][j]=="EX";
- int fixedBreak[i in AGENTS][j in DAYS] = timetable[i][j] == "CA" || timetable[i][j] == "RH" || timetable[i][j] == "RTT" || timetable[i][j] == "RC" || timetable[i][j] == "RH" || timetable[i][j] == "CM" || timetable[i][j] == "JF"|| timetable[i][j] == "ND";
+ int fixedBreak[i in AGENTS][j in DAYS] = timetable[i][j] == "RH" || timetable[i][j] == "RA" || timetable[i][j] == "RC" || timetable[i][j] == "RTT" || timetable[i][j] == "CA" || timetable[i][j] == "CM" || timetable[i][j] == "JF" || timetable[i][j] == "MPR" || timetable[i][j] == "ND";
  int fixedShift[i in AGENTS][j in DAYS] = timetable[i][j] == "M" || timetable[i][j] == "J" || timetable[i][j] == "S";
  
  int useRelaxation = ...; 
