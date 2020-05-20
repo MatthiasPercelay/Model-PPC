@@ -53,7 +53,7 @@ public class TimetableReports implements ITimetableReports {
 
 				csvWriter.append("Nurse "+String.valueOf(ii)+";");
 				for(int jj = 0; jj < s[ii].length;jj++){
-					csvWriter.append(s[ii][jj].pseudo_data);
+					csvWriter.append(s[ii][jj].pseudo_data.replaceAll("\\s+",""));
 					csvWriter.append(";");
 				}
 				csvWriter.append("\n");
