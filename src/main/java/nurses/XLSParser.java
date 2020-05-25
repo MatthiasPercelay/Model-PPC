@@ -147,6 +147,15 @@ public class XLSParser {
 				res[i][j] = shift;
 			}
 		}
+		// System.out.println("size "+res.length);
+		// System.out.println("size "+res[0].length);
+
+		// for(int i=0;i<res.length;i++){
+		// 	for(int j=0;j<res[i].length;j++){
+		// 		System.out.print(res[i][j] + " ");
+		// 	}
+		// 	System.out.println();
+		// }
 		return res;
 	}
 
@@ -171,6 +180,17 @@ public class XLSParser {
 			for (int j = 0; j < matin[0].length; j++) {
 				prefints[i][j] = prefInts(matin[i][j], soir[i][j], jour[i][j]);
 			}
+		}
+		System.out.println(prefints.length);
+		System.out.println(prefints[0].length);
+		for (int i = 0; i < prefints.length; i++) {
+			for (int j = 0; j < prefints[0].length; j++) {
+				for(int a = 0 ;a<3;a++){
+					System.out.print(prefints[i][j][a]);
+				}
+				System.out.println();
+			}
+			System.out.println();
 		}
 		return prefints;
 	}
@@ -225,6 +245,7 @@ public class XLSParser {
 		System.out.println(Arrays.deepToString(sprefs));*/
 		NRProblemInstance instance = new NRProblemInstance(new File("src/test/data/ucl-planning-december-19.xls"));
 		Shift[][] shifts = parser.getShiftMatrix("planning");
+
 		System.out.println(Arrays.deepToString(shifts));
 		System.out.println(Arrays.toString(instance.getWorkdays()));
 		System.out.println(Arrays.toString(instance.getBreaksPerCycle()));

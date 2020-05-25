@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.List;
 import ilog.concert.IloException;
 import ilog.concert.IloIntVarMap;
+import ilog.concert.IloIntExpr;
+// import ilog.concert.asIntExprMap;
 import ilog.opl.IloCplex;
 import ilog.opl.IloOplModel;
 import nurses.pareto.MOSolution;
@@ -37,6 +39,7 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 
 	protected void storeSolution(IProblemInstance instance, IloOplModel opl, ParetoArchiveL archive, int soln) {
 		final IloIntVarMap work = opl.getElement("work").asIntVarMap();
+
 		final int n = instance.getNbAgents();
 		final int d = instance.getNbDays();
 		final Shift[][] solution = new Shift[n][d];
@@ -64,28 +67,9 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 	
 	@Override
 	public void solve(IProblemInstance instance, ParetoArchiveL workdayArchive, ParetoArchiveL archive) {
-		setUp(this.MODEL_FILE);
-		IloCplex cplex;
-		try {
-			cplex = oplF.createCplex();
-		} catch (IloException e) {
-			e.printStackTrace();
-			return;
-		}
 		List<MOSolution> data = workdayArchive.getSolutions();
-		MOSolution sol = data.get(0);
-		System.out.println("sol--------------------------------------------------------------------------------------");
-		Shift[][] s = sol.getSolution().getshifts();
-
-		// for(int ii = 0 ; ii < s.length ; ii++){
-		// 	for(int jj =0 ; jj < s[ii].length ; jj++){
-		// 		System.out.print(s[ii][jj]);
-		// 		System.out.print(" ");
-		// 	}
-		// 	System.out.print("\n");
-		// }
-
-
+		//MOSolution sol = data.get(0);
+		//Shift[][] s = sol.getSolution().getshifts();
 		
 		Shift[][] hardcoded = new Shift[][]{
 			{Shift.S,Shift.RH,Shift.M,Shift.M,Shift.M,Shift.RH,Shift.RH,Shift.J,Shift.J,Shift.RH,Shift.J,Shift.S,Shift.S,Shift.S,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND},
@@ -96,11 +80,30 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 			{Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.B,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.JF,Shift.CA,Shift.CA,Shift.RH,Shift.RH}
 		};
 
+	for(int j=0; j < data.size(); j++ ){
+		setUp(this.MODEL_FILE);
+		IloCplex cplex;
+		try {
+			cplex = oplF.createCplex();
+		} catch (IloException e) {
+			e.printStackTrace();
+			return;
+		}
+		MOSolution sol = data.get(j);
 		NRProblemInstance problem = new NRProblemInstance(instance,sol.getSolution());
 		// problem.workday = sol.getSolution().getshifts();
-		problem.workday = hardcoded;
+		Shift[][] tmp = data.get(j).getSolution().getshifts();
+
+		for(int ii=0;ii<tmp.length;ii++){
+			for(int iii=0;iii<tmp[ii].length;iii++){
+				System.out.print(tmp[ii][iii] + " ");
+			}
+			System.out.println();
+		}
+		System.out.println();
+		
+		problem.workday = sol.getSolution().getshifts();
 		IloOplModel opl=oplF.createOplModel(def,cplex);
-		//opl.addDataSource(instance.toShiftDataSource(oplF));
 		opl.addDataSource(problem.toShiftDataSource(oplF));
 		opl.generate();
 
@@ -125,6 +128,7 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 		cplex.end();
 		opl.end();
 		tearDown();
+		}
 
 	}
 

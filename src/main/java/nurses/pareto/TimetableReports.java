@@ -37,17 +37,35 @@ public class TimetableReports implements ITimetableReports {
 		List<MOSolution> solutions = archive.getSolutions();
 		System.out.println(solutions.size());
 		for(int i=0; i < solutions.size();i++ ){
+
+			NRSolutionStatistics stats = new NRSolutionStatistics(instance,solutions.get(i).getSolution());
+
+			int[] tmp = stats.getTotalBreakSatisfaction();
+			int score = 0;
+			for(int jj = 0; jj<tmp.length;jj++){
+				System.out.print(tmp[jj] + " ");
+				score+=tmp[jj];
+			}
+			System.out.println();
+			System.out.println(score);
+
+			int[] tmp2 = stats.getTotalShitSatisfaction();
+			for(int jj = 0; jj<tmp2.length;jj++){
+				System.out.print(tmp2[jj]+" ");
+			}
+			System.out.println();
+
 			System.out.println("solution print csv-----------------------------------------------");
 			String csv_filename = "timetable" + String.valueOf(i) + ".csv";
-
+			stats.stats_for_dashboard("timetable" + String.valueOf(i) + ".txt");
 			Shift[][] s = solutions.get(i).getSolution().shifts;
 
 			try{
 			FileWriter csvWriter = new FileWriter(csv_filename);
-			csvWriter.append(" ;" + "Lundi;" + "Mardi;" + "Mercredi;"+"Jeudi;"+"Vendredi;"+"Samedi;"+"Dimanche;");
-			csvWriter.append("Lundi;" + "Mardi;" + "Mercredi;"+"Jeudi;"+"Vendredi;"+"Samedi;"+"Dimanche;");
-			csvWriter.append("Lundi;" + "Mardi;" + "Mercredi;"+"Jeudi;"+"Vendredi;"+"Samedi;"+"Dimanche;");
-			csvWriter.append("Lundi;" + "Mardi;" + "Mercredi;"+"Jeudi;"+"Vendredi;"+"Samedi;"+"Dimanche;");
+			csvWriter.append(" ;" + "L;" + "M;" + "M;"+"J;"+"V;"+"S;"+"D;");
+			csvWriter.append("L;" + "M;" + "M;"+"J;"+"V;"+"S;"+"D;");
+			csvWriter.append("L;" + "M;" + "M;"+"J;"+"V;"+"S;"+"D;");
+			csvWriter.append("L;" + "M;" + "M;"+"J;"+"V;"+"S;"+"D;");
 			csvWriter.append("\n");
 			for(int ii = 0 ; ii < s.length;ii++){
 
@@ -58,19 +76,15 @@ public class TimetableReports implements ITimetableReports {
 				}
 				csvWriter.append("\n");
 			}
-
-
+			
 			csvWriter.flush();
 			csvWriter.close();
 			}
 
+
 			catch (IOException ex){
 
 			}
-		
-
-
-
 			
 
 		}

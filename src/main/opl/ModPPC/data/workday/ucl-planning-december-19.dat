@@ -1,6 +1,6 @@
 n=6;
 c=2;
-useRelaxation=0;
+useRelaxation=1;
 OBJECTIVE_SHIFT = 1;
 OBJECTIVE_SHIFT_USE_AVERAGE = 0;
 timetable= [
@@ -11,6 +11,7 @@ timetable= [
 [ "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "JF", "NA", "NA", "NA", "NA" ],
 [ "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "JF", "CA", "CA", "RH", "RH" ]
 ];
+
 
 workDays= [ 10, 13, 10, 11, 17, 17 ];
 breaksPerCycle= [ 4, 4, 6, 6, 4, 4 ];

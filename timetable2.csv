@@ -1,7 +1,7 @@
- ;Lundi;Mardi;Mercredi;Jeudi;Vendredi;Samedi;Dimanche;Lundi;Mardi;Mercredi;Jeudi;Vendredi;Samedi;Dimanche;Lundi;Mardi;Mercredi;Jeudi;Vendredi;Samedi;Dimanche;Lundi;Mardi;Mercredi;Jeudi;Vendredi;Samedi;Dimanche;
+ ;L;M;M;J;V;S;D;L;M;M;J;V;S;D;L;M;M;J;V;S;D;L;M;M;J;V;S;D;
 Nurse 0;S;B;M;M;M;B;B;J;J;B;J;S;S;S;B;B;B;B;B;B;B;B;B;B;B;B;B;B;
-Nurse 1;B;B;B;B;B;B;B;B;M;M;M;M;B;M;M;B;S;S;S;S;B;B;B;B;J;M;M;M;
-Nurse 2;J;B;B;B;B;B;B;S;B;B;J;J;B;B;B;B;B;B;B;B;B;B;M;S;M;B;S;S;
-Nurse 3;S;S;S;J;J;B;B;B;B;B;B;B;B;B;B;M;B;J;B;B;B;M;B;M;B;J;B;B;
-Nurse 4;J;J;J;S;S;S;S;B;B;J;J;B;M;B;S;S;M;B;J;M;M;J;J;B;S;S;S;B;
-Nurse 5;M;M;M;M;B;M;M;M;S;S;S;B;B;B;J;J;J;M;M;B;S;S;S;B;B;B;B;B;
+Nurse 1;B;B;B;B;B;B;B;B;B;M;M;M;B;M;M;B;M;M;M;M;B;J;B;B;J;J;B;M;
+Nurse 2;B;B;B;B;B;M;M;M;M;B;S;J;B;B;B;B;B;B;B;B;B;B;M;M;B;M;B;S;
+Nurse 3;M;M;B;B;S;B;B;B;B;B;B;B;B;B;B;M;B;S;S;B;B;M;B;S;S;S;S;B;
+Nurse 4;B;S;S;S;B;S;S;B;S;J;B;B;M;B;S;S;S;B;B;S;M;B;J;B;M;B;M;B;
+Nurse 5;J;J;J;J;J;B;B;S;B;S;B;B;B;B;J;J;J;J;J;B;S;S;S;B;B;B;B;B;
