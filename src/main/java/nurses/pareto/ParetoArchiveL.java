@@ -26,10 +26,11 @@ public class ParetoArchiveL implements IParetoArchive {
 
     @Override
     public void add(MOSolution mosol) {
-        if (!isDominated(mosol)) {
-            removeNowDominated();
-            solutions.add(mosol);
-        }
+        // if (!isDominated(mosol)) {
+        //      removeNowDominated();
+        //     solutions.add(mosol);
+        // }
+        solutions.add(mosol);
     }
 
     @Override
