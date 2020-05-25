@@ -13,6 +13,7 @@
  int TWODAYS_BREAKS_PER_CYCLE = 1;
  int MAX_CONSECUTIVE_WORKING_DAYS = 6;
  int PREF_CONSECUTIVE_WORKING_DAYS = 5;
+ int PREF_WORKDAY_PER_WEEK = 5;
  
  int n = ...; 					// number of agents
  range AGENTS = 1..n;
@@ -26,6 +27,7 @@
  int d = DAYS_PER_WEEK * w;		// number of days of the work period
  range DAYS = 1..d;
  
+ int OBJECTIVE_WORKDAY_USE_BALANCE = ...;
  int OBJECTIVE_SHIFT = ...;
  int OBJECTIVE_SHIFT_USE_AVERAGE = ...;
  
@@ -37,7 +39,7 @@
  int demand[j in DAYS] = sum(k in SHIFTS) demands[k][j] + sum(i in AGENTS) (timetable[i][j] == "FO" || timetable[i][j]=="EX");
  
  int fixedWork[i in AGENTS][j in DAYS] = timetable[i][j] == "M" || timetable[i][j] == "J" || timetable[i][j] == "S" || timetable[i][j] == "FO" || timetable[i][j]=="EX";
- int fixedBreak[i in AGENTS][j in DAYS] = timetable[i][j] == "RH" || timetable[i][j] == "RA" || timetable[i][j] == "RC" || timetable[i][j] == "RTT" || timetable[i][j] == "CA" || timetable[i][j] == "CM" || timetable[i][j] == "JF" || timetable[i][j] == "MPR" || timetable[i][j] == "ND";
+ int fixedBreak[i in AGENTS][j in DAYS] = timetable[i][j] == "RH" || timetable[i][j] == "RA" || timetable[i][j] == "RC" || timetable[i][j] == "RTT" || timetable[i][j] == "CA" || timetable[i][j] == "CM" || timetable[i][j] == "JF" || timetable[i][j] == "ND";
  int fixedShift[i in AGENTS][j in DAYS] = timetable[i][j] == "M" || timetable[i][j] == "J" || timetable[i][j] == "S";
  
  int useRelaxation = ...; 
