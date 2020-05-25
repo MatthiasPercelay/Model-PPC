@@ -44,11 +44,9 @@ dexpr int underDemand[j in DAYS] = maxl(demand[j]-supply[j],0);
 // overdemand works for each day
 dexpr int upperDemand[j in DAYS] = maxl(supply[j]-demand[j],0);
 
+////// for preferences 
 // the irregular weeks that work more than 5 days
 dexpr int irregularWeeks[i in AGENTS][w in WEEKS] = sum(j in startW[w]..endW[w])work[i][j] >= (PREF_WORKDAY_PER_WEEK + 1);
- 
- 
-////// for preferences 
 // the score of break preferences for each agent in each cycle
 dexpr int breakprefpC[i in AGENTS][l in CYCLES] = sum(j in 1..WEEKS_PER_CYCLE*DAYS_PER_WEEK)(break[i][startW[startC[l]] + (j-1)] * (breakPrefs[i][j] != 0)); // breakpref can designate mjs
 
@@ -73,11 +71,11 @@ dexpr float diffWorkDayRate = max(i in AGENTS)workDayRate[i] - min(i in AGENTS)w
 dexpr int TOTALunderDemand=sum(j in DAYS) underDemand[j];
 // total sum of the upper demand, when not using relaxation we min this
 dexpr int TOTALupperDemand=sum(j in DAYS) upperDemand[j];
-// minimize the irregular weeks (work for more than 5 days)
-dexpr int TOTALirregularWeeks = sum(i in AGENTS, w in WEEKS)irregularWeeks[i][w];
 
 ////// objs for Preferences
-// constraint 4: total score of the preferences that are respected
+// minimize the irregular weeks (work for more than 5 days)
+dexpr int TOTALirregularWeeks = sum(i in AGENTS, w in WEEKS)irregularWeeks[i][w];
+// total score of the preferences that are respected
 dexpr int TOTALbreakprefpC = sum(i in AGENTS, l in CYCLES) breakprefpC[i][l];
 
 ////// objs for Balance
