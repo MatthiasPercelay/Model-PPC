@@ -14,10 +14,11 @@ int DAY = 3;
 int SHIFT[{"M", "J", "S"}] = [MORNING, DAY, EVENING];
 
 // DAY OF WORK AND FIXED SHIFT
+// can be simplified as j % DAYS_PER_CYCLE?
 int is_preference[i in AGENTS][j in DAYS][s in SHIFTS] = shiftPrefs[i][((j-1)%DAYS_PER_CYCLE) + 1][s] > 0;
 int is_forbidden[i in AGENTS][j in DAYS][s in SHIFTS] = shiftPrefs[i][((j-1)%DAYS_PER_CYCLE) + 1][s] < 0;
-
-int fixedWork_[i in AGENTS][j in DAYS] = (fixedWork[i][j] == 1 || workday[i][j] == "W") && (workday[i][j] != "FO" && workday[i][j] != "EX");
+// abundant conditions rhs?
+int fixedWork_[i in AGENTS][j in DAYS] = (fixedWork[i][j] == 1 || workday[i][j] == "W");
 
 // VARIABLES
 // Assign a shift to an agent
@@ -33,8 +34,8 @@ dexpr int SM[i in AGENTS] = sum(j in 1..d-1) (work[i][j] == EVENING && work[i][j
 int CONSECUTIVE_DAYS = 4;
 dexpr int sameShift[i in AGENTS][c in 2..CONSECUTIVE_DAYS] = sum(j in 1..d-c+1, s in SHIFTS) (sum(k in 0..c-1) (work[i][j+k] == s) == c);
 // Number of time the agent switch shift from one DAY to the next one.
+// shift switch times
 dexpr int shiftSwitch[i in AGENTS] = sum(j in 1..d-1, s in SHIFTS) ((work[i][j] == s && work[i][j+1] != s) * fixedWork_[i][j+1]); 
-
 // Number of preferences respected for each agent
 dexpr int preferences[i in AGENTS] = sum(j in DAYS, s in SHIFTS) (work[i][j] == s && is_preference[i][j][s] == 1) ;
 // Number of forbidden not respected for each agent
@@ -59,6 +60,7 @@ dexpr int objectives[i in AGENTS] = OBJECTIVE_SHIFT == 0 ? objective_0[i] :
 dexpr int preferences_respect[i in AGENTS] = 4*interdictions[i] - preferences[i];
 
 // Evaluation for each agent
+// overall objective + respect for each agent
 dexpr int objectiveValuePerAgent[i in AGENTS] = objectives[i] + preferences_respect[i];
 
 // Global evaluation of the solution
@@ -83,7 +85,8 @@ dexpr int SBMJ[i in AGENTS][j in 2..d-1] =
 			(one does not get the timetable of his life and the other wants to kill himself)
 */
 
-minimize objectiveValue + differenceToAverage * OBJECTIVE_SHIFT_USE_AVERAGE;
+
+minimize objectiveValue + differenceToAverage * OBJECTIVE_SHIFT_USE_AVERAGE; // OBJECTIVE_SHIFT_USE_AVERAGE=0
 
 subject to{
 
@@ -114,6 +117,18 @@ subject to{
  	
  	// TODO ... ?
  	 
+}
+
+execute PREPROCESS {
+	cplex.mipdisplay = 5
+}
+
+execute {
+	writeln("SM: ", SM);
+	writeln("sameShift: ", sameShift);
+	writeln("shiftSwitch: ", shiftSwitch);
+	writeln("preferences: ", preferences);
+	writeln("interdictions: ", interdictions);	
 }
 
 // PRINT THE RESULT
