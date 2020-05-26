@@ -262,6 +262,13 @@ public class NRProblemInstance implements IProblemInstance {
 			///////////////////////////
 			// Decide the type of objective function used.
 			// DEFAULT : 0
+			handler.startElement("OBJECTIVE_WORKDAY_USE_BALANCE");
+			handler.addIntItem(1);
+			handler.endElement();
+
+			///////////////////////////
+			// Decide the type of objective function used.
+			// DEFAULT : 0
 			handler.startElement("OBJECTIVE_SHIFT");
 			handler.addIntItem(1);
 			handler.endElement();
@@ -386,6 +393,13 @@ public class NRProblemInstance implements IProblemInstance {
 			///////////////////////////
 			handler.startElement("useRelaxation");
 			handler.addIntItem(0);
+			handler.endElement();
+
+			///////////////////////////
+			// Decide the type of objective function used.
+			// DEFAULT : 0
+			handler.startElement("OBJECTIVE_WORKDAY_USE_BALANCE");
+			handler.addIntItem(1);
 			handler.endElement();
 
 			///////////////////////////
