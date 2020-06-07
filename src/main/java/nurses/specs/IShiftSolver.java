@@ -9,7 +9,9 @@
 package nurses.specs;
 
 import nurses.pareto.ParetoArchiveL;
+import nurses.NRExtargs;
+
 public interface IShiftSolver {
 
-	void solve(IProblemInstance instance, ParetoArchiveL workdayArchive, ParetoArchiveL archive);
+	void solve(IProblemInstance instance, NRExtargs args, ParetoArchiveL workdayArchive, ParetoArchiveL archive);
 }

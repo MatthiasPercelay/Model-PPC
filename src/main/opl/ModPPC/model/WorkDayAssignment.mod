@@ -151,32 +151,32 @@ subject to{
 			sum(j in k..k+PREF_CONSECUTIVE_WORKING_DAYS) work[i][j] <= PREF_CONSECUTIVE_WORKING_DAYS; // at most 5 consecutive working days over a rolling 6 day
 }
 
-execute {
-	writeln("TOTALunderDemand:", TOTALunderDemand);
-	writeln("TOTALupperDemand:", TOTALunderDemand);
-	writeln("TOTALbreakprefpC:", TOTALbreakprefpC);
-	writeln("breakPrefRate:", breakPrefRate);
-	writeln("diffBreakPrefRate:", diffBreakPrefRate);
-	writeln("workDayRate:", workDayRate);
-	writeln("diffWorkDayRate:", diffWorkDayRate);
+//execute {
+//	writeln("TOTALunderDemand:", TOTALunderDemand);
+//	writeln("TOTALupperDemand:", TOTALunderDemand);
+//	writeln("TOTALbreakprefpC:", TOTALbreakprefpC);
+//	writeln("breakPrefRate:", breakPrefRate);
+//	writeln("diffBreakPrefRate:", diffBreakPrefRate);
+//	writeln("workDayRate:", workDayRate);
+//	writeln("diffWorkDayRate:", diffWorkDayRate);
 //	writeln("weekEnd:", weekEnd);
 //	writeln("irregularWeeks:", irregularWeeks);
-}
+//}
 
 
 
-execute PREPROCESS{
-	cplex.mipdisplay = 5
-}
+//execute PREPROCESS{
+//	cplex.mipdisplay = 5
+//}
 
 
 
-execute POSTPROCESS{
-        for(var i in AGENTS) {
-            for(var j in DAYS) {
-                if(timetable[i][j] == "NA") {
-                    write(work[i][j])                   
-                } 
+//execute POSTPROCESS{
+//        for(var i in AGENTS) {
+//            for(var j in DAYS) {
+//               if(timetable[i][j] == "NA") {
+//                    write(work[i][j])                   
+//                } 
 //                else if (timetable[i][j] == "M" || timetable[i][j] == "J" || timetable[i][j] == "S" || timetable[i][j] == "FO" || timetable[i][j]=="EX")
 //                {
 //                    write("1")
@@ -184,11 +184,11 @@ execute POSTPROCESS{
 //                 else{
 //                   write("0")
 //                   }
-                else{
-                  write(timetable[i][j])
-                  }
-                write(", ")               
-               }                                   
-        writeln();
-      }       
-}
+//                else{
+//                  write(timetable[i][j])
+//                  }
+//                write(", ")               
+//               }                                   
+//        writeln();
+//      }       
+//}

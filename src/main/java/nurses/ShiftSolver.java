@@ -22,6 +22,8 @@ import nurses.specs.IParetoArchive;
 import nurses.specs.IProblemInstance;
 import nurses.specs.IShiftSolver;
 import nurses.pareto.ParetoArchiveL;
+import nurses.NRExtargs;
+
 public class ShiftSolver extends NRSolver implements IShiftSolver {
 
 	public final String MODEL_FILE = "src/main/opl/ModPPC/model/ShiftAssignment.mod";
@@ -66,70 +68,107 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 
 	
 	@Override
-	public void solve(IProblemInstance instance, ParetoArchiveL workdayArchive, ParetoArchiveL archive) {
+	public void solve(IProblemInstance instance, NRExtargs args, ParetoArchiveL workdayArchive, ParetoArchiveL archive) {
 		List<MOSolution> data = workdayArchive.getSolutions();
 		//MOSolution sol = data.get(0);
 		//Shift[][] s = sol.getSolution().getshifts();
-		
-		Shift[][] hardcoded = new Shift[][]{
-			{Shift.S,Shift.RH,Shift.M,Shift.M,Shift.M,Shift.RH,Shift.RH,Shift.J,Shift.J,Shift.RH,Shift.J,Shift.S,Shift.S,Shift.S,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND},
-			{Shift.CA,Shift.CA,Shift.CA,Shift.CA,Shift.CA,Shift.RH,Shift.RH,Shift.RH,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.B,Shift.B,Shift.JF,Shift.W,Shift.W,Shift.W,Shift.W},
-			{Shift.W,Shift.B,Shift.B,Shift.B,Shift.RA,Shift.B,Shift.B,Shift.W,Shift.B,Shift.RA,Shift.W,Shift.W,Shift.RH,Shift.RH,Shift.RA,Shift.RTT,Shift.RTT,Shift.RTT,Shift.RTT,Shift.RH,Shift.RH,Shift.RA,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W},
-			{Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.RH,Shift.RH,Shift.RTT,Shift.RTT,Shift.RTT,Shift.RA,Shift.RTT,Shift.RH,Shift.RH,Shift.RTT,Shift.W,Shift.RA,Shift.W,Shift.B,Shift.RH,Shift.RH,Shift.W,Shift.B,Shift.W,Shift.B,Shift.W,Shift.B,Shift.B},
-			{Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.B,Shift.W,Shift.W,Shift.B,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.JF,Shift.W,Shift.W,Shift.W,Shift.B},
-			{Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.B,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.JF,Shift.CA,Shift.CA,Shift.RH,Shift.RH}
-		};
+		NRExtargs extArgs = args;
 
-	for(int j=0; j < data.size(); j++ ){
-		setUp(this.MODEL_FILE);
-		IloCplex cplex;
-		try {
-			cplex = oplF.createCplex();
-		} catch (IloException e) {
-			e.printStackTrace();
-			return;
+		int[][] demands = instance.getDemands();
+		int[] demandPerDay = new int[instance.getNbDays()];
+		for (int ii=0; ii<demands.length; ii++){
+			for (int jj=0; jj<demands[ii].length; jj++){
+				if (demands[ii][jj] == 1){
+					demandPerDay[jj] += 1;
+				}
+			}
 		}
-		MOSolution sol = data.get(j);
-		NRProblemInstance problem = new NRProblemInstance(instance,sol.getSolution());
-		// problem.workday = sol.getSolution().getshifts();
-		Shift[][] tmp = data.get(j).getSolution().getshifts();
+		
+		// Shift[][] hardcoded = new Shift[][]{
+		// 	{Shift.S,Shift.RH,Shift.M,Shift.M,Shift.M,Shift.RH,Shift.RH,Shift.J,Shift.J,Shift.RH,Shift.J,Shift.S,Shift.S,Shift.S,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND},
+		// 	{Shift.CA,Shift.CA,Shift.CA,Shift.CA,Shift.CA,Shift.RH,Shift.RH,Shift.RH,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.B,Shift.B,Shift.JF,Shift.W,Shift.W,Shift.W,Shift.W},
+		// 	{Shift.W,Shift.B,Shift.B,Shift.B,Shift.RA,Shift.B,Shift.B,Shift.W,Shift.B,Shift.RA,Shift.W,Shift.W,Shift.RH,Shift.RH,Shift.RA,Shift.RTT,Shift.RTT,Shift.RTT,Shift.RTT,Shift.RH,Shift.RH,Shift.RA,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W},
+		// 	{Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.RH,Shift.RH,Shift.RTT,Shift.RTT,Shift.RTT,Shift.RA,Shift.RTT,Shift.RH,Shift.RH,Shift.RTT,Shift.W,Shift.RA,Shift.W,Shift.B,Shift.RH,Shift.RH,Shift.W,Shift.B,Shift.W,Shift.B,Shift.W,Shift.B,Shift.B},
+		// 	{Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.B,Shift.W,Shift.W,Shift.B,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.JF,Shift.W,Shift.W,Shift.W,Shift.B},
+		// 	{Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.B,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.JF,Shift.CA,Shift.CA,Shift.RH,Shift.RH}
+		// };
 
-		for(int ii=0;ii<tmp.length;ii++){
-			for(int iii=0;iii<tmp[ii].length;iii++){
-				System.out.print(tmp[ii][iii] + " ");
+		for(int j=0; j < data.size(); j++ ){
+			setUp(this.MODEL_FILE);
+			IloCplex cplex;
+			try {
+				cplex = oplF.createCplex();
+			} catch (IloException e) {
+				e.printStackTrace();
+				return;
+			}
+			MOSolution sol = data.get(j);
+			NRProblemInstance problem = new NRProblemInstance(instance, extArgs, sol.getSolution());
+			
+
+
+			// problem.workday = sol.getSolution().getshifts();
+			Shift[][] tmp = data.get(j).getSolution().getshifts();
+			int[] supplyPerDay = new int[instance.getNbDays()];
+			for(int ii=0;ii<tmp.length;ii++){
+				for(int iii=0;iii<tmp[ii].length;iii++){
+					System.out.print(tmp[ii][iii] + " ");
+					if (tmp[ii][iii] == Shift.W || tmp[ii][iii] == Shift.M ||
+						tmp[ii][iii] == Shift.J || tmp[ii][iii] == Shift.S){
+						supplyPerDay[iii] += 1;
+					}
+				}
+				System.out.println();
 			}
 			System.out.println();
-		}
-		System.out.println();
-		
-		problem.workday = sol.getSolution().getshifts();
-		IloOplModel opl=oplF.createOplModel(def,cplex);
-		opl.addDataSource(problem.toShiftDataSource(oplF));
-		opl.generate();
 
-		try {
-
-			if(cplex.solve()) {		
-				System.out.println("Solving .......................");	
-				final int n = cplex.getSolnPoolNsolns();
-				for (int i = 0; i < n; i++) {
-					storeSolution(instance, opl, archive, i);
+			
+			problem.workday = sol.getSolution().getshifts();
+			int fakeAgent = 0;
+			for (int day=0; day <instance.getNbDays(); day++){
+				int diff = demandPerDay[day] - supplyPerDay[day];
+				for (int add=0; add < diff; add++){
+					if (fakeAgent == instance.getNbAgents()) fakeAgent = 0;
+					while(fakeAgent < instance.getNbAgents() && (problem.workday[fakeAgent][day] == Shift.W || 
+						problem.workday[fakeAgent][day] == Shift.M || problem.workday[fakeAgent][day] == Shift.J || 
+						problem.workday[fakeAgent][day] == Shift.S)){
+					// while(fakeAgent < instance.getNbAgents() && (problem.workday[fakeAgent][day] == Shift.W)){
+							if (fakeAgent == instance.getNbAgents() - 1) fakeAgent = 0;
+							fakeAgent++;
+						}
+					problem.workday[fakeAgent][day] = Shift.W;
+					System.out.println("On day " + (day+1) + " agent " + (fakeAgent+1) + "'s work should be assigned to an exteranl agent.");
+					fakeAgent++;
 				}
-                System.out.println("Number of solutions : " + archive.size());
-				opl.postProcess();
-				//opl.printSolution(System.out);
 			}
-		} catch (IloException e) {
-			System.out.println("An exception happened");
-			e.printStackTrace();
-			return;
-		}
 
-		cplex.end();
-		opl.end();
-		tearDown();
-		}
+			IloOplModel opl=oplF.createOplModel(def,cplex);
+			opl.addDataSource(problem.toShiftDataSource(oplF));
+			opl.generate();
 
-	}
+			try {
+
+				if(cplex.solve()) {		
+					System.out.println("Solving .......................");	
+					final int n = cplex.getSolnPoolNsolns();
+					for (int i = 0; i < n; i++) {
+						storeSolution(instance, opl, archive, i);
+					}
+					System.out.println("Number of solutions : " + archive.size());
+					opl.postProcess();
+					//opl.printSolution(System.out);
+				}
+			} catch (IloException e) {
+				System.out.println("An exception happened");
+				e.printStackTrace();
+				return;
+			}
+
+			cplex.end();
+			opl.end();
+			tearDown();
+			}
+
+		}
 
 }

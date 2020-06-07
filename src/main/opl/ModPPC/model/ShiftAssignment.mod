@@ -141,38 +141,38 @@ subject to{
  	  }
 }
 
-execute PREPROCESS {
-	cplex.mipdisplay = 5
-}
+//execute PREPROCESS {
+//	cplex.mipdisplay = 5
+//}
 
-execute {
-	writeln("SM: ", SM);
+//execute {
+//	writeln("SM: ", SM);
 //	writeln("sameShift: ", sameShift);
 //	writeln("shiftSwitch: ", shiftSwitch);
-	writeln("preferences: ", preferences);
-	writeln("interdictions: ", interdictions);
-	writeln("objBalance: ", objBalance);
+//	writeln("preferences: ", preferences);
+//	writeln("interdictions: ", interdictions);
+//	writeln("objBalance: ", objBalance);
 //	writeln("differenceToAverage: ", differenceToAverage);
 //	writeln("objectiveDiff: ", objectiveDiff);	
-}
+//}
 
 // PRINT THE RESULT
-execute POSTPROCESS{
-	var no_work = true;
-	for(var j in DAYS) write(j + "\t");
-	writeln(); writeln();
-	for(var i in AGENTS) {
-		for(var j in DAYS){
-			if(work[i][j] > 0) {
-				if(work[i][j] == 2) write("S");
-				else if(work[i][j] == 1) write("M");
-				else if(work[i][j] == 3) write("J");
-				else write("?");			
-			}
-			else write("-")
-            write("\t");
-		}                                                 
-        writeln();
-	}       
-}
+//execute POSTPROCESS{
+//	var no_work = true;
+//	for(var j in DAYS) write(j + "\t");
+//	writeln(); writeln();
+//	for(var i in AGENTS) {
+//		for(var j in DAYS){
+//			if(work[i][j] > 0) {
+//				if(work[i][j] == 2) write("S");
+//				else if(work[i][j] == 1) write("M");
+//				else if(work[i][j] == 3) write("J");
+//				else write("?");			
+//			}
+//			else write("-")
+//            write("\t");
+//		}                                                 
+//        writeln();
+//	}       
+//}
 

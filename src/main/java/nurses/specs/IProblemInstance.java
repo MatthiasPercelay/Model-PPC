@@ -11,6 +11,7 @@ package nurses.specs;
 import ilog.opl.IloCustomOplDataSource;
 import ilog.opl.IloOplFactory;
 import nurses.NRConstants;
+import nurses.NRExtargs;
 
 public interface IProblemInstance extends ITTDimension {
 
@@ -27,6 +28,10 @@ public interface IProblemInstance extends ITTDimension {
 	default int getNbDays() {
 		return getTimeTable().getNbDays();
 	}
+
+	void setExtArgs(NRExtargs args);
+
+	void relaxExtArgs();
 
 	ITimetable getTimeTable();
 	

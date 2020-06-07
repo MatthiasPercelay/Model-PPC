@@ -41,6 +41,8 @@ import nurses.specs.IShiftSolver;
 import nurses.specs.ITimetableReports;
 import nurses.specs.IWorkdaySolver;
 import nurses.pareto.TimetableReports;
+import nurses.NRExtargs;
+import nurses.pareto.MOSolution;
 
 public class NRCmd  {
 
@@ -71,6 +73,24 @@ public class NRCmd  {
 	@Option(name = "-f", aliases = { "-file", "--file" }, usage = "XLS Problem Instance File.", required = true)
 	private File instanceFile;
 
+	@Option(name = "-n", aliases = {"-number", "--number"}, usage = "Number of agents.")
+	private int n = 6;
+
+	@Option(name = "-c", aliases = {"-cycle", "--cycle"}, usage = "Number of cycles.")
+	private int c = 2;
+
+	@Option(name = "-r", aliases = {"-relaxation", "--relaxation"}, usage = "Use relaxation.")
+	private int r = 0;
+	
+	@Option(name = "-wdayBalance", aliases = {"--wdayBalance"}, usage = "Workday assignment uses balance.")
+	private int wdayBalance = 0;
+
+	@Option(name = "-shiftObj", aliases = {"--shiftObj"}, usage = "Shift assignment customized objective.")
+	private int shiftObj = 0;
+
+	@Option(name = "-shiftBalance", aliases = {"--shiftBalance"}, usage = "Shift assignment uses balance.")
+	private int shiftBalance = 0;
+
 	@Option(name = "-s", aliases = { "-seed", "--seed" }, usage = "Random Seed.")
 	private long seed = 0;
 
@@ -81,6 +101,8 @@ public class NRCmd  {
 	private int numThreads = 4;
 
 	private long runtime;
+
+	private NRExtargs extArgs;
 
 	public NRCmd() {
 		super();
@@ -94,7 +116,9 @@ public class NRCmd  {
 			LOGGER.log(Level.SEVERE, "Invalid Command Line Arguments : " + Arrays.toString(args) + "\n\ncmd...[FAIL]", e);
 			throw e;
 		}
+		extArgs = new NRExtargs(n, c, r, wdayBalance, shiftObj, shiftBalance);
 	}
+
 
 	public void setUp(String... args) throws CmdLineException { 
 		readArgs(args);
@@ -129,12 +153,38 @@ public class NRCmd  {
 		IloOplFactory.setDebugMode(true);
 		runtime = - System.nanoTime();
 		final IProblemInstance instance = parseInstance(instanceFile);
+		instance.setExtArgs(extArgs);
 		final IWorkdaySolver workdaySolver = createWorkdaySolver(instance);
 		final ParetoArchiveL workdayArchive = createArchive();
 		workdaySolver.solve(instance, workdayArchive);
+
+		// if workday assignment yields no solution, use relaxation and re-solve
+		if (workdayArchive.getSolutions().size() == 0){
+			System.out.println("------------------------- Solving with relaxation ---------------------");
+			instance.relaxExtArgs();
+			workdaySolver.solve(instance, workdayArchive);
+		}
+
 		final IShiftSolver shiftSolver = createShiftSolver();	
 		final ParetoArchiveL shiftArchive = createArchive();
-		shiftSolver.solve(instance, workdayArchive, shiftArchive);	
+		shiftSolver.solve(instance, extArgs, workdayArchive, shiftArchive);	
+
+		// TODO:
+		// // if shift assignment yields no solution with the non-relaxed workday assignment solution, relax and re-solve
+		// if (shiftArchive.getSolutions().size() == 0){
+		// 	if (extArgs.useRelaxation != 1){
+		// 		System.out.println("------------------------- Solving with relaxation ---------------------");
+				// instance.relaxExtArgs();
+				// final IWorkdaySolver newWorkdaySolver = createWorkdaySolver(instance);
+				// final ParetoArchiveL newWorkdayArchive = createArchive();
+				// newWorkdaySolver.solve(instance, newWorkdayArchive);
+		//		// not to relax 1 but relax 2
+		// 		shiftSolver.solve(instance, extArgs, newWorkdayArchive, shiftArchive);	
+		// 	}
+		// 	else{ // and no else
+		// 		System.out.println("The options cannot yield a solution even with relaxation. Please consider to change options.");
+		// 	}
+		// }
 		final TimetableReports reporter = createTimetableReports();
 		reporter.generateReports(instance, shiftArchive);
 		runtime += System.nanoTime();

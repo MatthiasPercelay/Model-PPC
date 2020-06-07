@@ -29,6 +29,7 @@ public class NRProblemInstance implements IProblemInstance {
 	private final int[][] breakPreferences;
 	private final int[][][] shiftPreferences;
 	public Shift[][] workday;
+	public NRExtargs extArgs;
 
 
 	public NRProblemInstance(File instanceFile) {
@@ -46,13 +47,13 @@ public class NRProblemInstance implements IProblemInstance {
 		breakPreferences = parser.getBreaksMatrix("breakPrefs");
 		shiftPreferences = parser.getPrefsMatrix("shiftPrefs");
 
+
 		for(int i = 0; i <demands.length ; i++ ){
 			for(int j = 0; j < demands[i].length ; j++ ){
 				System.out.print(demands[i][j] + " ");
 			}
 			System.out.println();
 		}
-
 
 	}
 
@@ -177,7 +178,7 @@ public class NRProblemInstance implements IProblemInstance {
 
 	}*/
 
-	public NRProblemInstance(IProblemInstance instance, ITimetable timetable) {
+	public NRProblemInstance(IProblemInstance instance, NRExtargs args, ITimetable timetable) {
 		super();
 		this.nbCycles = instance.getNbCycles();
 		this.timetable = timetable;
@@ -186,8 +187,19 @@ public class NRProblemInstance implements IProblemInstance {
 		this.breaksPerCycle = instance.getBreaksPerCycle();
 		this.breakPreferences = instance.getBreakPreferences();
 		this.shiftPreferences = instance.getShiftPreferences();
+		this.setExtArgs(args);
+		System.out.println("external args : useRelaxation=" + this.extArgs.useRelaxation);
 	}
 
+	@Override
+	public void setExtArgs(NRExtargs args) {
+		extArgs = args;
+	}
+
+	@Override
+	public void relaxExtArgs(){
+		extArgs.useRelaxation = 1;
+	}
 
 
 	@Override
@@ -256,21 +268,21 @@ public class NRProblemInstance implements IProblemInstance {
 
 			///////////////////////////
 			handler.startElement("useRelaxation");
-			handler.addIntItem(0);
+			handler.addIntItem(extArgs.useRelaxation);
 			handler.endElement();
 
 			///////////////////////////
 			// Decide the type of objective function used.
 			// DEFAULT : 0
 			handler.startElement("OBJECTIVE_WORKDAY_USE_BALANCE");
-			handler.addIntItem(1);
+			handler.addIntItem(extArgs.OBJECTIVE_WORKDAY_USE_BALANCE);
 			handler.endElement();
 
 			///////////////////////////
 			// Decide the type of objective function used.
 			// DEFAULT : 0
 			handler.startElement("OBJECTIVE_SHIFT");
-			handler.addIntItem(1);
+			handler.addIntItem(extArgs.OBJECTIVE_SHIFT);
 			handler.endElement();
 
 			///////////////////////////
@@ -279,7 +291,7 @@ public class NRProblemInstance implements IProblemInstance {
 			// 1 : Use this parameter; 0 : Don't use. DEFAULT : 1
 			// The computation of the solution takes much more time using this parameter, but might be better.
 			handler.startElement("OBJECTIVE_SHIFT_USE_AVERAGE");
-			handler.addIntItem(0);
+			handler.addIntItem(extArgs.OBJECTIVE_SHIFT_USE_AVERAGE);
 			handler.endElement();
 
 			///////////////////////////
@@ -392,21 +404,21 @@ public class NRProblemInstance implements IProblemInstance {
 
 			///////////////////////////
 			handler.startElement("useRelaxation");
-			handler.addIntItem(0);
+			handler.addIntItem(extArgs.useRelaxation);
 			handler.endElement();
 
 			///////////////////////////
 			// Decide the type of objective function used.
 			// DEFAULT : 0
 			handler.startElement("OBJECTIVE_WORKDAY_USE_BALANCE");
-			handler.addIntItem(1);
+			handler.addIntItem(extArgs.OBJECTIVE_WORKDAY_USE_BALANCE);
 			handler.endElement();
 
 			///////////////////////////
 			// Decide the type of objective function used.
 			// DEFAULT : 0
 			handler.startElement("OBJECTIVE_SHIFT");
-			handler.addIntItem(1);
+			handler.addIntItem(extArgs.OBJECTIVE_SHIFT);
 			handler.endElement();
 
 			///////////////////////////
@@ -415,7 +427,7 @@ public class NRProblemInstance implements IProblemInstance {
 			// 1 : Use this parameter; 0 : Don't use. DEFAULT : 1
 			// The computation of the solution takes much more time using this parameter, but might be better.
 			handler.startElement("OBJECTIVE_SHIFT_USE_AVERAGE");
-			handler.addIntItem(0);
+			handler.addIntItem(extArgs.OBJECTIVE_SHIFT_USE_AVERAGE);
 			handler.endElement();
 
 
