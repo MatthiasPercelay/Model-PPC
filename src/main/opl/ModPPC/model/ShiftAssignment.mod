@@ -36,6 +36,10 @@ dexpr int cons36hBreak[i in AGENTS][j in 1..d] = (j==1) ? (1 - maxl(fixedWork_[i
 		((fixedWork_[i][j-1] + fixedWork_[i][j] == 0) || (fixedWork_[i][j] + fixedWork_[i][j+1] == 0) ||
 		(fixedWork_[i][j] == 0 && work[i][j-1] != EVENING) || (fixedWork_[i][j] == 0 && work[i][j+1] == EVENING));
 
+////// obj for relaxation, fixedShift can be violated and assigned to additional agents
+// this is the first priority, viloate the least fixed shifts when using relaxation
+dexpr int violatedFixedShift[i in AGENTS][j in 1..d] = fixedShift[i][j] == 1 ? (SHIFT[workday[i][j]] != work[i][j]) : 0;
+
 
 ////// obj for customized requirements
 // Number of DAY where an agent does EVENING and MORNING the next DAY.
@@ -91,6 +95,7 @@ dexpr float differenceToAveragePerAgent[i in AGENTS] = abs(objectiveValue - obje
 
 //-------------------------------- Definition of final objective functions ------------------------------
 
+dexpr int objRelax = sum(i in AGENTS)(sum(j in 1..d) (violatedFixedShift[i][j]));
 dexpr int objCustom = sum(i in AGENTS) customRequire[i];
 dexpr int objPref = sum(i in AGENTS)preferences_respect[i];
 dexpr float objBalance = max(i in AGENTS) differenceToAveragePerAgent[i] - min(i in AGENTS) differenceToAveragePerAgent[i];
@@ -108,7 +113,7 @@ dexpr float objBalance = max(i in AGENTS) differenceToAveragePerAgent[i] - min(i
 			(one does not get the timetable of his life and the other wants to kill himself)
 */
 
-minimize staticLex(objPref, objBalance*OBJECTIVE_SHIFT_USE_AVERAGE, objCustom);
+minimize staticLex(objRelax*useRelaxation2, objPref, objBalance*OBJECTIVE_SHIFT_USE_AVERAGE, objCustom);
 
 
 //-------------------------------- Definition of constraints ------------------------------
@@ -123,8 +128,10 @@ subject to{
 
 	// respect fixed shifts
 	forall(j in DAYS, i in AGENTS){
-		// If the shift is already shift, then we must respect it	
-		if(fixedShift[i][j] == 1) work[i][j] == SHIFT[workday[i][j]];
+		// If use relaxation, fixed shift can be violated, otherwise must be respected
+		if (useRelaxation2 == 0){	
+			if(fixedShift[i][j] == 1) work[i][j] == SHIFT[workday[i][j]];
+		}	
 		// If an agent must work a certain DAY, then he must have a shift
 		if(fixedWork_[i][j] == 1 && workday[i][j] != "FO" && workday[i][j] != "EX") work[i][j] != 0;
 		if(fixedWork_[i][j] == 0 || workday[i][j] == "FO" || workday[i][j] == "EX") work[i][j] == 0;
@@ -144,19 +151,20 @@ subject to{
 //execute PREPROCESS {
 //	cplex.mipdisplay = 5
 //}
-
+//
 //execute {
 //	writeln("SM: ", SM);
-//	writeln("sameShift: ", sameShift);
-//	writeln("shiftSwitch: ", shiftSwitch);
+////	writeln("sameShift: ", sameShift);
+////	writeln("shiftSwitch: ", shiftSwitch);
 //	writeln("preferences: ", preferences);
 //	writeln("interdictions: ", interdictions);
 //	writeln("objBalance: ", objBalance);
-//	writeln("differenceToAverage: ", differenceToAverage);
-//	writeln("objectiveDiff: ", objectiveDiff);	
+//	writeln("objRelax: ", objRelax);
+////	writeln("differenceToAverage: ", differenceToAverage);
+////	writeln("objectiveDiff: ", objectiveDiff);	
 //}
-
-// PRINT THE RESULT
+//
+//// PRINT THE RESULT
 //execute POSTPROCESS{
 //	var no_work = true;
 //	for(var j in DAYS) write(j + "\t");

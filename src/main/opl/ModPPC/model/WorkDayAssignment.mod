@@ -84,7 +84,7 @@ dexpr float TOTALbalance = diffBreakPrefRate * 1 + diffWorkDayRate * 1;
 
 //-------------------------- Definition of final objective functions --------------------------
 
-dexpr int objBasic = (useRelaxation == 0) ? TOTALupperDemand : TOTALunderDemand;
+dexpr int objBasic = (useRelaxation1 == 0) ? TOTALupperDemand : TOTALunderDemand;
 dexpr int objPref = TOTALirregularWeeks - TOTALbreakprefpC;
 dexpr float objBalance = TOTALbalance;
 
@@ -96,7 +96,7 @@ minimize staticLex(objBasic, objPref, objBalance*OBJECTIVE_WORKDAY_USE_BALANCE);
 
 subject to{
   
-  	if(useRelaxation == 0){  // if use relaxation (1), we allow underdemand; and the solution should be corrected for model 2
+  	if(useRelaxation1 == 0){  // if use relaxation (1), we allow underdemand; and the solution should be corrected for model 2
     // satisfy demands for each day
 	forall(j in DAYS) 
  		ctDemand[j]:
@@ -159,31 +159,31 @@ subject to{
 //	writeln("diffBreakPrefRate:", diffBreakPrefRate);
 //	writeln("workDayRate:", workDayRate);
 //	writeln("diffWorkDayRate:", diffWorkDayRate);
-//	writeln("weekEnd:", weekEnd);
-//	writeln("irregularWeeks:", irregularWeeks);
+////	writeln("weekEnd:", weekEnd);
+////	writeln("irregularWeeks:", irregularWeeks);
 //}
-
-
-
+//
+//
+//
 //execute PREPROCESS{
 //	cplex.mipdisplay = 5
 //}
-
-
-
+//
+//
+//
 //execute POSTPROCESS{
 //        for(var i in AGENTS) {
 //            for(var j in DAYS) {
-//               if(timetable[i][j] == "NA") {
+//                if(timetable[i][j] == "NA") {
 //                    write(work[i][j])                   
 //                } 
-//                else if (timetable[i][j] == "M" || timetable[i][j] == "J" || timetable[i][j] == "S" || timetable[i][j] == "FO" || timetable[i][j]=="EX")
-//                {
-//                    write("1")
-//                 }
-//                 else{
-//                   write("0")
-//                   }
+////                else if (timetable[i][j] == "M" || timetable[i][j] == "J" || timetable[i][j] == "S" || timetable[i][j] == "FO" || timetable[i][j]=="EX")
+////                {
+////                    write("1")
+////                 }
+////                 else{
+////                   write("0")
+////                   }
 //                else{
 //                  write(timetable[i][j])
 //                  }

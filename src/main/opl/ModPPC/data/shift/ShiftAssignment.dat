@@ -122,11 +122,20 @@
 //["W","B","B","B","W","W","W","W","B","W","W","W","B","B","W","W","W","B","W","W","W","W","W","JF","CA","CA","RH","RH"]
 //];
 
+//workday = [
+//["S","RH","M","M","M","RH","RH","J","J","RH","J","S","S","S","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND"],
+//["CA","CA","CA","CA","CA","RH","RH","RH","B","W","B","W","W","W","W","B","W","B","W","W","W","W","W","JF","W","W","B","B"],
+//["W","W","B","B","RA","W","B","W","W","RA","B","B","RH","RH","RA","RTT","RTT","RTT","RTT","RH","RH","RA","B","W","W","W","W","W"],
+//["B","B","W","W","W","RH","RH","RTT","RTT","RTT","RA","RTT","RH","RH","RTT","W","RA","W","W","RH","RH","W","B","W","B","W","W","W"],
+//["B","W","W","B","B","W","W","B","W","W","W","B","B","B","W","W","W","W","B","W","W","B","W","JF","W","B","B","B"],
+//["W","W","B","W","W","B","W","W","B","W","W","W","B","B","W","W","W","W","W","B","B","W","W","JF","CA","CA","RH","RH"]
+//];
+
 workday = [
 ["S","RH","M","M","M","RH","RH","J","J","RH","J","S","S","S","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND"],
-["CA","CA","CA","CA","CA","RH","RH","RH","B","W","B","W","W","W","W","B","W","B","W","W","W","W","W","JF","W","W","B","B"],
-["W","W","B","B","RA","W","B","W","W","RA","B","B","RH","RH","RA","RTT","RTT","RTT","RTT","RH","RH","RA","B","W","W","W","W","W"],
-["B","B","W","W","W","RH","RH","RTT","RTT","RTT","RA","RTT","RH","RH","RTT","W","RA","W","W","RH","RH","W","B","W","B","W","W","W"],
-["B","W","W","B","B","W","W","B","W","W","W","B","B","B","W","W","W","W","B","W","W","B","W","JF","W","B","B","B"],
-["W","W","B","W","W","B","W","W","B","W","W","W","B","B","W","W","W","W","W","B","B","W","W","JF","CA","CA","RH","RH"]
+["CA","CA","CA","CA","CA","RH","RH","RH","B","W","W","B","W","W","W","B","W","W","W","W","B","W","W","JF","W","W","B","B"],
+["W","B","B","W","RA","W","B","W","B","RA","B","W","RH","RH","RA","RTT","RTT","RTT","RTT","RH","RH","RA","B","W","W","W","W","W"],
+["B","W","W","RA","W","RH","RH","RTT","RTT","RTT","RA","RTT","RH","RH","RTT","W","RA","W","W","RH","RH","W","B","W","B","W","W","W"],
+["B","W","W","RA","B","J","W","B","W","W","W","B","B","B","W","W","W","W","B","W","W","B","W","JF","W","B","B","B"],
+["W","W","B","J","W","RA","W","W","W","W","B","W","B","B","W","W","W","B","W","B","W","W","W","JF","CA","CA","RH","RH"]
 ];
