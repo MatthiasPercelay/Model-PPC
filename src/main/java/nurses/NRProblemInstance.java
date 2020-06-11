@@ -188,7 +188,8 @@ public class NRProblemInstance implements IProblemInstance {
 		this.breakPreferences = instance.getBreakPreferences();
 		this.shiftPreferences = instance.getShiftPreferences();
 		this.setExtArgs(args);
-		System.out.println("external args : useRelaxation=" + this.extArgs.useRelaxation);
+		System.out.println("external args : useRelaxation1=" + this.extArgs.useRelaxation1);
+		System.out.println("external args : useRelaxation2=" + this.extArgs.useRelaxation2);
 	}
 
 	@Override
@@ -197,8 +198,13 @@ public class NRProblemInstance implements IProblemInstance {
 	}
 
 	@Override
-	public void relaxExtArgs(){
-		extArgs.useRelaxation = 1;
+	public void relaxWday(){
+		extArgs.useRelaxation1 = 1;
+	}
+
+	@Override
+	public void relaxShift(){
+		extArgs.useRelaxation2 = 1;
 	}
 
 
@@ -267,8 +273,13 @@ public class NRProblemInstance implements IProblemInstance {
 			handler.endElement();
 
 			///////////////////////////
-			handler.startElement("useRelaxation");
-			handler.addIntItem(extArgs.useRelaxation);
+			handler.startElement("useRelaxation1");
+			handler.addIntItem(extArgs.useRelaxation1);
+			handler.endElement();
+
+			///////////////////////////
+			handler.startElement("useRelaxation2");
+			handler.addIntItem(extArgs.useRelaxation2);
 			handler.endElement();
 
 			///////////////////////////
@@ -403,8 +414,13 @@ public class NRProblemInstance implements IProblemInstance {
 			handler.endElement();
 
 			///////////////////////////
-			handler.startElement("useRelaxation");
-			handler.addIntItem(extArgs.useRelaxation);
+			handler.startElement("useRelaxation1");
+			handler.addIntItem(extArgs.useRelaxation1);
+			handler.endElement();
+
+			///////////////////////////
+			handler.startElement("useRelaxation2");
+			handler.addIntItem(extArgs.useRelaxation2);
 			handler.endElement();
 
 			///////////////////////////

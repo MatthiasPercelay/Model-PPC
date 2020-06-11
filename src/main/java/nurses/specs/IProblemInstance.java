@@ -31,7 +31,9 @@ public interface IProblemInstance extends ITTDimension {
 
 	void setExtArgs(NRExtargs args);
 
-	void relaxExtArgs();
+	void relaxWday();
+
+	void relaxShift();
 
 	ITimetable getTimeTable();
 	

@@ -11,15 +11,17 @@ package nurses;
 public class NRExtargs {
     public int n;
     public int c;
-    public int useRelaxation;
+    public int useRelaxation1;
+    public int useRelaxation2;
     public int OBJECTIVE_WORKDAY_USE_BALANCE;
     public int OBJECTIVE_SHIFT;
     public int OBJECTIVE_SHIFT_USE_AVERAGE;
 
-    NRExtargs(int n, int c, int r, int wdayBalance, int shiftObj, int shiftBalance){
+    NRExtargs(int n, int c, int wr, int sr, int wdayBalance, int shiftObj, int shiftBalance){
         this.n = n;
         this.c = c;
-        useRelaxation = r;
+        useRelaxation1 = wr;
+        useRelaxation2 = sr;
         OBJECTIVE_WORKDAY_USE_BALANCE = wdayBalance;
         OBJECTIVE_SHIFT = shiftObj;
         OBJECTIVE_SHIFT_USE_AVERAGE = shiftBalance;

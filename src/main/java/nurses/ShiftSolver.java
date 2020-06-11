@@ -152,9 +152,10 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 					System.out.println("Solving .......................");	
 					final int n = cplex.getSolnPoolNsolns();
 					for (int i = 0; i < n; i++) {
+						System.out.println("Solution " + (archive.size() + 1) + ":");
 						storeSolution(instance, opl, archive, i);
 					}
-					System.out.println("Number of solutions : " + archive.size());
+					System.out.println("Number of total solutions : " + archive.size());
 					opl.postProcess();
 					//opl.printSolution(System.out);
 				}

@@ -79,8 +79,11 @@ public class NRCmd  {
 	@Option(name = "-c", aliases = {"-cycle", "--cycle"}, usage = "Number of cycles.")
 	private int c = 2;
 
-	@Option(name = "-r", aliases = {"-relaxation", "--relaxation"}, usage = "Use relaxation.")
-	private int r = 0;
+	@Option(name = "-wr", aliases = {"-wdayRelaxation", "--wdayRelaxation"}, usage = "Workday assignment uses relaxation.")
+	private int wr = 0;
+
+	@Option(name = "-sr", aliases = {"-shiftRelaxation", "--shiftRelaxation"}, usage = "Shift assignment uses relaxation.")
+	private int sr = 0;
 	
 	@Option(name = "-wdayBalance", aliases = {"--wdayBalance"}, usage = "Workday assignment uses balance.")
 	private int wdayBalance = 0;
@@ -116,7 +119,7 @@ public class NRCmd  {
 			LOGGER.log(Level.SEVERE, "Invalid Command Line Arguments : " + Arrays.toString(args) + "\n\ncmd...[FAIL]", e);
 			throw e;
 		}
-		extArgs = new NRExtargs(n, c, r, wdayBalance, shiftObj, shiftBalance);
+		extArgs = new NRExtargs(n, c, wr, sr, wdayBalance, shiftObj, shiftBalance);
 	}
 
 
@@ -160,31 +163,31 @@ public class NRCmd  {
 
 		// if workday assignment yields no solution, use relaxation and re-solve
 		if (workdayArchive.getSolutions().size() == 0){
-			System.out.println("------------------------- Solving with relaxation ---------------------");
-			instance.relaxExtArgs();
-			workdaySolver.solve(instance, workdayArchive);
+			if (extArgs.useRelaxation1 == 0){
+				System.out.println("------------------------- Solving workday assignment with relaxation ---------------------");
+				instance.relaxWday();
+				workdaySolver.solve(instance, workdayArchive);
+			}
+			else{
+				System.out.println("The options yield no solution even with relaxation. Please consider to change options.");
+			}
 		}
 
 		final IShiftSolver shiftSolver = createShiftSolver();	
 		final ParetoArchiveL shiftArchive = createArchive();
 		shiftSolver.solve(instance, extArgs, workdayArchive, shiftArchive);	
 
-		// TODO:
-		// // if shift assignment yields no solution with the non-relaxed workday assignment solution, relax and re-solve
-		// if (shiftArchive.getSolutions().size() == 0){
-		// 	if (extArgs.useRelaxation != 1){
-		// 		System.out.println("------------------------- Solving with relaxation ---------------------");
-				// instance.relaxExtArgs();
-				// final IWorkdaySolver newWorkdaySolver = createWorkdaySolver(instance);
-				// final ParetoArchiveL newWorkdayArchive = createArchive();
-				// newWorkdaySolver.solve(instance, newWorkdayArchive);
-		//		// not to relax 1 but relax 2
-		// 		shiftSolver.solve(instance, extArgs, newWorkdayArchive, shiftArchive);	
-		// 	}
-		// 	else{ // and no else
-		// 		System.out.println("The options cannot yield a solution even with relaxation. Please consider to change options.");
-		// 	}
-		// }
+		// if shift assignment yields no solution to the workday assignment results, relax shift assignment and re-solve
+		if (shiftArchive.getSolutions().size() == 0){
+			if (extArgs.useRelaxation2 == 0){
+				System.out.println("------------------------- Solving shift assignment with relaxation ---------------------");
+				extArgs.useRelaxation2 = 1;
+				shiftSolver.solve(instance, extArgs, workdayArchive, shiftArchive);	
+			}
+			else{
+				System.out.println("The options yield no solution even with relaxation. Please consider to change options.");
+			}
+		}
 		final TimetableReports reporter = createTimetableReports();
 		reporter.generateReports(instance, shiftArchive);
 		runtime += System.nanoTime();

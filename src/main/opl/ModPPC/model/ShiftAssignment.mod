@@ -154,18 +154,14 @@ subject to{
 //
 //execute {
 //	writeln("SM: ", SM);
-////	writeln("sameShift: ", sameShift);
-////	writeln("shiftSwitch: ", shiftSwitch);
 //	writeln("preferences: ", preferences);
 //	writeln("interdictions: ", interdictions);
 //	writeln("objBalance: ", objBalance);
 //	writeln("objRelax: ", objRelax);
-////	writeln("differenceToAverage: ", differenceToAverage);
-////	writeln("objectiveDiff: ", objectiveDiff);	
 //}
-//
-//// PRINT THE RESULT
-//execute POSTPROCESS{
+
+// PRINT THE RESULT
+execute POSTPROCESS{
 //	var no_work = true;
 //	for(var j in DAYS) write(j + "\t");
 //	writeln(); writeln();
@@ -181,6 +177,16 @@ subject to{
 //            write("\t");
 //		}                                                 
 //        writeln();
-//	}       
-//}
+//	}
+	for (var i in AGENTS){
+	  for (var j in DAYS){
+	    if (violatedFixedShift[i][j] == 1){
+	      write("Day " + j + " Agent " + i + "'s fixed shift is violated: " + workday[i][j] + "->");
+	      if (work[i][j] == 2) writeln("S");
+	      else if (work[i][j] == 1) writeln("M");
+	      else if (work[i][j] == 3) writeln("J");
+	    }
+	  }
+	}       
+}
 
