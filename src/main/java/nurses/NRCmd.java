@@ -159,8 +159,8 @@ public class NRCmd  {
 		instance.setExtArgs(extArgs);
 		final IWorkdaySolver workdaySolver = createWorkdaySolver(instance);
 		final ParetoArchiveL workdayArchive = createArchive();
+		long startTime = System.currentTimeMillis();
 		workdaySolver.solve(instance, workdayArchive);
-
 		// if workday assignment yields no solution, use relaxation and re-solve
 		if (workdayArchive.getSolutions().size() == 0){
 			if (extArgs.useRelaxation1 == 0){
@@ -172,9 +172,11 @@ public class NRCmd  {
 				System.out.println("The options yield no solution even with relaxation. Please consider to change options.");
 			}
 		}
+		long endTime = System.currentTimeMillis();
 
 		final IShiftSolver shiftSolver = createShiftSolver();	
 		final ParetoArchiveL shiftArchive = createArchive();
+		long startTime1 = System.currentTimeMillis();
 		shiftSolver.solve(instance, extArgs, workdayArchive, shiftArchive);	
 
 		// if shift assignment yields no solution to the workday assignment results, relax shift assignment and re-solve
@@ -188,6 +190,9 @@ public class NRCmd  {
 				System.out.println("The options yield no solution even with relaxation. Please consider to change options.");
 			}
 		}
+		long endTime1 = System.currentTimeMillis();
+		System.out.println("Total execution time: " + ((endTime-startTime)+(endTime1-startTime1)) + "ms");
+
 		final TimetableReports reporter = createTimetableReports();
 		reporter.generateReports(instance, shiftArchive);
 		runtime += System.nanoTime();

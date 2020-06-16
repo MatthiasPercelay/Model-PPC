@@ -229,7 +229,7 @@ public class XLSParser {
 	}
 
 	public static void main(String[] args) throws EncryptedDocumentException, InvalidFormatException, IOException {
-		XLSParser parser = new XLSParser(new File("src/test/data/ucl-planning-december-19.xls"));
+		XLSParser parser = new XLSParser(new File("src/test/data/ucl-planning-december-19a10.xls"));
 		parser.setUp();
 		/*int[][] matrix = parser.getIntMatrix("demands");
 		System.out.println(Arrays.deepToString(matrix));
@@ -243,7 +243,7 @@ public class XLSParser {
 		System.out.println(Arrays.deepToString(prefs));
 		String[][] sprefs = parser.getStringMatrix("shiftPrefs");
 		System.out.println(Arrays.deepToString(sprefs));*/
-		NRProblemInstance instance = new NRProblemInstance(new File("src/test/data/ucl-planning-december-19.xls"));
+		NRProblemInstance instance = new NRProblemInstance(new File("src/test/data/ucl-planning-decembera10-19.xls"));
 		Shift[][] shifts = parser.getShiftMatrix("planning");
 
 		System.out.println(Arrays.deepToString(shifts));

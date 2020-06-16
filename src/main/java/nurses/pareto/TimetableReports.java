@@ -8,6 +8,9 @@
  */
 package nurses.pareto;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Arrays;
 import java.util.List;
 import nurses.specs.IParetoArchive;
@@ -18,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.*;
 
 import nurses.planning.TimeTable;
 import nurses.pareto.ParetoArchiveL;
@@ -27,6 +31,7 @@ public class TimetableReports implements ITimetableReports {
 
 	public ParetoArchiveL archive;
 	public IProblemInstance instance_problem;
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
 
 	public TimetableReports() {
 		// TODO Auto-generated constructor stub
@@ -34,8 +39,17 @@ public class TimetableReports implements ITimetableReports {
 
 	@Override
 	public void generateReports(IProblemInstance instance, ParetoArchiveL archive) {
+		
 		List<MOSolution> solutions = archive.getSolutions();
 		System.out.println(solutions.size());
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		String time = sdf.format(timestamp);
+		String path = "solutions/" + time;
+		File directory = new File(path);
+		if (! directory.exists()){
+			directory.mkdir();
+		}
+
 		for(int i=0; i < solutions.size();i++ ){
 
 			NRSolutionStatistics stats = new NRSolutionStatistics(instance,solutions.get(i).getSolution());
@@ -56,8 +70,10 @@ public class TimetableReports implements ITimetableReports {
 			System.out.println();
 
 			System.out.println("solution print csv-----------------------------------------------");
-			String csv_filename = "timetable" + String.valueOf(i) + ".csv";
-			stats.stats_for_dashboard("timetable" + String.valueOf(i) + ".txt");
+			
+
+			String csv_filename = path + "/timetable" + String.valueOf(i) + ".csv";
+			stats.stats_for_dashboard( path+"/timetable" + String.valueOf(i) + ".txt");
 			Shift[][] s = solutions.get(i).getSolution().shifts;
 
 			try{

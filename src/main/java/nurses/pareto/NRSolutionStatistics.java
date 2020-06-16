@@ -7,7 +7,9 @@
  * See LICENSE file in the project root for full license information.
  */
 package nurses.pareto;
-
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import nurses.Shift;
 import nurses.planning.TimeTable;
 import nurses.specs.IProblemInstance;
@@ -168,8 +170,8 @@ public class NRSolutionStatistics {
 
     public int[] getTotalBreakSatisfaction(){
         int nb_agent = timetable.getNbAgents();
-
         int[] breakprefScore = new int[nb_agent];
+
         Shift[][] data = timetable.getshifts();
 
         for(int i =0;i<nb_agent;i++){
@@ -179,7 +181,6 @@ public class NRSolutionStatistics {
             for(int c=0;c<2;c++){
 
                 for(int j =0; j<14;j++){
-
                     if((breakpref[i][j] != 0)&&(data[i][totalDays].isBreak())){
                         breakScore+=1;
                     }
