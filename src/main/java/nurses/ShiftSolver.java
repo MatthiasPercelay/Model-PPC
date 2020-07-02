@@ -84,14 +84,6 @@ public class ShiftSolver extends NRSolver implements IShiftSolver {
 			}
 		}
 		
-		// Shift[][] hardcoded = new Shift[][]{
-		// 	{Shift.S,Shift.RH,Shift.M,Shift.M,Shift.M,Shift.RH,Shift.RH,Shift.J,Shift.J,Shift.RH,Shift.J,Shift.S,Shift.S,Shift.S,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND,Shift.ND},
-		// 	{Shift.CA,Shift.CA,Shift.CA,Shift.CA,Shift.CA,Shift.RH,Shift.RH,Shift.RH,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.B,Shift.B,Shift.JF,Shift.W,Shift.W,Shift.W,Shift.W},
-		// 	{Shift.W,Shift.B,Shift.B,Shift.B,Shift.RA,Shift.B,Shift.B,Shift.W,Shift.B,Shift.RA,Shift.W,Shift.W,Shift.RH,Shift.RH,Shift.RA,Shift.RTT,Shift.RTT,Shift.RTT,Shift.RTT,Shift.RH,Shift.RH,Shift.RA,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W},
-		// 	{Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.RH,Shift.RH,Shift.RTT,Shift.RTT,Shift.RTT,Shift.RA,Shift.RTT,Shift.RH,Shift.RH,Shift.RTT,Shift.W,Shift.RA,Shift.W,Shift.B,Shift.RH,Shift.RH,Shift.W,Shift.B,Shift.W,Shift.B,Shift.W,Shift.B,Shift.B},
-		// 	{Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.B,Shift.W,Shift.W,Shift.B,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.JF,Shift.W,Shift.W,Shift.W,Shift.B},
-		// 	{Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.B,Shift.B,Shift.W,Shift.W,Shift.W,Shift.W,Shift.W,Shift.B,Shift.W,Shift.W,Shift.W,Shift.JF,Shift.CA,Shift.CA,Shift.RH,Shift.RH}
-		// };
 
 		for(int j=0; j < data.size(); j++ ){
 			setUp(this.MODEL_FILE);

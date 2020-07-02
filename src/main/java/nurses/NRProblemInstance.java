@@ -28,9 +28,9 @@ public class NRProblemInstance implements IProblemInstance {
 	private final int[][] demands;
 	private final int[][] breakPreferences;
 	private final int[][][] shiftPreferences;
+	// TODO Useless, always use the timetable ? 
 	public Shift[][] workday;
 	public NRExtargs extArgs;
-
 
 	public NRProblemInstance(File instanceFile) {
 		XLSParser parser = new XLSParser(instanceFile);
@@ -38,145 +38,18 @@ public class NRProblemInstance implements IProblemInstance {
 			parser.setUp();
 		} catch (EncryptedDocumentException | InvalidFormatException | IOException e) {
 			e.printStackTrace();
+			//TODO throw exception ?
 		}
 		timetable = new TimeTable(instanceFile);
 		nbCycles = timetable.getNbDays() / 14;
 		workDays = parser.getIntRange("workDays");
+		
 		breaksPerCycle = parser.getIntRange("breaksperCycle");
 		demands = parser.getIntMatrix("demands");
 		breakPreferences = parser.getBreaksMatrix("breakPrefs");
 		shiftPreferences = parser.getPrefsMatrix("shiftPrefs");
-
-
-		for(int i = 0; i <demands.length ; i++ ){
-			for(int j = 0; j < demands[i].length ; j++ ){
-				System.out.print(demands[i][j] + " ");
-			}
-			System.out.println();
-		}
-
+		// TODO set assertions in the models to check instance data ? 
 	}
-
-	/*public NRProblemInstance(File instanceFile) {
-		nbCycles = 2;
-		timetable = new TimeTable(instanceFile);
-		workDays = new int[] {10, 13, 10, 11, 17, 17};
-		breaksPerCycle= new int[]{4, 4, 6, 6, 4, 4 };
-		demands= new int[][]{
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{ 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0 }
-		};
-
-		breakPreferences= new int[][]{
-			{ 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1 },
-			{ 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1 },
-			{ 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1 },
-			{ 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1,},
-			{ 2, 0, 0, 0, 1, 0, 0, 2, 0, 0, 0, 1, 0, 0 },
-			{ 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1 },
-		};
-
-		shiftPreferences= new int[][][]{
-			{
-				{ 1, 0, 0 },    // L
-				{ 0, 0, 0 },    // M
-				{ 0, 0, 1 },    // M
-				{ 0, 0, 1 },    // J
-				{ 0, 0, 0 },    // V
-				{ 0, 0, 0 },    // S
-				{ 0, 0, 1 },    // D
-				{ 1, 0, 0 },    // L
-				{ 0, 0, 0 },    // M
-				{ 0, 0, 1 },    // M
-				{ 0, 0, 1 },    // J
-				{ 0, 0, 0 },    // V
-				{ 0, 0, 0 },    // S
-				{ 0, 0, 1 }     // D
-			}, 
-			{
-				{ 1, 0, 0 },    // L
-				{ 0, 0, 0 },    // M
-				{ 0, 0, 1 },    // M
-				{ 0, 0, 1 },    // J
-				{ 0, 0, 0 },    // V
-				{ 0, 0, 0 },    // S
-				{ 0, 0, 1 },    // D
-				{ 1, 0, 0 },    // L
-				{ 0, 0, 0 },    // M
-				{ 0, 0, 1 },    // M
-				{ 0, 0, 1 },    // J
-				{ 0, 0, 0 },    // V
-				{ 0, 0, 0 },    // S
-				{ 0, 0, 1 }     // D
-			},
-			{
-				{ 1, 0, 0 },    // L
-				{ 0, 0, 0 },    // M
-				{ 0, 0, 1 },    // M
-				{ 0, 0, 1 },    // J
-				{ 0, 0, 0 },    // V
-				{ 0, 0, 0 },    // S
-				{ 0, 0, 1 },    // D
-				{ 1, 0, 0 },    // L
-				{ 0, 0, 0 },    // M
-				{ 0, 0, 1 },    // M
-				{ 0, 0, 1 },    // J
-				{ 0, 0, 0 },    // V
-				{ 0, 0, 0 },    // S
-				{ 0, 0, 1 }     // D
-			},
-			{
-				{ 1, 0, 0 },    // L
-				{ 0, 0, 0 },    // M
-				{ 0, 0, 1 },    // M
-				{ 0, 0, 1 },    // J
-				{ 0, 0, 0 },    // V
-				{ 0, 0, 0 },    // S
-				{ 0, 0, 1 },    // D
-				{ 1, 0, 0 },    // L
-				{ 0, 0, 0 },    // M
-				{ 0, 0, 1 },    // M
-				{ 0, 0, 1 },    // J
-				{ 0, 0, 0 },    // V
-				{ 0, 0, 0 },    // S
-				{ 0, 0, 1 }     // D
-			},
-			{
-				{ 1, 0, 0 },    // L
-				{ 0, 0, 0 },    // M
-				{ 0, 0, 1 },    // M
-				{ 0, 0, 1 },    // J
-				{ 0, 0, 0 },    // V
-				{ 0, 0, 0 },    // S
-				{ 0, 0, 1 },    // D
-				{ 1, 0, 0 },    // L
-				{ 0, 0, 0 },    // M
-				{ 0, 0, 1 },    // M
-				{ 0, 0, 1 },    // J
-				{ 0, 0, 0 },    // V
-				{ 0, 0, 0 },    // S
-				{ 0, 0, 1 }     // D
-			},
-			{
-				{ 1, 0, 0 },    // L
-				{ 0, 0, 0 },    // M
-				{ 0, 0, 1 },    // M
-				{ 0, 0, 1 },    // J
-				{ 0, 0, 0 },    // V
-				{ 0, 0, 0 },    // S
-				{ 0, 0, 1 },    // D
-				{ 1, 0, 0 },    // L
-				{ 0, 0, 0 },    // M
-				{ 0, 0, 1 },    // M
-				{ 0, 0, 1 },    // J
-				{ 0, 0, 0 },    // V
-				{ 0, 0, 0 },    // S
-				{ 0, 0, 1 }     // D
-			}
-		};
-
-	}*/
 
 	public NRProblemInstance(IProblemInstance instance, NRExtargs args, ITimetable timetable) {
 		super();
@@ -191,6 +64,7 @@ public class NRProblemInstance implements IProblemInstance {
 		System.out.println("external args : useRelaxation1=" + this.extArgs.useRelaxation1);
 		System.out.println("external args : useRelaxation2=" + this.extArgs.useRelaxation2);
 	}
+
 
 	@Override
 	public void setExtArgs(NRExtargs args) {
@@ -207,7 +81,7 @@ public class NRProblemInstance implements IProblemInstance {
 		extArgs.useRelaxation2 = 1;
 	}
 
-
+	
 	@Override
 	public int getNbCycles() {
 		return nbCycles;
@@ -241,16 +115,6 @@ public class NRProblemInstance implements IProblemInstance {
 	@Override
 	public int[][][] getShiftPreferences() {
 		return shiftPreferences;
-	}
-
-	public void set_workday(Shift[][] data){
-		for(int i = 0 ; i < data.length; i++){
-			for(int j = 0 ; j < data[i].length ; j++){
-				System.out.println(data[i][j]);
-				this.workday[i][j] = data[i][j];
-				
-			}
-		}
 	}
 
 	private class NRPOplDataSource extends IloCustomOplDataSource {
@@ -540,7 +404,6 @@ public class NRProblemInstance implements IProblemInstance {
 			///////////////////////////
 		}
 	}
-
 
 	@Override
 	public IloCustomOplDataSource toWorkdayDataSource(IloOplFactory oplF) {

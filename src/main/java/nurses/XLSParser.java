@@ -163,36 +163,16 @@ public class XLSParser {
 		final String[][] strings = getStringMatrix(namedRegion);
 		final int width = getRegionWidth(namedRegion);
 		final int height = getRegionHeight(namedRegion);
-
-		String[][] matin = new String[height / 3][width];
-		String[][] soir = new String[height / 3][width];
-		String[][] jour = new String[height / 3][width];
-
-
-		for (int i = 0; i < strings.length / 3; i++) {
-			matin[i] = strings[3 * i];
-			soir[i] = strings[3 * i + 1];
-			jour[i] = strings[3 * i + 2];
-		}
-
-		int[][][] prefints = new int[height / 3][width][3];
-		for (int i = 0; i < matin.length; i++) {
-			for (int j = 0; j < matin[0].length; j++) {
-				prefints[i][j] = prefInts(matin[i][j], soir[i][j], jour[i][j]);
+		int[][][] prefs = new int[height / 3][width][3];
+		for (int i = 0; i < height; i++) {
+			final int p = i / 3;
+			final int q = i % 3;
+			for (int j = 0; j < width; j++) {
+				prefs[p][j][q] = prefFromString(strings[i][j]);
+				
 			}
-		}
-		System.out.println(prefints.length);
-		System.out.println(prefints[0].length);
-		for (int i = 0; i < prefints.length; i++) {
-			for (int j = 0; j < prefints[0].length; j++) {
-				for(int a = 0 ;a<3;a++){
-					System.out.print(prefints[i][j][a]);
-				}
-				System.out.println();
-			}
-			System.out.println();
-		}
-		return prefints;
+		}	
+		return prefs;
 	}
 
 	public int[][] getBreaksMatrix(String namedRegion) {
@@ -206,19 +186,10 @@ public class XLSParser {
 		return res;
 	}
 
-	private int[] prefInts(String matin, String soir, String jour) {
-		int[] res = new int[3];
-		res[0] = prefFromString(matin);
-		res[1] = prefFromString(soir);
-		res[2] = prefFromString(jour);
-		return res;
-	}
-
 	private int prefFromString(String pref) {
 		return pref.equalsIgnoreCase("NON") ? -1 : 
 		pref.equalsIgnoreCase("OUI") ? 1 : 0;
 	}
-
 
 	public static void main(String[] args) throws EncryptedDocumentException, InvalidFormatException, IOException {
 		XLSParser parser = new XLSParser(new File("src/test/data/ucl-planning-december-19a10.xls"));
