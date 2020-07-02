@@ -196,12 +196,11 @@ public class XLSParser {
 	}
 
 	public int[][] getBreaksMatrix(String namedRegion) {
-		String[][] strings = getStringMatrix(namedRegion);
-		int[][] res = new int[strings.length][strings[0].length];
+		final String[][] strings = getStringMatrix(namedRegion);
+		final int[][] res = new int[strings.length][strings[0].length];
 		for (int i = 0; i < strings.length; i++) {
 			for (int j = 0; j < strings[i].length; j++) {
-				int pref = breakFromString(strings[i][j]);
-				res[i][j] = pref;
+				res[i][j] = prefFromString(strings[i][j]);
 			}
 		}
 		return res;
@@ -216,17 +215,10 @@ public class XLSParser {
 	}
 
 	private int prefFromString(String pref) {
-		String val = pref.toUpperCase();
-		if (val.equals("NON")) return -1;
-		else if (val.equals("OUI")) return 1;
-		else return 0;
+		return pref.equalsIgnoreCase("NON") ? -1 : 
+		pref.equalsIgnoreCase("OUI") ? 1 : 0;
 	}
 
-	private int breakFromString(String pref) {
-		String val = pref.toUpperCase();
-		if (val.equals("OUI")) return 1;
-		else return 0;
-	}
 
 	public static void main(String[] args) throws EncryptedDocumentException, InvalidFormatException, IOException {
 		XLSParser parser = new XLSParser(new File("src/test/data/ucl-planning-december-19a10.xls"));
