@@ -1,7 +1,7 @@
 /**
  * This file is part of nurse-rostering-solver, https://github.com/MatthiasPercelay/Model-PPC
  *
- * Copyright (c) 2019, Université Nice Sophia Antipolis. All rights reserved.
+ * Copyright (c) 2020, Université Nice Sophia Antipolis. All rights reserved.
  *
  * Licensed under the BSD 3-clause license.
  * See LICENSE file in the project root for full license information.
@@ -11,6 +11,7 @@ package nurses.specs;
 import ilog.opl.IloCustomOplDataSource;
 import ilog.opl.IloOplFactory;
 import nurses.NRConstants;
+import nurses.NRExtargs;
 
 public interface IProblemInstance extends ITTDimension {
 
@@ -27,6 +28,12 @@ public interface IProblemInstance extends ITTDimension {
 	default int getNbDays() {
 		return getTimeTable().getNbDays();
 	}
+
+	void setExtArgs(NRExtargs args);
+
+	void relaxWday();
+
+	void relaxShift();
 
 	ITimetable getTimeTable();
 	

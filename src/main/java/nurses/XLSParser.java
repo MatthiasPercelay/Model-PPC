@@ -1,3 +1,11 @@
+/**
+ * This file is part of nurse-rostering-solver, https://github.com/MatthiasPercelay/Model-PPC
+ *
+ * Copyright (c) 2020, Université Nice Sophia Antipolis. All rights reserved.
+ *
+ * Licensed under the BSD 3-clause license.
+ * See LICENSE file in the project root for full license information.
+ */
 package nurses;
 
 import java.awt.geom.Area;
@@ -139,6 +147,15 @@ public class XLSParser {
 				res[i][j] = shift;
 			}
 		}
+		// System.out.println("size "+res.length);
+		// System.out.println("size "+res[0].length);
+
+		// for(int i=0;i<res.length;i++){
+		// 	for(int j=0;j<res[i].length;j++){
+		// 		System.out.print(res[i][j] + " ");
+		// 	}
+		// 	System.out.println();
+		// }
 		return res;
 	}
 
@@ -163,6 +180,17 @@ public class XLSParser {
 			for (int j = 0; j < matin[0].length; j++) {
 				prefints[i][j] = prefInts(matin[i][j], soir[i][j], jour[i][j]);
 			}
+		}
+		System.out.println(prefints.length);
+		System.out.println(prefints[0].length);
+		for (int i = 0; i < prefints.length; i++) {
+			for (int j = 0; j < prefints[0].length; j++) {
+				for(int a = 0 ;a<3;a++){
+					System.out.print(prefints[i][j][a]);
+				}
+				System.out.println();
+			}
+			System.out.println();
 		}
 		return prefints;
 	}
@@ -201,7 +229,7 @@ public class XLSParser {
 	}
 
 	public static void main(String[] args) throws EncryptedDocumentException, InvalidFormatException, IOException {
-		XLSParser parser = new XLSParser(new File("src/test/data/ucl-planning-december-19.xls"));
+		XLSParser parser = new XLSParser(new File("src/test/data/ucl-planning-december-19a10.xls"));
 		parser.setUp();
 		/*int[][] matrix = parser.getIntMatrix("demands");
 		System.out.println(Arrays.deepToString(matrix));
@@ -215,8 +243,9 @@ public class XLSParser {
 		System.out.println(Arrays.deepToString(prefs));
 		String[][] sprefs = parser.getStringMatrix("shiftPrefs");
 		System.out.println(Arrays.deepToString(sprefs));*/
-		NRProblemInstance instance = new NRProblemInstance(new File("src/test/data/ucl-planning-december-19.xls"));
+		NRProblemInstance instance = new NRProblemInstance(new File("src/test/data/ucl-planning-decembera10-19.xls"));
 		Shift[][] shifts = parser.getShiftMatrix("planning");
+
 		System.out.println(Arrays.deepToString(shifts));
 		System.out.println(Arrays.toString(instance.getWorkdays()));
 		System.out.println(Arrays.toString(instance.getBreaksPerCycle()));

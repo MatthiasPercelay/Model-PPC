@@ -1,9 +1,19 @@
+/**
+ * This file is part of nurse-rostering-solver, https://github.com/MatthiasPercelay/Model-PPC
+ *
+ * Copyright (c) 2020, Université Nice Sophia Antipolis. All rights reserved.
+ *
+ * Licensed under the BSD 3-clause license.
+ * See LICENSE file in the project root for full license information.
+ */
 package nurses;
 
 import java.util.Arrays;
 
 import ilog.concert.IloException;
 import ilog.concert.IloIntVarMap;
+import ilog.concert.*;
+import ilog.concert.IloIntExpr;
 import ilog.opl.IloCplex;
 import ilog.opl.IloOplModel;
 import nurses.pareto.MOSolution;
@@ -11,6 +21,7 @@ import nurses.pareto.NRSolutionStatistics;
 import nurses.specs.IParetoArchive;
 import nurses.specs.IProblemInstance;
 import nurses.specs.IWorkdaySolver;
+import nurses.pareto.ParetoArchiveL;
 
 public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 
@@ -23,12 +34,36 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 				(value == 0 ? Shift.B : Shift.W) : shift; 
 	}
 	
-	protected void storeSolution(IProblemInstance instance, IloOplModel opl, IParetoArchive archive, int soln) {
+	protected void storeSolution(IProblemInstance instance, IloOplModel opl, ParetoArchiveL archive, int soln) {
 		final IloIntVarMap work = opl.getElement("work").asIntVarMap();
+
+		// final IloIntDExprMap breakprefpW = opl.getElement("breakprefpW").asIntExprMap();
+		IloCplex cplex = opl.getCplex();
+
+		
+		// int[][] tmp = new int[2][6];
+		// try{
+		// 	for (int i = 1; i <= 2; i++) {
+		// 		IloIntExpr breakprefpWi = breakprefpW.get(i);
+		// 		for (int j = 1; j <= 6; j++) {
+		// 			tmp[i-1][j-1] = cplex.getValue(breakprefpWi.get(j), soln);
+							
+		// 		}
+		// 		System.out.println(Arrays.toString(tmp[i-1]));
+		// 	}
+
+		// } catch (IloException e) {
+		// 	// TODO Auto-generated catch block
+		// 	e.printStackTrace();
+		// }
+
+
+
+		
 		final int n = instance.getNbAgents();
 		final int d = instance.getNbDays();
 		final Shift[][] solution = new Shift[n][d];
-		IloCplex cplex = opl.getCplex();
+		// IloCplex cplex = opl.getCplex();
 		//System.out.println("SOLUTION");
 		try {
 			for (int i = 1; i <= n; i++) {
@@ -38,6 +73,7 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 							instance.getTimeTable().getShift(i, j),
 							cplex.getValue(worki.get(j), soln)
 							);
+					//System.out.println(solution[i-1][j-1]);
 				}
 				//System.out.println(Arrays.toString(solution[i-1]));
 			}
@@ -51,7 +87,7 @@ public class WorkdaySolver extends NRSolver implements IWorkdaySolver {
 	}
 	
 	@Override
-	public void solve(IProblemInstance instance, IParetoArchive archive) {
+	public void solve(IProblemInstance instance, ParetoArchiveL archive) {
 		setUp(MODEL_FILE);
 		IloCplex cplex;
 		try {

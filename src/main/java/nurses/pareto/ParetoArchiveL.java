@@ -1,7 +1,7 @@
 /**
  * This file is part of nurse-rostering-solver, https://github.com/MatthiasPercelay/Model-PPC
  *
- * Copyright (c) 2019, Université Nice Sophia Antipolis. All rights reserved.
+ * Copyright (c) 2020, Université Nice Sophia Antipolis. All rights reserved.
  *
  * Licensed under the BSD 3-clause license.
  * See LICENSE file in the project root for full license information.
@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class ParetoArchiveL implements IParetoArchive {
-    private List<MOSolution> solutions;
-    final private ParetoDominance comp;
+    public List<MOSolution> solutions;
+    final public ParetoDominance comp;
 
     public ParetoArchiveL() {
         solutions = new ArrayList<>();
@@ -26,10 +26,11 @@ public class ParetoArchiveL implements IParetoArchive {
 
     @Override
     public void add(MOSolution mosol) {
-        if (!isDominated(mosol)) {
-            removeNowDominated();
-            solutions.add(mosol);
-        }
+        // if (!isDominated(mosol)) {
+        //      removeNowDominated();
+        //     solutions.add(mosol);
+        // }
+        solutions.add(mosol);
     }
 
     @Override

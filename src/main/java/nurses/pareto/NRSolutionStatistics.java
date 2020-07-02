@@ -1,16 +1,32 @@
+/**
+ * This file is part of nurse-rostering-solver, https://github.com/MatthiasPercelay/Model-PPC
+ *
+ * Copyright (c) 2020, Université Nice Sophia Antipolis. All rights reserved.
+ *
+ * Licensed under the BSD 3-clause license.
+ * See LICENSE file in the project root for full license information.
+ */
 package nurses.pareto;
-
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import nurses.Shift;
 import nurses.planning.TimeTable;
 import nurses.specs.IProblemInstance;
 import nurses.specs.ITimetable;
+import java.io.IOException;
+
+import java.io.FileWriter;
+import java.io.PrintWriter;
+
+import javax.swing.plaf.basic.BasicComboBoxUI.FocusHandler;
 
 
 public class NRSolutionStatistics {
     private IProblemInstance instance;
-    private ITimetable timetable;
+    private TimeTable timetable;
 
-    public NRSolutionStatistics(IProblemInstance instance, ITimetable timetable) {
+    public NRSolutionStatistics(IProblemInstance instance, TimeTable timetable) {
         this.instance = instance;
         this.timetable = timetable;
     }
@@ -152,49 +168,147 @@ public class NRSolutionStatistics {
         return count;
     }
 
+    public int[] getTotalBreakSatisfaction(){
+        int nb_agent = timetable.getNbAgents();
+        int[] breakprefScore = new int[nb_agent];
+
+        Shift[][] data = timetable.getshifts();
+
+        for(int i =0;i<nb_agent;i++){
+            int totalDays = 0;
+            int breakScore = 0;
+            int[][] breakpref = instance.getBreakPreferences();
+            for(int c=0;c<2;c++){
+
+                for(int j =0; j<14;j++){
+                    if((breakpref[i][j] != 0)&&(data[i][totalDays].isBreak())){
+                        breakScore+=1;
+                    }
+                    totalDays+=1;
+                }
+            }
+            breakprefScore[i] = breakScore;
+
+        }
+        return breakprefScore;
+    }
+
+    public int[] getTotalShitSatisfaction(){
+        int nb_agent = timetable.getNbAgents();
+        int[] shiftScore = new int[nb_agent];
+
+        for(int i =0;i<nb_agent;i++){
+            int totalDays = 0;
+            int ShiftScore = 0;
+            int[][][] shiftPref = instance.getShiftPreferences();
+            // System.out.println(shiftPref[0].length);
+            // System.out.println(shiftPref[0][0].length);
+            // for(int a=0;a<shiftPref.length;a++){
+            //     for(int b=0;b<shiftPref[a].length;b++){
+            //         for(int c=0;c<shiftPref[a][b].length;c++){
+            //             System.out.print(shiftPref[a][b][c]+" ");
+            //         }
+            //         System.out.println();
+            //     }
+            //     System.out.println();
+            // }
+            for(int c=0;c<2;c++){
+                for(int j =0; j<14;j++){
+                    for(int z=0;z<3;z++){
+                        if((shiftPref[i][j][z] == 1) && (shiftToPrefIndex(timetable.getShift(i+1, totalDays+1))) == z   ){
+                            // System.out.println("oui "+i +" "+ j + " "+ z +" ");
+                            // System.out.println(j);
+                            // System.out.println(z);
+                            ShiftScore+=1;
+                        }
+                        else if((shiftPref[i][j][z] == -1) && (shiftToPrefIndex(timetable.getShift(i+1, totalDays+1))) == shiftPref[i][j][z]   ){
+                            // System.out.println("non " + i +" "+ j + " "+ z +" ");
+                            ShiftScore+=1;
+                        }
+                    }
+                    totalDays+=1;
+                }
+            }
+            shiftScore[i] = ShiftScore;
+
+        }
+        return shiftScore;
+        
+    }
+    
     private int shiftToPrefIndex(Shift s) {
         if (s == Shift.M) return 0;
-        if (s == Shift.S) return 1;
-        else return 2;
+        else if (s == Shift.J) return 1;
+        else if (s == Shift.S) return 2;
+        else if (s == Shift.B) return -1;
+        else return -2;
     }
 
-    private int getSatisfaction(int agent, int day) {
-        Shift s = timetable.getShift(agent, day);
-        if (timetable.getShift(agent, day).isBreak()) {
-            return 0;
+
+    public void stats_for_dashboard(String filename){
+
+        // FileWriter filewriter = new FileWriter(filename);
+        try (PrintWriter out = new PrintWriter(filename)) {
+        // PrintWriter out = new PrintWriter(filename);
+        out.println(getTotalWork());
+        out.println(getTotalWeekends());
+        int[] tmp = getTotalBreakSatisfaction();
+        for(int i =0;i<tmp.length;i++){
+            out.print(tmp[i]+" ");
         }
-        return instance.getShiftPreferences()[agent-1][day-1][shiftToPrefIndex(s)];
-    }
-
-    public int getTotalSatisfaction(int agent) {
-        int count = 0;
-        for (int day = 1; day <= timetable.getNbDays(); day++) {
-            count += getSatisfaction(agent, day);
+        out.println();
+        out.println(getTotalSixDays());
+        int[] tmp2 = getTotalShitSatisfaction();
+        for(int i =0;i<tmp2.length;i++){
+            out.print(tmp2[i]+" ");
         }
-        return count;
-    }
+        out.println();
 
-    public int getTotalSatisfaction() {
-        int count = 0;
-        for (int agent = 1; agent <= timetable.getNbAgents(); agent++) {
-            count += getTotalSatisfaction(agent);
+        out.close();}
+        catch(IOException e){
+            e.printStackTrace();
         }
-        return count;
     }
 
-    public double avgSatisfaction() {
-        return (double)getTotalSatisfaction() / (double)timetable.getNbAgents();
-    }
 
-    public double stdDevSatisfaction() {
-        // standard deviation of the satisfaction
-        double avgSat = avgSatisfaction();
-        double variation = 0;
-        for (int agent = 1; agent <= timetable.getNbAgents(); agent++) {
-            variation += Math.pow((getTotalSatisfaction(agent) - avgSat),2);
-        }
-        return Math.sqrt(variation / timetable.getNbAgents());
-    }
+    // private int getSatisfaction(int agent, int day) {
+    //     Shift s = timetable.getShift(agent, day);
+    //     if (timetable.getShift(agent, day).isBreak()) {
+    //         return 0;
+    //     }
+    //     return instance.getShiftPreferences()[agent-1][day-1][shiftToPrefIndex(s)];
+    // }
+
+    // public int getTotalSatisfaction(int agent) {
+    //     int count = 0;
+    //     for (int day = 1; day <= timetable.getNbDays(); day++) {
+    //         count += getSatisfaction(agent, day);
+    //     }
+    //     return count;
+    // }
+
+    // public int getTotalSatisfaction() {
+    //     int count = 0;
+    //     System.out.println("days "+timetable.getNbDays() + " agents " + timetable.getNbAgents());
+    //     for (int agent = 1; agent <= timetable.getNbAgents(); agent++) {
+    //         count += getTotalSatisfaction(agent);
+    //     }
+    //     return count;
+    // }
+
+    // public double avgSatisfaction() {
+    //     return (double)getTotalSatisfaction() / (double)timetable.getNbAgents();
+    // }
+
+    // public double stdDevSatisfaction() {
+    //     // standard deviation of the satisfaction
+    //     double avgSat = avgSatisfaction();
+    //     double variation = 0;
+    //     for (int agent = 1; agent <= timetable.getNbAgents(); agent++) {
+    //         variation += Math.pow((getTotalSatisfaction(agent) - avgSat),2);
+    //     }
+    //     return Math.sqrt(variation / timetable.getNbAgents());
+    // }
 
 
 }

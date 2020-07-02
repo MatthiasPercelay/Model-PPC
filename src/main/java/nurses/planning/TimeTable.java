@@ -1,7 +1,7 @@
 /**
  * This file is part of nurse-rostering-solver, https://github.com/MatthiasPercelay/Model-PPC
  *
- * Copyright (c) 2019, Université Nice Sophia Antipolis. All rights reserved.
+ * Copyright (c) 2020, Université Nice Sophia Antipolis. All rights reserved.
  *
  * Licensed under the BSD 3-clause license.
  * See LICENSE file in the project root for full license information.
@@ -27,9 +27,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class TimeTable implements ITimetable {
-    private Shift[][] shifts;
-    private int days;
-    private int agents;
+    public Shift[][] shifts;
+    public int days;
+    public int agents;
 
     public TimeTable(int days, int agents) {
         this.days = days;
@@ -133,6 +133,10 @@ public class TimeTable implements ITimetable {
 	@Override
 	public Shift getShift(int i, int j) {
 		return shifts[i - 1][j - 1];
+	}
+
+	public Shift[][] getshifts(){
+		return shifts;
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 /**
  * This file is part of nurse-rostering-solver, https://github.com/MatthiasPercelay/Model-PPC
  *
- * Copyright (c) 2019, Université Nice Sophia Antipolis. All rights reserved.
+ * Copyright (c) 2020, Université Nice Sophia Antipolis. All rights reserved.
  *
  * Licensed under the BSD 3-clause license.
  * See LICENSE file in the project root for full license information.
@@ -16,11 +16,11 @@ import java.util.Arrays;
 
 public final class MOSolution {
 
-	public final ITimetable solution;
+	public final TimeTable solution;
 
 	public final double[] objective;
 
-	public MOSolution(ITimetable solution, double[] objective) {
+	public MOSolution(TimeTable solution, double[] objective) {
 		super();
 		this.solution = solution;
 		this.objective = objective;
@@ -32,7 +32,7 @@ public final class MOSolution {
 		this.objective = objective;
 	}
 
-	public final ITimetable getSolution() {
+	public final TimeTable getSolution() {
 		return solution;
 	}
 

@@ -4,11 +4,138 @@
  * Creation Date: 25 nov. 2019 at 13:45:45
  *********************************************/
  
-workday=[
-["S",	"RH",	"M",	"M",	"M",	"RH",	"RH",	"J",	"J",	"RH",	"J",	"S",	"S",	"S",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR"],
-["CA",	"CA",	"CA",	"CA",	"CA",	"RH",	"RH",	"RH",	"W",	"W",	"W",	"W",	"B",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"B",	"B",	"B",	"JF",	"W",	"W",	"W",	"W"	],
-["W",	"B",	"B",	"B",	"RA",	"B",	"B",	"W",	"B",	"RA",	"W",	"W",	"RH",	"RH",	"RA",	"RTT",	"RTT",	"RTT",	"RTT",	"RH",	"RH",	"RA",	"W",	"W",	"W",	"B",	"W",	"W"	],
-["W",	"W",	"W",	"W",	"W",	"RH",	"RH",	"RTT",	"RTT",	"RTT",	"RA",	"RTT",	"RH",	"RH",	"RTT",	"W",	"RA",	"W",	"B",	"RH",	"RH",	"W",	"B",	"W",	"B",	"W",	"B",	"B"	],
-["W",	"W",	"W",	"W",	"W",	"W",	"W",	"B",	"B",	"W",	"W",	"B",	"W",	"B",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"W",	"JF",	"W",	"W",	"W",	"B"	],
-["W",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"W",	"W",	"B",	"B",	"B",	"W",	"W",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"JF",	"CA",	"CA",	"RH",	"RH"]
+//workday=[
+//["S",	"RH",	"M",	"M",	"M",	"RH",	"RH",	"J",	"J",	"RH",	"J",	"S",	"S",	"S",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR"],
+//["CA",	"CA",	"CA",	"CA",	"CA",	"RH",	"RH",	"RH",	"W",	"W",	"W",	"W",	"B",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"B",	"B",	"B",	"JF",	"W",	"W",	"W",	"W"	],
+//["W",	"B",	"B",	"B",	"RA",	"B",	"B",	"W",	"B",	"RA",	"W",	"W",	"RH",	"RH",	"RA",	"RTT",	"RTT",	"RTT",	"RTT",	"RH",	"RH",	"RA",	"W",	"W",	"W",	"B",	"W",	"W"	],
+//["W",	"W",	"W",	"W",	"W",	"RH",	"RH",	"RTT",	"RTT",	"RTT",	"RA",	"RTT",	"RH",	"RH",	"RTT",	"W",	"RA",	"W",	"B",	"RH",	"RH",	"W",	"B",	"W",	"B",	"W",	"B",	"B"	],
+//["W",	"W",	"W",	"W",	"W",	"W",	"W",	"B",	"B",	"W",	"W",	"B",	"W",	"B",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"W",	"JF",	"W",	"W",	"W",	"B"	],
+//["W",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"W",	"W",	"B",	"B",	"B",	"W",	"W",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"JF",	"CA",	"CA",	"RH",	"RH"]
+//];  // data provided by former students
+
+//// objective 12346
+//workday=[
+//["S",	"RH",	"M",	"M",	"M",	"RH",	"RH",	"J",	"J",	"RH",	"J",	"S",	"S",	"S",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR"],
+//["CA",	"CA",	"CA",	"CA",	"CA",	"RH",	"RH",	"RH",	"B",	"W",	"W",	"W",	"B",	"W",	"W",	"B",	"W",	"W",	"W",	"B",	"B",	"W",	"W",	"JF",	"W",	"W",	"B",	"W"	],
+//["B",	"B",	"B",	"B",	"RA",	"W",	"W",	"W",	"B",	"RA",	"B",	"W",	"RH",	"RH",	"RA",	"RTT",	"RTT",	"RTT",	"RTT",	"RH",	"RH",	"RA",	"W",	"W",	"W",	"W",	"B",	"B"	],
+//["W",	"W",	"B",	"B",	"W",	"RH",	"RH",	"RTT",	"RTT",	"RTT",	"RA",	"RTT",	"RH",	"RH",	"RTT",	"W",	"RA",	"W",	"W",	"RH",	"RH",	"B",	"B",	"W",	"B",	"W",	"W",	"W"	],
+//["B",	"W",	"W",	"W",	"B",	"W",	"W",	"B",	"W",	"W",	"B",	"B",	"W",	"B",	"B",	"W",	"W",	"W",	"B",	"W",	"W",	"B",	"B",	"JF",	"W",	"B",	"W",	"B"	],
+//["W",	"W",	"W",	"W",	"W",	"B",	"B",	"W",	"W",	"W",	"B",	"B",	"B",	"B",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"W",	"JF",	"CA",	"CA",	"RH",	"RH"]
+//];
+
+//// objective 1234
+//workday=[
+//["S",	"RH",	"M",	"M",	"M",	"RH",	"RH",	"J",	"J",	"RH",	"J",	"S",	"S",	"S",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR"],
+//["CA",	"CA",	"CA",	"CA",	"CA",	"RH",	"RH",	"RH",	"B",	"W",	"W",	"W",	"B",	"B",	"W",	"W",	"W",	"W",	"W",	"B",	"B",	"W",	"W",	"JF",	"W",	"W",	"B",	"W"	],
+//["B",	"B",	"B",	"B",	"RA",	"B",	"W",	"W",	"B",	"RA",	"B",	"W",	"RH",	"RH",	"RA",	"RTT",	"RTT",	"RTT",	"RTT",	"RH",	"RH",	"RA",	"W",	"W",	"W",	"W",	"B",	"W"	],
+//["W",	"W",	"B",	"W",	"W",	"RH",	"RH",	"RTT",	"RTT",	"RTT",	"RA",	"RTT",	"RH",	"RH",	"RTT",	"B",	"RA",	"W",	"W",	"RH",	"RH",	"W",	"B",	"W",	"B",	"W",	"W",	"B"	],
+//["B",	"W",	"W",	"W",	"B",	"W",	"B",	"B",	"W",	"W",	"B",	"B",	"W",	"W",	"B",	"W",	"W",	"W",	"B",	"W",	"W",	"B",	"B",	"JF",	"W",	"B",	"W",	"B"	],
+//["W",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"W",	"B",	"B",	"B",	"B",	"B",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"W",	"JF",	"CA",	"CA",	"RH",	"RH"]
+//];
+
+
+////relaxed version
+//workday=[
+//["S",	"RH",	"M",	"M",	"M",	"RH",	"RH",	"J",	"J",	"RH",	"J",	"S",	"S",	"S",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR"],
+//["CA",	"CA",	"CA",	"CA",	"CA",	"RH",	"RH",	"RH",	"W",	"W",	"B",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"JF",	"W",	"B",	"B",	"B"	],
+//["W",	"W",	"W",	"B",	"RA",	"W",	"W",	"W",	"W",	"RA",	"B",	"B",	"RH",	"RH",	"RA",	"RTT",	"RTT",	"RTT",	"RTT",	"RH",	"RH",	"RA",	"B",	"B",	"B",	"B",	"B",	"B"	],
+//["W",	"W",	"W",	"W",	"W",	"RH",	"RH",	"RTT",	"RTT",	"RTT",	"RA",	"RTT",	"RH",	"RH",	"RTT",	"W",	"RA",	"W",	"W",	"RH",	"RH",	"W",	"B",	"B",	"B",	"B",	"B",	"B"	],
+//["W",	"W",	"W",	"W",	"W",	"B",	"B",	"W",	"W",	"W",	"W",	"B",	"B",	"B",	"B",	"B",	"B",	"B",	"W",	"W",	"B",	"W",	"W",	"JF",	"W",	"W",	"W",	"W"	],
+//["W",	"W",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"W",	"B",	"B",	"B",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"W",	"B",	"JF",	"CA",	"CA",	"RH",	"RH"]
+//];
+
+
+////relaxed version
+//workday=[
+//["S",	"RH",	"M",	"M",	"M",	"RH",	"RH",	"J",	"J",	"RH",	"J",	"S",	"S",	"S",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR"],
+//["CA",	"CA",	"CA",	"CA",	"CA",	"RH",	"RH",	"RH",	"W",	"W",	"B",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"JF",	"W",	"B",	"B",	"B"	],
+//["W",	"W",	"W",	"W",	"RA",	"W",	"W",	"W",	"W",	"RA",	"B",	"B",	"RH",	"RH",	"RA",	"RTT",	"RTT",	"RTT",	"RTT",	"RH",	"RH",	"RA",	"W",	"W",	"B",	"B",	"B",	"B"	],
+//["W",	"W",	"W",	"W",	"W",	"RH",	"RH",	"RTT",	"RTT",	"RTT",	"RA",	"RTT",	"RH",	"RH",	"RTT",	"W",	"RA",	"W",	"W",	"RH",	"RH",	"W",	"W",	"W",	"B",	"B",	"B",	"B"	],
+//["W",	"W",	"W",	"W",	"W",	"B",	"B",	"W",	"W",	"W",	"W",	"B",	"B",	"B",	"B",	"B",	"B",	"B",	"W",	"W",	"B",	"W",	"W",	"JF",	"W",	"W",	"W",	"W"	],
+//["W",	"W",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"W",	"B",	"B",	"B",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"W",	"B",	"JF",	"CA",	"CA",	"RH",	"RH"]
+//];
+
+//workday=[
+//["S",	"RH",	"M",	"M",	"M",	"RH",	"RH",	"J",	"J",	"RH",	"J",	"S",	"S",	"S",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR"],
+//["CA",	"CA",	"CA",	"CA",	"CA",	"RH",	"RH",	"RH",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"JF",	"W",	"W",	"W",	"W"	],
+//["W",	"W",	"W",	"W",	"RA",	"W",	"W",	"W",	"W",	"RA",	"W",	"W",	"RH",	"RH",	"RA",	"RTT",	"RTT",	"RTT",	"RTT",	"RH",	"RH",	"RA",	"W",	"W",	"W",	"W",	"W",	"W"	],
+//["W",	"W",	"W",	"W",	"W",	"RH",	"RH",	"RTT",	"RTT",	"RTT",	"RA",	"RTT",	"RH",	"RH",	"RTT",	"W",	"RA",	"W",	"W",	"RH",	"RH",	"W",	"W",	"W",	"W",	"W",	"W",	"W"	],
+//["W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"JF",	"W",	"W",	"W",	"W"	],
+//["W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"W",	"JF",	"CA",	"CA",	"RH",	"RH"]
+//]; 
+
+//right version of obj1234
+//workday=[
+//["S",	"RH",	"M",	"M",	"M",	"RH",	"RH",	"J",	"J",	"RH",	"J",	"S",	"S",	"S",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR",	"MPR"],
+//["CA",	"CA",	"CA",	"CA",	"CA",	"RH",	"RH",	"RH",	"W",	"W",	"W",	"W",	"B",	"W",	"W",	"B",	"W",	"W",	"W",	"W",	"B",	"W",	"B",	"JF",	"B",	"W",	"B",	"W"	],
+//["B",	"B",	"B",	"B",	"RA",	"W",	"W",	"W",	"B",	"RA",	"W",	"W",	"RH",	"RH",	"RA",	"RTT",	"RTT",	"RTT",	"RTT",	"RH",	"RH",	"RA",	"W",	"W",	"W",	"W",	"B",	"W"	],
+//["W",	"W",	"B",	"B",	"W",	"RH",	"RH",	"RTT",	"RTT",	"RTT",	"RA",	"RTT",	"RH",	"RH",	"RTT",	"W",	"RA",	"W",	"W",	"RH",	"RH",	"W",	"B",	"W",	"W",	"W",	"W",	"B"	],
+//["B",	"W",	"W",	"W",	"B",	"W",	"W",	"B",	"W",	"W",	"B",	"B",	"W",	"B",	"W",	"W",	"W",	"B",	"B",	"W",	"W",	"B",	"W",	"JF",	"W",	"B",	"W",	"B"	],
+//["W",	"W",	"W",	"W",	"W",	"B",	"B",	"W",	"B",	"W",	"B",	"B",	"B",	"B",	"W",	"W",	"W",	"W",	"W",	"B",	"W",	"W",	"W",	"JF",	"CA",	"CA",	"RH",	"RH"]
+//];
+
+//workday = [
+//["S","RH","M","M","M","RH","RH","J","J","RH","J","S","S","S","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR"],
+//["CA","CA","CA","CA","CA","RH","RH","RH","W","W","W","W","B","W","W","B","W","W","W","W","B","W","B","JF","B","W","B","W"],
+//["B","B","B","B","RA","W","W","W","B","RA","W","W","RH","RH","RA","RTT","RTT","RTT","RTT","RH","RH","RA","W","W","W","W","B","W"],
+//["W","W","B","B","W","RH","RH","RTT","RTT","RTT","RA","RTT","RH","RH","RTT","W","RA","W","W","RH","RH","W","B","W","W","W","W","B"],
+//["B","W","W","W","B","W","W","B","W","W","B","B","W","B","W","W","W","B","B","W","W","B","W","JF","W","B","W","B"],
+//["W","W","W","W","W","B","B","W","B","W","B","B","B","B","W","W","W","W","W","B","W","W","W","JF","CA","CA","RH","RH"]
+//];
+
+////staticLex(1, 2, 3, 4)
+//workday = [
+//["S","RH","M","M","M","RH","RH","J","J","RH","J","S","S","S","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR"],
+//["CA","CA","CA","CA","CA","RH","RH","RH","B","W","W","W","B","W","W","B","W","W","W","W","B","W","B","JF","W","W","B","W"],
+//["B","B","B","B","RA","W","W","W","W","RA","W","W","RH","RH","RA","RTT","RTT","RTT","RTT","RH","RH","RA","W","W","B","W","B","W"],
+//["W","W","B","B","W","RH","RH","RTT","RTT","RTT","RA","RTT","RH","RH","RTT","W","RA","W","W","RH","RH","W","B","W","W","W","W","B"],
+//["B","W","W","W","B","W","W","B","W","W","B","B","W","B","W","W","W","B","B","W","W","B","W","JF","W","B","W","B"],
+//["W","W","W","W","W","B","B","W","B","W","B","B","B","B","W","W","W","W","W","B","W","W","W","JF","CA","CA","RH","RH"]
+//];
+
+////staticLex(4, 1, 2, 3)
+//workday = [
+//["S","RH","M","M","M","RH","RH","J","J","RH","J","S","S","S","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR"],
+//["CA","CA","CA","CA","CA","RH","RH","RH","W","W","B","W","B","W","W","B","W","W","W","B","B","W","W","JF","W","W","B","W"],
+//["B","W","B","W","RA","B","B","W","W","RA","W","W","RH","RH","RA","RTT","RTT","RTT","RTT","RH","RH","RA","W","W","B","W","B","W"],
+//["W","W","B","B","W","RH","RH","RTT","RTT","RTT","RA","RTT","RH","RH","RTT","W","RA","W","W","RH","RH","W","B","W","W","W","W","B"],
+//["B","B","W","W","B","W","W","B","B","W","B","B","W","B","W","W","W","W","B","W","W","B","B","JF","W","B","W","B"],
+//["W","W","W","B","W","W","W","W","B","W","W","B","B","B","W","W","W","B","W","W","W","W","W","JF","CA","CA","RH","RH"]
+//];
+
+//staticLex(1, 2, 3, 4, 6)
+//workday = [
+//["S","RH","M","M","M","RH","RH","J","J","RH","J","S","S","S","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR","MPR"],
+//["CA","CA","CA","CA","CA","RH","RH","RH","W","W","B","W","B","B","W","W","W","W","W","B","W","W","B","JF","B","W","B","B"],
+//["W","W","B","B","RA","W","W","W","W","RA","B","B","RH","RH","RA","RTT","RTT","RTT","RTT","RH","RH","RA","W","W","W","W","B","B"],
+//["B","W","W","B","W","RH","RH","RTT","RTT","RTT","RA","RTT","RH","RH","RTT","B","RA","W","W","RH","RH","W","B","W","W","W","W","W"],
+//["B","W","W","W","B","W","W","B","B","W","W","B","W","B","W","W","W","W","B","W","B","B","W","JF","W","B","W","W"],
+//["W","B","B","W","W","B","B","W","B","W","W","W","B","W","W","W","W","B","W","W","W","W","W","JF","CA","CA","RH","RH"]
+//];
+
+//workday = [
+//["S","RH","M","M","M","RH","RH","J","J","RH","J","S","S","S","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND"],
+//["CA","CA","CA","CA","CA","RH","RH","RH","W","W","B","W","B","B","W","W","W","W","W","B","B","W","W","JF","W","W","B","W"],
+//["W","W","W","W","RA","B","W","W","B","RA","B","B","RH","RH","RA","RTT","RTT","RTT","RTT","RH","RH","RA","W","W","W","W","B","B"],
+//["B","W","B","W","W","RH","RH","RTT","RTT","RTT","RA","RTT","RH","RH","RTT","W","RA","W","W","RH","RH","W","B","W","B","W","W","W"],
+//["B","W","W","B","B","W","B","B","W","W","W","B","W","W","W","B","W","W","B","W","W","B","B","JF","W","B","W","B"],
+//["W","B","B","B","W","W","W","W","B","W","W","W","B","B","W","W","W","B","W","W","W","W","W","JF","CA","CA","RH","RH"]
+//];
+
+//workday = [
+//["S","RH","M","M","M","RH","RH","J","J","RH","J","S","S","S","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND"],
+//["CA","CA","CA","CA","CA","RH","RH","RH","B","W","B","W","W","W","W","B","W","B","W","W","W","W","W","JF","W","W","B","B"],
+//["W","W","B","B","RA","W","B","W","W","RA","B","B","RH","RH","RA","RTT","RTT","RTT","RTT","RH","RH","RA","B","W","W","W","W","W"],
+//["B","B","W","W","W","RH","RH","RTT","RTT","RTT","RA","RTT","RH","RH","RTT","W","RA","W","W","RH","RH","W","B","W","B","W","W","W"],
+//["B","W","W","B","B","W","W","B","W","W","W","B","B","B","W","W","W","W","B","W","W","B","W","JF","W","B","B","B"],
+//["W","W","B","W","W","B","W","W","B","W","W","W","B","B","W","W","W","W","W","B","B","W","W","JF","CA","CA","RH","RH"]
+//];
+
+workday = [
+["S","RH","M","M","M","RH","RH","J","J","RH","J","S","S","S","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND","ND"],
+["CA","CA","CA","CA","CA","RH","RH","RH","B","W","W","B","W","W","W","B","W","W","W","W","B","W","W","JF","W","W","B","B"],
+["W","B","B","W","RA","W","B","W","B","RA","B","W","RH","RH","RA","RTT","RTT","RTT","RTT","RH","RH","RA","B","W","W","W","W","W"],
+["B","W","W","RA","W","RH","RH","RTT","RTT","RTT","RA","RTT","RH","RH","RTT","W","RA","W","W","RH","RH","W","B","W","B","W","W","W"],
+["B","W","W","RA","B","J","W","B","W","W","W","B","B","B","W","W","W","W","B","W","W","B","W","JF","W","B","B","B"],
+["W","W","B","J","W","RA","W","W","W","W","B","W","B","B","W","W","W","B","W","B","W","W","W","JF","CA","CA","RH","RH"]
 ];
